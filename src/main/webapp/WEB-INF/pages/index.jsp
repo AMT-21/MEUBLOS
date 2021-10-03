@@ -1,12 +1,13 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="">
-<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-<link href="css/style.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css" />
 <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
@@ -23,11 +24,11 @@
 			<i class="fa fa-bars"></i>
 			<span class="sr-only">Toggle navigation</span>
 			</button>
-			<a href="index.html" class="navbar-brand brand"> SCORILO </a>
+			<a href="index.jsp" class="navbar-brand brand"> MEUBLOS </a>
 		</div>
 		<div id="navbar-collapse-02" class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="propClone"><a href="index.html">Home</a></li>
+				<li class="propClone"><a href="index.jsp">Home</a></li>
 				<li class="propClone"><a href="shop.html">Shop</a></li>
 				<li class="propClone"><a href="product.html">Product</a></li>
 				<li class="propClone"><a href="checkout.html">Checkout</a></li>
@@ -123,7 +124,7 @@
 								<a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
 							</p>
 						</div>
-						<span class="maxproduct"><img src="images/product1-1.jpg" alt=""></span>
+						<span class="maxproduct"><img src="${pageContext.request.contextPath}/images/product1-1.jpg" alt=""></span>
 					</div>
 					<div class="product-details">
 						<a href="#">
@@ -149,7 +150,7 @@
 								<a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
 							</p>
 						</div>
-						<span class="maxproduct"><img src="images/product2.jpg" alt=""></span>
+						<span class="maxproduct"><img src="${pageContext.request.contextPath}/images/product2.jpg" alt=""></span>
 					</div>
 					<div class="product-details">
 						<a href="#">
@@ -175,7 +176,7 @@
 								<a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
 							</p>
 						</div>
-						<span class="maxproduct"><img src="images/product2-3.jpg" alt=""></span>
+						<span class="maxproduct"><img src="${pageContext.request.contextPath}/images/product2-3.jpg" alt=""></span>
 					</div>
 					<div class="product-details">
 						<a href="#">
@@ -310,9 +311,9 @@
 </div>
 
 <!-- SCRIPTS =============================-->
-<script src="js/jquery-.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/anim.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery-.js"></script>
+<script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/anim.js"></script>
 <script>
 //----HOVER CAPTION---//	  
 jQuery(document).ready(function ($) {
