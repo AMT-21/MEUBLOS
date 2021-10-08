@@ -8,6 +8,7 @@ class Sprint0ApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
