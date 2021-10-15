@@ -1,31 +1,20 @@
-# Foobar
+# Meublos
 
-Foobar is a Python library for dealing with word pluralization.
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/AMT-21/sprint0.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AMT-21/sprint0/context:java)
 
-## Installation
+### Contribuer au projet
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Pour commencer à travailler sur ce projet, il faut tout d'abord le cloner en local.
 
-```bash
-pip install foobar
-```
+Les conventions de nommage disponibles sur le wiki du repo doivent être prise en compte.
 
-## Usage
+Le git flow décrit dans le wiki doit également être respecté tout au long du travail.
 
-```python
-import foobar
-# returns 'words'
-foobar.pluralize('word')
-# returns 'geese'
-foobar.pluralize('goose')
-# returns 'phenomenon'
-foobar.singularize('phenomena')
-```
+Des commits réguliers doivent être effectués pour avoir un suivi du travail effectué.
 
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Avant d'effectuer des changement majeurs, une issue doit être créée.
 
-Please make sure to update tests as appropriate.
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+
+
+
