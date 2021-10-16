@@ -1,1 +1,7 @@
 language: java
+
+branches:
+  only:
+    - main
+    - dev
+    
