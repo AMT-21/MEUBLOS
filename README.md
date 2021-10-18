@@ -17,7 +17,7 @@ MEUBLOS est un site e-commerce de meubles. Ce projet s'inscrit dans le cadre du 
 ```
 git clone https://github.com/AMT-21/sprint0
 ```
-2. Créer une branch feature p:
+2. Créer une branch feature :
 ```
 git flow feature start MYFEATURE 
 ```
