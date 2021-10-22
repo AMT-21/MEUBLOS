@@ -62,24 +62,24 @@ jobs:
         run: mvn tomcat7:redeploy-only --file pom.xml
         
       # Write instance SSH Key
-      - name: Write Instance SSH Key
-        run: echo "${{ secrets.INSTANCE_SSH_KEY }}" > INSTANCE_KEY.pem && chmod 400 INSTANCE_KEY.pem
+      #- name: Write Instance SSH Key
+      #  run: echo "${{ secrets.INSTANCE_SSH_KEY }}" > INSTANCE_KEY.pem && chmod 400 INSTANCE_KEY.pem
         
       #Run the SQL script
-      - name: Upload the SQL script
-        uses: appleboy/scp-action@master
-        with:
-          host: localhost
-          username: admin
-          key: ${{ secrets.INSTANCE_SSH_KEY }}
-          port: 23
-          source: "script.sql"
-          target: "/home/admin/mysql"
+      #- name: Upload the SQL script
+      #  uses: appleboy/scp-action@master
+      #  with:
+      #    host: localhost
+      #    username: admin
+      #    key: ${{ secrets.INSTANCE_SSH_KEY }}
+      #    port: 23
+      #    source: "script.sql"
+      #    target: "/home/admin/mysql"
           
       #- name: Upload the SQL script
       #  run: sudo scp -P 23 -i "INSTANCE_KEY.pem" script.sql admin@localhost:/home/admin/mysql
         
       # Connect to Amazon instance
-      - name: Run script on Amazon instance
-        run: ssh admin@localhost -p 23 -i "INSTANCE_KEY.pem" 'mysql < /home/admin/mysql/script.sql'
+      #- name: Run script on Amazon instance
+      #  run: ssh admin@localhost -p 23 -i "INSTANCE_KEY.pem" 'mysql < /home/admin/mysql/script.sql'
 
