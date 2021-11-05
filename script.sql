@@ -5,17 +5,10 @@ USE meublos;
 
 
 
-CREATE TABLE `Matiere` (
-	nomMatiere VARCHAR(50) NOT NULL,
+CREATE TABLE `Categorie` (
+	nomCategorie VARCHAR(50) NOT NULL,
 	
-	CONSTRAINT PK_Matiere PRIMARY KEY (nomMatiere)
-) ENGINE = InnoDB;
-
-
-CREATE TABLE `Style` (
-	nomStyle VARCHAR(50) NOT NULL,
-	
-	CONSTRAINT PK_Style PRIMARY KEY (nomStyle)
+	CONSTRAINT PK_Categorie PRIMARY KEY (nomCategorie)
 ) ENGINE = InnoDB;
 
 
@@ -25,26 +18,78 @@ CREATE TABLE `Meuble` (
 	nom VARCHAR(50) NOT NULL,
 	description TEXT NOT NULL,
 	prixVente DECIMAL(6,2) NOT NULL,
-	matiere VARCHAR(50) NOT NULL,
-	style VARCHAR(50),
 	
-	INDEX IDX_FK_Meuble_Matiere (matiere),
-	INDEX IDX_FK_Meuble_Style (style),
+	CONSTRAINT PK_Meuble PRIMARY KEY (id)
 	
-	CONSTRAINT PK_Meuble PRIMARY KEY (id),
-	
-	CONSTRAINT FK_Meuble_Matiere
-		FOREIGN KEY (matiere)
-		REFERENCES Matiere (nomMatiere)
-		ON UPDATE CASCADE,
-	CONSTRAINT FK_Meuble_Style
-		FOREIGN KEY (style)
-		REFERENCES Style (nomStyle)
-		ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 
+CREATE TABLE `Panier` (
+	idUser INT UNSIGNED NOT NULL,
+	
+	CONSTRAINT PK_Panier PRIMARY KEY (idUser)
+) ENGINE = InnoDB;
+
+
+CREATE TABLE `Meuble_Categorie` (
+	idMeuble INT UNSIGNED NOT NULL,
+	nomCategorie VARCHAR(50) NOT NULL,
+	
+	CONSTRAINT PK_Meuble_Categorie PRIMARY KEY (idMeuble, nomCategorie),
+	
+	CONSTRAINT FK_Meuble_Categorie_nomCategorie FOREIGN KEY (nomCategorie)
+		REFERENCES Categorie (nomCategorie)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+		
+	CONSTRAINT FK_Meuble_Categorie_idMeuble FOREIGN KEY (idMeuble)
+		REFERENCES Meuble (id)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+) ENGINE = InnoDB;
+
+
+CREATE TABLE `Panier_Meuble` (
+	idMeuble INT UNSIGNED NOT NULL,
+	idUserPanier INT UNSIGNED NOT NULL,
+	quantite INT UNSIGNED NOT NULL,
+	
+	CONSTRAINT PK_Panier_Meuble PRIMARY KEY (idMeuble, idUserPanier),
+	
+	CONSTRAINT FK_Panier_Meuble_idMeuble FOREIGN KEY (idMeuble)
+		REFERENCES Meuble (id)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+		
+	CONSTRAINT FK_Panier_Meuble_idUserPanier FOREIGN KEY (idUserPanier)
+		REFERENCES Panier (idUser)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+) ENGINE = INNODB;
 
 
 
-    
+
+
+INSERT INTO `categorie` (`nomCategorie`) VALUES
+	('Armoire'),
+	('Louis XVI'),
+	('Table');
+	
+INSERT INTO `meuble` (`id`, `nom`, `description`, `prixVente`) VALUES
+	(1, 'Un meuble du grenier', 'Il était dans mon grenier pendant des années', 10.55),
+	(2, 'Table en marbre', 'En super état ! Comme neuf. \r\n\r\nPersonne non sérieuse s\'abstenir.', 430.00),
+	(3, 'Armoire style "Louis XVI"', 'Petite pépite avec quelques dégats presque pas visible\r\nMerci de me contacter pour plus d\'informations.', 249.90);
+
+INSERT INTO `meuble_categorie` (`idMeuble`, `nomCategorie`) VALUES
+	(3, 'Armoire'),
+	(3, 'Louis XVI'),
+	(2, 'Table');
+	
+INSERT INTO `panier` (`idUser`) VALUES
+	(1);
+	
+	
+INSERT INTO `panier_meuble` (`idMeuble`, `idUserPanier`, `quantite`) VALUES
+	(1, 1, 1),
+	(2, 1, 2);
