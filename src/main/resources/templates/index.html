@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
+    <title>Meublos</title>
+</head>
+<body>
+
+<!-- HEADER =============================-->
+<header class="item header margin-top-0">
+    <div class="wrapper">
+
+        <div th:replace="fragments/header :: header"></div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="text-homeimage">
+                        <div class="maintext-image" data-scrollreveal="enter top over 1.5s after 0.1s">
+                            MEUBLOS
+                        </div>
+                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.3s">
+                            Vente de meuble depuis chez vous
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- LATEST ITEMS =============================-->
+<section class="item content">
+    <div class="container">
+        <div class="underlined-title">
+            <div class="editContent">
+                <h1 class="text-center latestitems">Derniers produits</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="productbox">
+                    <div class="fadeshop">
+                        <div class="captionshop text-center" style="display: none;">
+                            <h3>Item Name</h3>
+                            <p>
+                                This is a short excerpt to generally describe what the item is about.
+                            </p>
+                            <p>
+                                <a href="#" class="learn-more detailslearn"><i class="fa fa-shopping-cart"></i> Purchase</a>
+                                <a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
+                            </p>
+                        </div>
+                        <span class="maxproduct">
+                            <img th:src="@{/images/product1-1.jpg}" alt="">
+                        </span>
+                    </div>
+                    <div class="product-details">
+                        <a href="#">
+                            <h1>Calypso Theme</h1>
+                        </a>
+                        <span class="price">
+						<span class="edd_price">$49.00</span>
+						</span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.productbox -->
+            <div class="col-md-4">
+                <div class="productbox">
+                    <div class="fadeshop">
+                        <div class="captionshop text-center" style="display: none;">
+                            <h3>Item Name</h3>
+                            <p>
+                                This is a short excerpt to generally describe what the item is about.
+                            </p>
+                            <p>
+                                <a href="#" class="learn-more detailslearn"><i class="fa fa-shopping-cart"></i> Purchase</a>
+                                <a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
+                            </p>
+                        </div>
+                        <span class="maxproduct">
+                            <img th:src="@{/images/product2.jpg}" alt="">
+                        </span>
+                    </div>
+                    <div class="product-details">
+                        <a href="#">
+                            <h1>FastSell Theme</h1>
+                        </a>
+                        <span class="price">
+						<span class="edd_price">$49.00</span>
+						</span>
+                    </div>
+                </div>
+            </div>
+            <!-- /.productbox -->
+            <div class="col-md-4">
+                <div class="productbox">
+                    <div class="fadeshop">
+                        <div class="captionshop text-center" style="display: none;">
+                            <h3>Item Name</h3>
+                            <p>
+                                This is a short excerpt to generally describe what the item is about.
+                            </p>
+                            <p>
+                                <a href="#" class="learn-more detailslearn"><i class="fa fa-shopping-cart"></i> Purchase</a>
+                                <a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
+                            </p>
+                        </div>
+                        <span class="maxproduct">
+                            <img th:src="@{/images/product2-3.jpg}" alt="">
+                        </span>
+                    </div>
+                    <div class="product-details">
+                        <a href="#">
+                            <h1>Biscaya Theme</h1>
+                        </a>
+                        <span class="price">
+						<span class="edd_price">$49.00</span>
+						</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- BUTTON =============================-->
+<div class="item content container text-center">
+    <a href="/shop" class="homebrowseitems">Voir tous nos produits</a>
+</div>
+<br/>
+
+<!-- AREA =============================-->
+
+<!-- TESTIMONIAL =============================-->
+<div class="item content container col-md-10 col-md-offset-1 slide-text">
+    <h2><span class="uppercase">100% satisfait !</span></h2>
+    <p>
+        Une superbe expérience que d'acheter mes meubles sur MEUBLOS, je suis comblée !
+    </p>
+</div>
+
+
+<!-- FOOTER =============================-->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- SCRIPTS =============================-->
+<script th:src="@{/js/jquery-.js}"></script>
+<script th:src="@{/js/bootstrap.js}"></script>
+<script th:src="@{/js/anim.js}"></script>
+<script>
+    //----HOVER CAPTION---//
+    jQuery(document).ready(function ($) {
+        $('.fadeshop').hover(
+            function () {
+                $(this).find('.captionshop').fadeIn(150);
+            },
+            function () {
+                $(this).find('.captionshop').fadeOut(150);
+            }
+        );
+    });
+</script>
+
+</body>
+</html>
