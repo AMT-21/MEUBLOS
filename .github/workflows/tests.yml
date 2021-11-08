@@ -26,12 +26,7 @@ jobs:
         
       - name: Start MySQL service
         run: |
-          sudo /etc/init.d/mysql stop
-          sudo service mysql stop
-          sudo killall -KILL mysql mysqld_safe mysqld
           sudo /etc/init.d/mysql start
-          sudo service mysql start
-
-        
+     
       - name: Deploy SQL Script
         run: mysql -uroot < script.sql
