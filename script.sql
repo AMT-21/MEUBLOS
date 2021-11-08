@@ -18,6 +18,7 @@ CREATE TABLE `Meuble` (
 	nom VARCHAR(50) NOT NULL,
 	description TEXT NOT NULL,
 	prixVente DECIMAL(6,2) NOT NULL,
+	quantite INT UNSIGNED NOT NULL,
 	
 	CONSTRAINT PK_Meuble PRIMARY KEY (id)
 	
@@ -76,10 +77,10 @@ INSERT INTO `categorie` (`nomCategorie`) VALUES
 	('Louis XVI'),
 	('Table');
 	
-INSERT INTO `meuble` (`id`, `nom`, `description`, `prixVente`) VALUES
-	(1, 'Un meuble du grenier', 'Il était dans mon grenier pendant des années', 10.55),
-	(2, 'Table en marbre', 'En super état ! Comme neuf. \r\n\r\nPersonne non sérieuse s\'abstenir.', 430.00),
-	(3, 'Armoire style "Louis XVI"', 'Petite pépite avec quelques dégats presque pas visible\r\nMerci de me contacter pour plus d\'informations.', 249.90);
+INSERT INTO `meuble` (`id`, `nom`, `description`, `prixVente`, `quantite`) VALUES
+	(1, 'Un meuble du grenier', 'Il était dans mon grenier pendant des années', 10.55, 4),
+	(2, 'Table en marbre', 'En super état ! Comme neuf. \r\n\r\nPersonne non sérieuse s\'abstenir.', 430.00, 2),
+	(3, 'Armoire style "Louis XVI"', 'Petite pépite avec quelques dégats presque pas visible\r\nMerci de me contacter pour plus d\'informations.', 249.90, 1);
 
 INSERT INTO `meuble_categorie` (`idMeuble`, `nomCategorie`) VALUES
 	(3, 'Armoire'),
