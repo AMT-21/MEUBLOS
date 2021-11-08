@@ -24,9 +24,8 @@ jobs:
       - name: Start DMZ tunnel
         run: sudo ssh -tt -o StrictHostKeyChecking=no -L 3306:${{ secrets.INSTANCE_IP_ADDRESS }}:3306 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
         
-      - uses: shogo82148/actions-setup-mysql@v1
-        with:
-          mysql-version: '8.0'
-          
-      - name: Run SQL script
-        run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
+      - name: Start MySQL service
+        run: sudo /etc/init.d/mysql start
+        
+      - name: Deploy SQL Script
+        run: mysql -uroot < script.sql
