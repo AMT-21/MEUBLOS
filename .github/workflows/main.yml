@@ -77,10 +77,10 @@ jobs:
       - name: Upload the SQL script
         uses: appleboy/scp-action@master
         with:
-           host: localhost
+           host: 10.0.1.15
            username: admin
            key: ${{ secrets.INSTANCE_SSH_KEY }}
-           port: 23
+           port: 22
            source: "script.sql"
            target: "/home/admin/mysql"
           
