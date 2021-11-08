@@ -1,4 +1,4 @@
-name: deploy
+name: Deploy app
 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
@@ -60,37 +60,4 @@ jobs:
       #Deploy the app to Tomcat
       - name: Deploy with Maven
         run: mvn tomcat7:redeploy-only --file pom.xml
-        
-      #- name: Upload SQL Script # To action container
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    #Set artifact name
-      #    name: release
-          #From this path
-      #    path: target/script.sql
-        
-      # Write instance SSH Key
-      - name: Write Instance SSH Key
-        run: echo "${{ secrets.INSTANCE_SSH_KEY }}" > INSTANCE_KEY.pem && chmod 400 INSTANCE_KEY.pem
-        
-      - name: Start DMZ tunnel
-        run: sudo ssh -tt -o StrictHostKeyChecking=no -L 23:${{ secrets.INSTANCE_IP_ADDRESS }}:22 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
-        
-      # Upload the SQL script
-      - name: Upload the SQL script
-        uses: appleboy/scp-action@master
-        with:
-           host: localhost
-           username: admin
-           key: ${{ secrets.INSTANCE_SSH_KEY }}
-           port: 23
-           source: "script.sql"
-           target: "/home/admin/mysql"
-          
-      # - name: Upload the SQL script
-      #  run: sudo scp -P 23 -i "INSTANCE_KEY.pem" script.sql admin@localhost:/home/admin/mysql
-        
-      # Connect to Amazon instance
-      #- name: Run script on Amazon instance
-      #  run: ssh admin@localhost -p 23 -i "INSTANCE_KEY.pem" 'mysql < /home/admin/mysql/script.sql'
-
+    
