@@ -26,7 +26,9 @@ jobs:
         
       - name: Start MySQL service
         run: |
-          sudo /etc/init.d/mysql start
+          sudo systemctl status mysql.service
+          sudo systemctl start mysql.service
+          sudo systemctl status mysql.service
      
       - name: Deploy SQL Script
         run: mysql -uroot < script.sql
