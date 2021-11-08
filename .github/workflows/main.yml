@@ -37,7 +37,7 @@ jobs:
         run: echo "${{ secrets.DMZ_SSH_KEY }}" > DMZ_KEY.pem && chmod 400 DMZ_KEY.pem
         
       - name: Start DMZ tunnel
-        run: ssh -tt -o StrictHostKeyChecking=no -L 8080:${{ secrets.SERVER_IP_ADDRESS }}:8080 -L 23:${{ secrets.INSTANCE_IP_ADDRESS }}:22 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
+        run: sudo ssh -tt -o StrictHostKeyChecking=no -L 8080:${{ secrets.SERVER_IP_ADDRESS }}:8080 -L 23:${{ secrets.INSTANCE_IP_ADDRESS }}:22 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
         
       - name: Setup maven settings
         uses: s4u/maven-settings-action@v2.4.1
