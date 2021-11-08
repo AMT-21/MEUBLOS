@@ -48,36 +48,45 @@ jobs:
       - name: Build with Maven
         run: mvn -B package -DskipTests --file pom.xml
         
-      - name: Upload WAR
+      - name: Upload WAR # To action container
         #This uploads artifacts from your workflow allowing you to share data between jobs and store data once a workflow is complete.
         uses: actions/upload-artifact@v2
         with:
           #Set artifact name
           name: release
           #From this path
-          path: target/sprint0.war
+          path: target/MEUBLOS.war
           
       #Deploy the app to Tomcat
       - name: Deploy with Maven
         run: mvn tomcat7:redeploy-only --file pom.xml
+        
+      # - name: Upload SQL Script # To action container
+        #This uploads artifacts from your workflow allowing you to share data between jobs and store data once a workflow is complete.
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    #Set artifact name
+      #    name: release
+          #From this path
+      #    path: target/script.sql
         
       # Write instance SSH Key
       - name: Write Instance SSH Key
         run: echo "${{ secrets.INSTANCE_SSH_KEY }}" > INSTANCE_KEY.pem && chmod 400 INSTANCE_KEY.pem
         
       # Run the SQL script
-      - name: Upload the SQL script
-        uses: appleboy/scp-action@master
-        with:
-          host: localhost
-          username: admin
-          key: ${{ secrets.INSTANCE_SSH_KEY }}
-          port: 23
-          source: "script.sql"
-          target: "/home/admin/mysql"
+      # - name: Upload the SQL script
+      #   uses: appleboy/scp-action@master
+      #   with:
+      #     host: localhost
+      #     username: admin
+      #     key: ${{ secrets.INSTANCE_SSH_KEY }}
+      #     port: 23
+      #     source: "script.sql"
+      #     target: "/home/admin/mysql"
           
-      #- name: Upload the SQL script
-      #  run: sudo scp -P 23 -i "INSTANCE_KEY.pem" script.sql admin@localhost:/home/admin/mysql
+      - name: Upload the SQL script
+        run: sudo scp -P 23 -i "INSTANCE_KEY.pem" script.sql admin@localhost:/home/admin/mysql
         
       # Connect to Amazon instance
       #- name: Run script on Amazon instance
