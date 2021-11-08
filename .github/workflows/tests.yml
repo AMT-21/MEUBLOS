@@ -25,7 +25,13 @@ jobs:
         run: sudo ssh -tt -o StrictHostKeyChecking=no -L 3306:${{ secrets.INSTANCE_IP_ADDRESS }}:3306 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
         
       - name: Start MySQL service
-        run: sudo /etc/init.d/mysql start
+        run: |
+          sudo /etc/init.d/mysql stop
+          sudo service mysql stop
+          sudo killall -KILL mysql mysqld_safe mysqld
+          sudo /etc/init.d/mysql start
+          sudo service mysql start
+
         
       - name: Deploy SQL Script
         run: mysql -uroot < script.sql
