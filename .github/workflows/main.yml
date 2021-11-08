@@ -37,7 +37,7 @@ jobs:
         run: echo "${{ secrets.DMZ_SSH_KEY }}" > DMZ_KEY.pem && chmod 400 DMZ_KEY.pem
         
       - name: Start DMZ tunnel
-        run: sudo ssh -tt -o StrictHostKeyChecking=no -L 8080:${{ secrets.SERVER_IP_ADDRESS }}:8080 -L 23:${{ secrets.INSTANCE_IP_ADDRESS }}:22 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
+        run: sudo ssh -tt -o StrictHostKeyChecking=no -L 8080:${{ secrets.SERVER_IP_ADDRESS }}:8080 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
         
       - name: Setup maven settings
         uses: s4u/maven-settings-action@v2.4.1
@@ -61,23 +61,26 @@ jobs:
       - name: Deploy with Maven
         run: mvn tomcat7:redeploy-only --file pom.xml
         
-      - name: Upload SQL Script # To action container
-        uses: actions/upload-artifact@v2
-        with:
-          #Set artifact name
-          name: release
+      #- name: Upload SQL Script # To action container
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    #Set artifact name
+      #    name: release
           #From this path
-          path: target/script.sql
+      #    path: target/script.sql
         
       # Write instance SSH Key
       - name: Write Instance SSH Key
         run: echo "${{ secrets.INSTANCE_SSH_KEY }}" > INSTANCE_KEY.pem && chmod 400 INSTANCE_KEY.pem
         
+      - name: Start DMZ tunnel
+        run: sudo ssh -tt -o StrictHostKeyChecking=no -L 23:${{ secrets.INSTANCE_IP_ADDRESS }}:22 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
+        
       # Upload the SQL script
       - name: Upload the SQL script
         uses: appleboy/scp-action@master
         with:
-           host: 127.0.0.1
+           host: localhost
            username: admin
            key: ${{ secrets.INSTANCE_SSH_KEY }}
            port: 23
