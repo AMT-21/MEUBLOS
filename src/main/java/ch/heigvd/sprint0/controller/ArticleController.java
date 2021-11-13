@@ -20,9 +20,10 @@ public class ArticleController {
     @Autowired
     private IArticleService articleService;
 
-    /*@PostMapping("/articles/{id}")
-    public ResponseEntity<Optional<Article>> findArticle(@PathVariable Long id) {
+    @GetMapping("/articles/{id}")
+    public String findArticle(@PathVariable Long id, Model model) {
         Optional<Article> article = articleService.findById(id);
-        return new ResponseEntity<>(article, HttpStatus.OK);
-    }*/
+        model.addAttribute("article", article);
+        return "articleDetail.html";
+    }
 }

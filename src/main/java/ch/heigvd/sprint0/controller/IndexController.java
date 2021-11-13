@@ -15,7 +15,7 @@ public class IndexController {
     private IArticleService articleService;
 
     @GetMapping("/")
-    public String findCountries(Model model) {
+    public String index(Model model) {
         List<Article> articles = articleService.findAll();
         model.addAttribute("articles", articles);
         return "index.html";
