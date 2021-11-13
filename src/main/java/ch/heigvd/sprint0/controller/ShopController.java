@@ -10,16 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 @Controller
-public class IndexController {
+public class ShopController {
     @Autowired
     private IArticleService articleService;
 
-    @GetMapping("/")
-    public String findCountries(Model model) {
+    @GetMapping("/shop")
+    public String findArticles(Model model) {
         List<Article> articles = articleService.findAll();
         model.addAttribute("articles", articles);
-        return "index.html";
+        return "shop.html";
     }
 }
-
-

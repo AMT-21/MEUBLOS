@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import javax.persistence.*;
+import java.util.Set;
 //The @Entity annotation specifies that the class is an entity and is mapped to a database table while the @Table
 // annotation specifies the name of the database table to be used for mapping.
 
@@ -17,54 +18,58 @@ public class Article {
     //The primary key of an entity is specified with the @Id annotation. The @GeneratedValue gives a strategy for
     // generating the values of primary keys.
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
     /* article name
      */
     @Column(name = "nom", unique = true)
-    private String nom;
+    private String name;
 
     /* unique description
      */
-    @Column(name = "description", unique = true)
+    @Column(name = "description")
     private String description;
 
     /* article price
      */
-    @Column(name = "prixvente", unique = true)
-    private double prixVente;
+    @Column(name = "prixvente")
+    private double price;
 
     /* article material
      */
-    @Column(name = "quantite", unique = true)
-    private int quantite;
+    @Column(name = "quantite")
+    private int stock;
 
+    @OneToMany(mappedBy = "article")
+    private Set<Cart_Article> cart_article_list;
+
+    @OneToMany(mappedBy = "article")
+    private Set<Article_Category> article_category_list;
 
     public Article(){
 
     }
 
-    public Article(Integer id, String nom, String description, int prixVente, int quantite)
-    {
+    public Article(Integer id, String name, String description, int price, int stock) {
         this.id = id;
-        this.nom = nom;
+        this.name = name;
         this.description = description;
-        this.prixVente = prixVente;
-        this.quantite = quantite;
+        this.price = price;
+        this.stock = stock;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -75,11 +80,19 @@ public class Article {
         this.description = description;
     }
 
-    public double getPrixVente() {
-        return prixVente;
+    public double getPrice() {
+        return price;
     }
 
-    public void setPrixVente(int prixVente) {
-        this.prixVente = prixVente;
+    public void setPrixVente(int price) {
+        this.price = price;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 }
