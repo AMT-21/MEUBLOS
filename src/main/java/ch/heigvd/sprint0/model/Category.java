@@ -7,7 +7,6 @@ import java.util.Set;
 @Table(name = "Categorie")
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nomCategorie")
     private String nameCategory;
 
