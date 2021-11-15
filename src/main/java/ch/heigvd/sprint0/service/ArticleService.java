@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 //ArticleService contains the implementation of the findAll() method. We use the repository to retrieve data from
@@ -22,4 +23,7 @@ public class ArticleService implements IArticleService {
     {
         return (List<Article>) repository.findAll();
     }
+
+    @Override
+    public Optional<Article> find(Long id){ return repository.findById(id);}
 }

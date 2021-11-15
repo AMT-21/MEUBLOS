@@ -34,7 +34,7 @@
             <li class="propClone"><a href="product.html">Product</a></li>
             <li class="propClone"><a href="checkout.html">Checkout</a></li>
             <li class="propClone"><a href="contact.html">Contact</a></li>
-            <li class="propClone"><a href="articles">Articles</a> </li>
+            <li class="propClone"><a href="showArticles.html">Articles</a> </li>
           </ul>
         </div>
       </div>
@@ -74,7 +74,7 @@
               </p>
               <p>
                 <a href="#" class="learn-more detailslearn"><i class="fa fa-shopping-cart"></i> Purchase</a>
-                <a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
+                <a href="article" th:href="@{'/article/'+${article.id}}" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
               </p>
             </div>
             <span class="maxproduct">
