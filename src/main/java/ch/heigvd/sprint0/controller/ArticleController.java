@@ -20,7 +20,7 @@ public class ArticleController {
 
     @GetMapping("/article/{id}")
     public String findArticle(@PathVariable Long id, Model model){
-        Article article= articleService.find(2L)
+        Article article= articleService.find(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         model.addAttribute("article", article);
         return "article";

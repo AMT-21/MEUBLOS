@@ -39,6 +39,20 @@
                 </div>
             </div>
         </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="text-homeimage">
+                        <div class="maintext-image" data-scrollreveal="enter top over 1.5s after 0.1s">
+                            Increase Digital Sales
+                        </div>
+                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.3s">
+                            Boost revenue with Scorilo
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </header>
 
@@ -54,31 +68,24 @@
             <div class="col-md-4">
                 <div class="productbox">
                     <div class="fadeshop">
-                        <div class="captionshop text-center" style="display: none;">
-                            <h3 th:text="${article.nom}"></h3>
-                            <p th:text="${article.description}">
-
-                            </p>
-                            <p>
-                                <a href="#" class="learn-more detailslearn"><i class="fa fa-shopping-cart"></i> Purchase</a>
-                                <a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
-                            </p>
-                        </div>
                         <span class="maxproduct">
-                            <img th:src="@{article.id}" th:alt="'Article n° '+${article.id}">
+                            <img th:src="@{'/images/'+${article.id}+'.jpg'}" th:alt="'Article n° '+${article.id}">
                         </span>
-                    </div>
-                    <div class="product-details">
-                        <a href="#">
-                            <h1 th:text="${article.nom}"></h1>
-                        </a>
-                        <span class="price">
-                        <span th:utext="${'&#36;'+'&nbsp;'}" ></span>
-						<span th:text="${article.prixVente}"class="edd_price">$</span>
-						</span>
                     </div>
                 </div>
 
+            </div>
+            <div class="col-lg-3">
+                <div>
+                    <h2>Nom</h2>
+                    <p th:text="${article.nom}"></p>
+                    <h2>Description</h2>
+                    <p th:text="${article.description}"></p>
+                    <h2>Prix</h2>
+                    <p th:text="${'&#36;'+'&nbsp;'}+${article.prixVente}"></p>
+                    <a href="#" class="learn-more detailslearn"><i class="fa fa-shopping-cart"></i> Purchase</a>
+
+                </div>
             </div>
         </div>
 </section>

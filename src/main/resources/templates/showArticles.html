@@ -82,7 +82,7 @@
                         </span>
           </div>
           <div class="product-details">
-            <a href="#">
+            <a href="article" th:href="@{'/article/'+${article.id}}">
               <h1 th:text="${article.nom}"></h1>
             </a>
             <span class="price">
