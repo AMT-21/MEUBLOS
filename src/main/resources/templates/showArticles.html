@@ -11,23 +11,6 @@
   <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
-<tbody>
-<h2>List of articles</h2>
-
-<table>
-  <tr>
-    <th>Id</th>
-    <th>Nom</th>
-    <th>Description</th>
-  </tr>
-
-  <tr th:each="article: ${articles}">
-    <td th:text="${article.id}" />
-    <td th:text="${article.nom}" />
-    <td th:text="${article.description}" />
-  </tr>
-</table>
-</tbody>
 </html>
 
 
@@ -95,7 +78,7 @@
               </p>
             </div>
             <span class="maxproduct">
-                            <img th:src="@{/images/product1-1.jpg}" alt="">
+                            <img th:src="@{'/images/'+${article.id}+'.jpg'}" th:alt="'Article n° '+${article.id}">
                         </span>
           </div>
           <div class="product-details">
@@ -103,11 +86,12 @@
               <h1 th:text="${article.nom}"></h1>
             </a>
             <span class="price">
-						<span class="edd_price">$49.00</span>
+                        <span th:utext="${'&#36;'+'&nbsp;'}" ></span>
+						<span th:text="${article.prixVente}"class="edd_price">$</span>
 						</span>
           </div>
         </div>
-      </div>
+
     </div>
   </div>
 </section>
