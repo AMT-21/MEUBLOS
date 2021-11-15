@@ -1,10 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Cart</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
 <body>
+
+<!-- HEADER =============================-->
+<header class="item header margin-top-0">
+    <div class="wrapper">
+        <div th:replace="fragments/header :: header"></div>
+    </div>
+</header>
+
+
+
+<!-- ITEMS ============================= -->
+<section class="item content">
+    <div th:switch="${articles_in_cart}">
+        <h2 th:case="null">No content yet!</h2>
+        <div th:case="*">
+            <h2>Cart</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="articles_in_cart : ${article_in_cart}">
+                    <td th:text="${article_in_cart.article.name}"></td>
+                    <td th:text="${article_in_cart.article.description}"></td>
+                    <td th:text="${article_in_cart.article.price}"></td>
+                    <td th:text="${article_in_cart.quantity}"></td>
+                    <td><a th:href="@{./cart/remove/{idArt}/{idCart}(id1=${article_in_cart.article.id},id2=${article_in_cart.cart.idUser})}">remove</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p><a href="/signup">Add a new user</a></p>
+    </div>
+</section>
+-->
+
+<!-- FOOTER =============================-->
+<div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>

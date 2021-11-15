@@ -1,6 +1,7 @@
 package ch.heigvd.sprint0.service;
 
 import ch.heigvd.sprint0.model.Article;
+import ch.heigvd.sprint0.model.Cart_Article;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -10,4 +11,5 @@ import java.util.Optional;
 public interface IArticleService {
     List<Article> findAll();
     Optional<Article> findById(long id);
+    List<Cart_Article> findCartArticleFromUser(long id);
 }
