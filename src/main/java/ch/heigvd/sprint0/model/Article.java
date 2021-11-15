@@ -1,4 +1,5 @@
 package ch.heigvd.sprint0.model;
+import org.hibernate.annotations.Type;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -29,12 +30,12 @@ public class Article {
 
     /* unique description
      */
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "text")
     private String description;
 
     /* article price
      */
-    @Column(name = "prixvente")
+    @Column(name = "prixvente", columnDefinition = "DECIMAL(6,2)")
     private double price;
 
     /* article material
