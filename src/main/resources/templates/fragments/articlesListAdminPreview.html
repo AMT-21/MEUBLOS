@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<tr th:fragment="articlesListAdminPreview(article)" style="cursor: pointer;" th:onclick="'javascript:rowClicked(\'' + ${article.id} + '\');'">
+    <th scope="row" th:text="${article.id}"></th>
+    <td th:text="${article.name}"></td>
+    <td th:text="${article.price}"></td>
+    <td th:text="${article.stock}"></td>
+</tr>
+
+</body>
+</html>
