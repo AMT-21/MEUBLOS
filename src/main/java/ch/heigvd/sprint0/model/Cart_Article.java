@@ -2,37 +2,24 @@ package ch.heigvd.sprint0.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Panier_Meuble")
 public class Cart_Article implements Serializable {
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "idMeuble", referencedColumnName = "id")
-    private Article article;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "idUserPanier", referencedColumnName = "idUser")
-    private Cart cart;
+    @EmbeddedId
+    private Cart_Article_Ids ids;
 
     @Column(name = "quantite")
     private int quantity;
 
-    public Article getArticle() {
-        return article;
+    public Cart_Article_Ids getIds() {
+        return ids;
     }
 
-    public void setArticle(Article article) {
-        this.article = article;
-    }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setIds(Cart_Article_Ids ids) {
+        this.ids = ids;
     }
 
     public int getQuantity() {

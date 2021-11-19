@@ -1,6 +1,5 @@
 package ch.heigvd.sprint0.controller;
 
-import ch.heigvd.sprint0.model.Article;
 import ch.heigvd.sprint0.model.Cart_Article;
 import ch.heigvd.sprint0.repository.ArticleRepository;
 import ch.heigvd.sprint0.repository.CartArticleRepository;
@@ -43,7 +42,6 @@ public class CartController {
         model.addAttribute("articles_in_cart", cart_articles);
         return "cart.html";
     }
-
 
     @GetMapping("/cart/remove/{idArt}/{idCart}")
     public String remove(Model model, @PathVariable("idArt") long idArt, @PathVariable("idCart") long idCart) {
