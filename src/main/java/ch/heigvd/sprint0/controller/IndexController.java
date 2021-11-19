@@ -1,6 +1,7 @@
 package ch.heigvd.sprint0.controller;
 
 import ch.heigvd.sprint0.model.Article;
+import ch.heigvd.sprint0.repository.ArticleRepository;
 import ch.heigvd.sprint0.service.IArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,12 +13,11 @@ import java.util.List;
 @Controller
 public class IndexController {
     @Autowired
-    private IArticleService articleService;
+    private ArticleRepository articleRepository;
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Article> articles = articleService.findAll();
-        model.addAttribute("articles", articles);
+        model.addAttribute("articles", articleRepository.findTop2ByOrderByIdDesc());
         return "index.html";
     }
 }

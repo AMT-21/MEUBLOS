@@ -19,11 +19,11 @@ public class Cart_Article implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cart_Article that = (Cart_Article) o;
-        return quantity == that.quantity && Objects.equals(article, that.article) && Objects.equals(cart, that.cart);
+        return quantity == that.quantity && Objects.equals(ids, that.ids);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(article, cart, quantity);
+        return Objects.hash(ids, quantity);
     }
 }
