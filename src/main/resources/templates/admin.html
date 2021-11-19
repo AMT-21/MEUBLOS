@@ -39,7 +39,7 @@
     <div class="container toparea">
         <div class="row">
             <div class="col-md-12">
-                <a class="btn btn-primary" href="/addArticle" role="button">Ajouter un article</a>
+                <a class="btn btn-primary" href="/admin/addArticle" role="button">Ajouter un article</a>
                 <a class="btn btn-primary" href="/editCategories" role="button">Modifier les catégories</a>
                 <br />
                 <br />
@@ -84,7 +84,7 @@
 </script>
 <script>
     function rowClicked(value) {
-        location.href = "/admin/editArticle/" + value;
+        location.href = "/admin/editArticle?id=" + value;
     }
 </script>
 
