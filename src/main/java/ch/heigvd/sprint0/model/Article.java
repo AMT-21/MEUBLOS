@@ -30,13 +30,12 @@ public class Article {
 
     /* unique description
      */
-    @Type(type = "text")
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "text")
     private String description;
 
     /* article price
      */
-    @Column(name = "prixvente")
+    @Column(name = "prixvente", columnDefinition = "DECIMAL(6,2)")
     private double price;
 
     /* article material

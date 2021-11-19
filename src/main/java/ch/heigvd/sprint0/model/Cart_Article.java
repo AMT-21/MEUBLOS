@@ -14,19 +14,16 @@ public class Cart_Article implements Serializable {
     @Column(name = "quantite")
     private int quantity;
 
-    public Cart_Article_Ids getIds() {
-        return ids;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart_Article that = (Cart_Article) o;
+        return quantity == that.quantity && Objects.equals(article, that.article) && Objects.equals(cart, that.cart);
     }
 
-    public void setIds(Cart_Article_Ids ids) {
-        this.ids = ids;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    @Override
+    public int hashCode() {
+        return Objects.hash(article, cart, quantity);
     }
 }
