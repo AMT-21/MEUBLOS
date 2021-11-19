@@ -12,7 +12,7 @@ public class Cart {
     @Column(name = "idUser")
     private int idUser;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "ids.cart")
     private Set<Cart_Article> cart_article_list;
 
     public Cart(int idUser) {

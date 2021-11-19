@@ -1,4 +1,5 @@
 package ch.heigvd.sprint0.model;
+import org.hibernate.annotations.Type;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -29,6 +30,7 @@ public class Article {
 
     /* unique description
      */
+    @Type(type = "text")
     @Column(name = "description")
     private String description;
 
@@ -42,7 +44,7 @@ public class Article {
     @Column(name = "quantite")
     private int stock;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "ids.article")
     private Set<Cart_Article> cart_article_list;
 
     @OneToMany(mappedBy = "article")

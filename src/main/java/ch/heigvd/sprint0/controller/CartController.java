@@ -1,6 +1,7 @@
 package ch.heigvd.sprint0.controller;
 
 import ch.heigvd.sprint0.model.Cart_Article;
+import ch.heigvd.sprint0.model.Cart_Article_Ids;
 import ch.heigvd.sprint0.repository.ArticleRepository;
 import ch.heigvd.sprint0.repository.CartArticleRepository;
 import ch.heigvd.sprint0.repository.CartRepository;
@@ -46,9 +47,9 @@ public class CartController {
     @GetMapping("/cart/remove/{idArt}/{idCart}")
     public String remove(Model model, @PathVariable("idArt") long idArt, @PathVariable("idCart") long idCart) {
         cartArticleRepository.delete(
-                cartArticleRepository.findCart_ArticleByArticleAndCart(
-                        articleRepository.findById(idArt).get(),
-                        cartRepository.findById(idCart).get()));
+                cartArticleRepository.findById(new Cart_Article_Ids(
+                        cartRepository.findById(idCart).get(),
+                        articleRepository.findById(idArt).get())).get());
         return "redirect:/cart";
     }
 }
