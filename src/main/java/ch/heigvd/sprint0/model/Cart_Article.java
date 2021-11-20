@@ -14,6 +14,27 @@ public class Cart_Article implements Serializable {
     @Column(name = "quantite")
     private int quantity;
 
+    public Cart_Article(Cart_Article_Ids ids, int quantity) {
+        this.ids = ids;
+        this.quantity = quantity;
+    }
+
+    public Cart getCart() {
+        return ids.getCart();
+    }
+
+    public Article getArticle() {
+        return ids.getArticle();
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

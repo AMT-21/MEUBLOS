@@ -23,10 +23,6 @@ public class Cart {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
-    }
-
     public Set<Cart_Article> getCart_article_list() {
         return cart_article_list;
     }

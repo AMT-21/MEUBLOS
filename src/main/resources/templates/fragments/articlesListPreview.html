@@ -17,16 +17,30 @@
                             </p>
                         </div>
                         <span class="maxproduct">
-                                    <img th:src="@{/images/product1-1.jpg}" alt="">
-                                </span>
+                            <img th:src="@{/images/product1-1.jpg}" alt="">
+                        </span>
                     </div>
                     <div class="product-details">
-                        <a href="#">
+                        <a th:href="@{/articles/{id}(id=${article.id})}">
                             <h1 th:text="${article.name}"></h1>
                         </a>
                         <span class="price">
-                                <span class="edd_price">$49.00</span>
-                                </span>
+                            <span class="edd_price">$49.00</span>
+                        </span>
+                    </div>
+                    <div class="product-details">
+                        <div th:with="condition=${not session.articles_in_cart.?[article == article].isEmpty()}" th:remove="tag">
+                            <div th:if="condition" th:remove="tag">
+                                <button class="edd-add-to-cart">
+                                    <a th:href="@{/cart/add/{id}(id=${article.id})}" class="homebrowseitems">Ajouter au panier</a>
+                                </button>
+                            </div>
+                            <div th:unless="condition" th:remove="tag">
+                                <button class="edd-add-to-cart">
+                                    <a th:href="@{/cart/remove/{id}(id=${article.id})}" class="homebrowseitems">Enlever du panier</a>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

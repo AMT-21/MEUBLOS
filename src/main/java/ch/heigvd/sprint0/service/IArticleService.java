@@ -10,6 +10,6 @@ import java.util.Optional;
 //IArticleService provides the findAll() contract method declaration to get all articles from the data source.
 public interface IArticleService {
     List<Article> findAll();
-    Optional<Article> findById(long id);
-    List<Cart_Article> findCartArticleFromUser(long id);
+    Optional<Article> findById(int id);
+    List<Cart_Article> findCartArticleFromUser(int id);
 }

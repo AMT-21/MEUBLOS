@@ -21,9 +21,9 @@ public class ArticleController {
     private IArticleService articleService;
 
     @GetMapping("/articles/{id}")
-    public String findArticle(@PathVariable Long id, Model model) {
+    public String findArticle(@PathVariable int id, Model model) {
         Optional<Article> article = articleService.findById(id);
         model.addAttribute("article", article);
-        return "articleDetail.html";
+        return "article_detail.html";
     }
 }
