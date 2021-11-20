@@ -10,16 +10,16 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idUser")
-    private int idUser;
+    private Integer idUser;
 
     @OneToMany(mappedBy = "ids.cart")
     private Set<Cart_Article> cart_article_list;
 
-    public Cart(int idUser) {
+    public Cart(Integer idUser) {
         this.idUser = idUser;
     }
 
-    public int getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 

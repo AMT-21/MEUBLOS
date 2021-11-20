@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +22,10 @@ public class ArticleController {
     private IArticleService articleService;
 
     @GetMapping("/articles/{id}")
-    public String findArticle(@PathVariable int id, Model model) {
+    public String findArticle(@PathVariable int id, Model model, HttpSession session) {
         Optional<Article> article = articleService.findById(id);
         model.addAttribute("article", article);
+        model.addAttribute("session", session);
         return "article_detail.html";
     }
 }

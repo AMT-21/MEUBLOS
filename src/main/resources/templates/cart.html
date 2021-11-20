@@ -20,36 +20,37 @@
     </div>
 </header>
 
-<h1>Panier</h1>
-
 <!-- ITEMS ============================= -->
 <section class="item content">
-    <div th:with="condition=${session.articles_in_cart.isEmpty()}" th:remove="tag">
-        <div th:if="condition" th:remove="tag">
-            <h2>No content yet!</h2>
-        </div>
-        <div th:unless="condition" th:remove="tag">
-            <h2>Cart</h2>
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="session.articles_in_cart : ${article_in_cart}">
-                    <td th:text="${article_in_cart.article.name}"></td>
-                    <td th:text="${article_in_cart.article.description}"></td>
-                    <td th:text="${article_in_cart.article.price}"></td>
-                    <td th:text="${article_in_cart.quantity}"></td>
-                    <td><a th:href="@{./cart/remove/{idArt}/{idCart}(id1=${article_in_cart.article.id},id2=${article_in_cart.cart.idUser})}">remove</a></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+    <div th:if="${session.articles_in_cart.isEmpty()}">
+        <h2>Le panier est vide</h2>
+    </div>
+    <div th:if="${not session.articles_in_cart.isEmpty()}">
+        <h2>Panier</h2>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Quantité</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="art : ${session.articles_in_cart}">
+                <td th:text="${art.article.name}"></td>
+                <td th:text="${art.article.price}"></td>
+                <td>
+                    <form th:action="@{/cart/update/{id}(id=${art.article.id})}" method="post">
+                        <input th:value="${art.quantity}" type="number" id="quantity"
+                               name="quantity" min="1" th:max="${art.article.stock}">
+                        <input value="save" type="submit">
+                    </form>
+                </td>
+                <td><a class="btn btn-primary" th:href="@{/cart/remove/{id}(id=${art.article.id})}">remove</a></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </section>
 
