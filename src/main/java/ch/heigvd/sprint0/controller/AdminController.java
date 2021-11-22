@@ -42,11 +42,13 @@ public class AdminController {
             articlesCategoriesStr.add(str);
         }
 
-        for(String str : articlesCategoriesStr) {
-            System.out.println(str);
-        }
         model.addAttribute("articles", articles);
         model.addAttribute("atriclesCategories", articlesCategoriesStr);
         return "admin.html";
+    }
+
+    @GetMapping("/admin/article")
+    public String adminArticle(Model model) {
+        return "adminArticle.html";
     }
 }

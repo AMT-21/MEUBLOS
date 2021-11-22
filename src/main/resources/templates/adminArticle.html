@@ -24,7 +24,7 @@
                 <div class="col-md-12 text-center">
                     <div class="text-pageheader">
                         <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s">
-                            Admin
+                            Admin article
                         </div>
                     </div>
                 </div>
@@ -39,23 +39,7 @@
     <div class="container toparea">
         <div class="row">
             <div class="col-md-12">
-                <a class="btn btn-primary" href="/admin/article" role="button">Ajouter un article</a>
-                <a class="btn btn-primary" href="/editCategories" role="button">Modifier les catégories</a>
-                <br />
-                <br />
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">nom</th>
-                        <th scope="col">prix</th>
-                        <th scope="col">stock</th>
-                        <th scope="col">catégorie(s)</th>
-                    </tr>
-                    </thead>
-                    <tbody th:each="article, iter: ${articles}" th:insert="fragments/articlesListAdminPreview :: articlesListAdminPreview(${article})">
-                    </tbody>
-                </table>
+
             </div>
         </div>
     </div>
@@ -81,11 +65,6 @@
             }
         );
     });
-</script>
-<script>
-    function rowClicked(value) {
-        location.href = "/admin/editArticle?id=" + value;
-    }
 </script>
 
 </body>
