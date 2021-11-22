@@ -10,10 +10,16 @@ public class Category {
     @Column(name = "nomCategorie")
     private String nameCategory;
 
-    @OneToMany(mappedBy = "category")
+    public String getNameCategory() {
+        return nameCategory;
+    }
+
+    @OneToMany(mappedBy = "ids.category")
     private Set<Article_Category> article_category_list;
 
     public Category(String nameCategory) {
         this.nameCategory = nameCategory;
     }
+
+    public Category() { }
 }

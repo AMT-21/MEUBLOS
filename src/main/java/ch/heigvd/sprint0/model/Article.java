@@ -46,7 +46,7 @@ public class Article {
     @OneToMany(mappedBy = "ids.article")
     private Set<Cart_Article> cart_article_list;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "ids.article")
     private Set<Article_Category> article_category_list;
 
     public Article(){
