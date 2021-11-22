@@ -43,7 +43,7 @@ public class Article {
     @Column(name = "quantite")
     private int stock;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "ids.article")
     private Set<Cart_Article> cart_article_list;
 
     @OneToMany(mappedBy = "article")

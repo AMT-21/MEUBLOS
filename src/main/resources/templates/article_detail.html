@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
-    <title>Articles</title>
+    <title>ArticleDetail</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="">
@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
-
+<body>
 
 <!-- HEADER =============================-->
 <header class="item header margin-top-0">
@@ -20,32 +20,8 @@
     </div>
 </header>
 
-<!-- LATEST ITEMS =============================-->
-<section class="item content">
-    <div th:include="fragments/articlesListPreview :: articlesListPreview(${articles})"></div>
-</section>
-
 <!-- FOOTER =============================-->
 <div th:replace="fragments/footer :: footer"></div>
 
-<!-- SCRIPTS =============================-->
-<script th:src="@{/static/js/jquery-.js}"></script>
-<script th:src="@{/static/js/bootstrap.min.js}"></script>
-<script th:src="@{/static/js/anim.js}"></script>
-<script>
-    //----HOVER CAPTION---//
-    jQuery(document).ready(function ($) {
-        $('.fadeshop').hover(
-            function () {
-                $(this).find('.captionshop').fadeIn(150);
-            },
-            function () {
-                $(this).find('.captionshop').fadeOut(150);
-            }
-        );
-    });
-</script>
-
 </body>
 </html>
-

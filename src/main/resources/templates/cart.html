@@ -1,10 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Cart</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
 <body>
+
+<!-- HEADER =============================-->
+<header class="item header margin-top-0">
+    <div class="wrapper">
+        <div th:replace="fragments/header :: header"></div>
+    </div>
+</header>
+
+<!-- ITEMS ============================= -->
+<section class="item content">
+    <div th:if="${session.articles_in_cart.isEmpty()}">
+        <h2>Le panier est vide</h2>
+    </div>
+    <div th:if="${not session.articles_in_cart.isEmpty()}">
+        <h2>Panier</h2>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Quantité</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="art : ${session.articles_in_cart}">
+                <td th:text="${art.article.name}"></td>
+                <td th:text="${art.article.price}"></td>
+                <td>
+                    <form th:action="@{/cart/update/{id}(id=${art.article.id})}" method="post">
+                        <input th:value="${art.quantity}" type="number" id="quantity"
+                               name="quantity" min="1" th:max="${art.article.stock}">
+                        <input value="save" type="submit">
+                    </form>
+                </td>
+                <td><a class="btn btn-primary" th:href="@{/cart/remove/{id}(id=${art.article.id})}">remove</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- FOOTER =============================-->
+<div th:replace="fragments/footer :: footer"></div>
 
 </body>
 </html>
