@@ -136,19 +136,38 @@ public class CartController {
         }
 
         List<Cart_Article> cart_articles;
+        Cart_Article cart_article = null;
 
         // Si l'utilisateur est connecté. Mettre à jour son panier.
         if (isConnected) {
-            Cart_Article cart_article = cartArticleRepository.findCart_ArticleByIds_Article_IdAndIds_Cart_IdUser(artId, cartId);
+            cart_article = cartArticleRepository.findCart_ArticleByIds_Article_IdAndIds_Cart_IdUser(artId, cartId);
+
+            if (cart_article == null) {
+                add(model, session, artId);
+                cart_article = cartArticleRepository.findCart_ArticleByIds_Article_IdAndIds_Cart_IdUser(artId, cartId);
+            }
+
             cart_article.setQuantity(quantity);
             cartArticleRepository.save(cart_article);   // update
             cart_articles = cartArticleRepository.findCart_ArticlesByIds_Cart_IdUser(cartId);
-        } else { // sinon il faut traité le panier de la session.
+        } else { // sinon il faut traiter le panier de la session.
             cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
             for(Cart_Article c : cart_articles){
                 if ( c.getArticle().getId() == artId ){
+                    cart_article = c;
                     c.setQuantity(quantity);
                     break;
+                }
+            }
+
+            if (cart_article == null) {
+                add(model, session, artId);
+                cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
+                for(Cart_Article c : cart_articles){
+                    if ( c.getArticle().getId() == artId ){
+                        c.setQuantity(quantity);
+                        break;
+                    }
                 }
             }
         }
