@@ -1,9 +1,4 @@
 package ch.heigvd.sprint0.model;
-import org.hibernate.annotations.Type;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import javax.persistence.*;
 import java.util.Set;

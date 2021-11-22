@@ -11,5 +11,4 @@ import java.util.Optional;
 public interface IArticleService {
     List<Article> findAll();
     Optional<Article> findById(int id);
-    List<Cart_Article> findCartArticleFromUser(int id);
 }

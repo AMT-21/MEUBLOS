@@ -1,6 +1,7 @@
 package ch.heigvd.sprint0.repository;
 
 import ch.heigvd.sprint0.model.Article;
+import ch.heigvd.sprint0.model.Article_Category;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
