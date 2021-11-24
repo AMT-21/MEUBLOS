@@ -53,7 +53,7 @@
                         <th scope="col">catégorie(s)</th>
                     </tr>
                     </thead>
-                    <tbody th:each="article, iter: ${articles}" th:insert="fragments/articlesListAdminPreview :: articlesListAdminPreview(${article})">
+                    <tbody th:each="article: ${articles}" th:insert="fragments/articlesListAdminPreview :: articlesListAdminPreview(${article})">
                     </tbody>
                 </table>
             </div>
@@ -84,7 +84,7 @@
 </script>
 <script>
     function rowClicked(value) {
-        location.href = "/admin/editArticle?id=" + value;
+        location.href = "/admin/article?id=" + value;
     }
 </script>
 

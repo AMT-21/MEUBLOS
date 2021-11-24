@@ -24,7 +24,12 @@
                 <div class="col-md-12 text-center">
                     <div class="text-pageheader">
                         <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s">
-                            Admin article
+                            <div th:if="${selectedArticle} == null">
+                                Ajouter un article
+                            </div>
+                            <div th:if="${selectedArticle} != null">
+                                Modifier un article
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -37,11 +42,53 @@
 <!-- CONTENT =============================-->
 <section class="item content" style="position: relative; z-index: 9">
     <div class="container toparea">
-        <div class="row">
-            <div class="col-md-12">
-
+        <form style="padding: unset" action="#" th:action="@{/admin/article}" th:object="${article}" method="post">
+            <div class="row">
+                <div class="col-12">
+                    <div th:if="${selectedArticle} != null" class="form-group row">
+                        <label for="staticId" class="col-sm-2 col-form-label">Id</label>
+                        <div class="col-sm-10">
+                            <input type="text" readonly class="form-control-plaintext" id="staticId" th:value="${selectedArticle.id}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="form-select">Sélectionner une/des catégorie(s) :</label>
+                        <select class="form-select" multiple aria-label="multiple select example" th:field="*{article_category_list}">
+                            <option th:each="category: ${categories}" th:value="${category.nameCategory}" th:text="${category.nameCategory}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="name">Nom :</label>
+                        <input class="form-control" id="name" th:field="*{name}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label for="image">Image :</label>
+                        <input type="file" class="form-control" id="image" />
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="description">Description :</label>
+                            <textarea class="form-control" id="description" th:field="*{description}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Prix :</label>
+                            <input class="form-control" id="price" type="number" th:field="*{price}">
+                        </div>
+                        <div class="form-group">
+                            <label for="stock">Stock :</label>
+                            <input class="form-control" id="stock" type="number" th:field="*{stock}">
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+            <button type="submit" class="btn btn-primary">Créer</button>
+        </form>
     </div>
 </section>
 

@@ -38,4 +38,9 @@ public class ArticleService implements IArticleService {
     public List<Cart_Article> findCartArticleFromUser(int id) {
         return new LinkedList<>(cartRepository.findById(id).get().getCart_article_list());
     }
+
+    @Override
+    public void addArticle(Article article) {
+        articleRepository.save(article);
+    }
 }

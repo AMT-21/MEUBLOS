@@ -1,4 +1,6 @@
 package ch.heigvd.sprint0.model;
+import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
+import ch.heigvd.sprint0.repository.CategoryRepository;
 import org.hibernate.annotations.Type;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.Query;
@@ -6,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 //The @Entity annotation specifies that the class is an entity and is mapped to a database table while the @Table
 // annotation specifies the name of the database table to be used for mapping.
@@ -85,6 +88,10 @@ public class Article {
         return price;
     }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     public void setPrixVente(int price) {
         this.price = price;
     }
@@ -95,5 +102,17 @@ public class Article {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public void setArticle_category_list(String categoryName) {
+        Category c = new Category(categoryName);
+        Article_Category_Ids ids = new Article_Category_Ids(this, c);
+        Set<Article_Category> articleCategories = new HashSet<>();
+        articleCategories.add(new Article_Category(ids));
+        this.article_category_list = articleCategories;
+    }
+
+    public Set<Article_Category> getArticle_category_list() {
+        return article_category_list;
     }
 }

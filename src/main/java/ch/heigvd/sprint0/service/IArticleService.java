@@ -12,4 +12,5 @@ public interface IArticleService {
     List<Article> findAll();
     Optional<Article> findById(int id);
     List<Cart_Article> findCartArticleFromUser(int id);
+    void addArticle(Article article);
 }
