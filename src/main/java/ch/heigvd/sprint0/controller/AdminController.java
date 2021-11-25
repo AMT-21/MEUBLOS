@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.swing.text.html.Option;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,12 +64,13 @@ public class AdminController {
             }
         }
 
-        if(error != null && errorMsg != null) {
+        if(error != null) {
             if ("DescAlreadyUsed".equals(error)) {
                 error = "Cette description d'article est déjà utilisée par l'article " + errorMsg;
             }
-        } else {
-            error = null;
+            if ("NotAnImage".equals(error)) {
+                error = "L'image n'est pas valide";
+            }
         }
 
         List<Category> categories = (List<Category>) categoryRepository.findAll();
@@ -79,23 +82,40 @@ public class AdminController {
     }
 
     @PostMapping("/admin/article")
-    public String articleSubmit(@ModelAttribute Article article, Model model, @RequestParam("image") MultipartFile image) {
+    public String articleSubmit(@ModelAttribute Article article, Model model, @RequestParam(value = "image", required = false) MultipartFile image) {
         // Vérifier que la description n'est pas déjà utilisée par un autre article
         Optional<Article> articleWithSameDescription = articleService.findByDescription(article.getDescription());
         if(articleWithSameDescription.isPresent()) {
             return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
         }
 
-        articleService.addArticle(article);
-        Article insertedArticle = articleService.findTopByOrderByIdDesc().get(0);
+        if(!image.isEmpty()) {
+            // On accepte que les images
+            try (InputStream input = image.getInputStream()) {
+                try { ImageIO.read(input).toString(); } catch (Exception e) {
+                    // It's not an image.
+                    return "redirect:/admin/article?error=NotAnImage";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        try {
-            // Get the file and save it somewhere
-            byte[] bytes = image.getBytes();
-            Path path = Paths.get("F://temp//" + insertedArticle.getId());
-            Files.write(path, bytes);
-        } catch (IOException e) {
-            e.printStackTrace();
+            articleService.addArticle(article);
+            Article insertedArticle = articleService.findTopByOrderByIdDesc().get(0);
+            // Upload de l'image
+            try {
+                Path path = Paths.get("uploads");
+                if(!Files.exists(path))
+                    Files.createDirectory(path);
+
+                String extension = "." + image.getOriginalFilename().split("\\.")[1];
+                Files.copy(image.getInputStream(), path.resolve(insertedArticle.getId().toString() + extension));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // ajout d'un article sans image
+            articleService.addArticle(article);
         }
 
         return "redirect:/admin";
