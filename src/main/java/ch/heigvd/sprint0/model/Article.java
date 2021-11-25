@@ -8,7 +8,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 //The @Entity annotation specifies that the class is an entity and is mapped to a database table while the @Table
 // annotation specifies the name of the database table to be used for mapping.
@@ -49,8 +51,8 @@ public class Article {
     @OneToMany(mappedBy = "ids.article")
     private Set<Cart_Article> cart_article_list;
 
-    @OneToMany(mappedBy = "ids.article")
-    private Set<Article_Category> article_category_list;
+    @OneToMany(mappedBy = "ids.article", cascade = CascadeType.PERSIST)
+    private List<Article_Category> article_category_list;
 
     public Article(){
 
@@ -105,14 +107,16 @@ public class Article {
     }
 
     public void setArticle_category_list(String categoryName) {
-        Category c = new Category(categoryName);
-        Article_Category_Ids ids = new Article_Category_Ids(this, c);
-        Set<Article_Category> articleCategories = new HashSet<>();
-        articleCategories.add(new Article_Category(ids));
+        List<Article_Category> articleCategories = new ArrayList<>();
+        for(String category : categoryName.split(",")) {
+            Category c = new Category(category);
+            Article_Category_Ids ids = new Article_Category_Ids(this, c);
+            articleCategories.add(new Article_Category(ids));
+        }
         this.article_category_list = articleCategories;
     }
 
-    public Set<Article_Category> getArticle_category_list() {
+    public List<Article_Category> getArticle_category_list() {
         return article_category_list;
     }
 }

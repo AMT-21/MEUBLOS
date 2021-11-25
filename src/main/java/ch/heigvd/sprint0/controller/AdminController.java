@@ -16,7 +16,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Controller
@@ -38,9 +44,11 @@ public class AdminController {
     }
 
     @GetMapping("/admin/article")
-    public String adminArticle(Model model, @RequestParam(name = "id", required = false) String id) {
+    public String adminArticle(Model model, @RequestParam(name = "id", required = false) String id,
+                               @RequestParam(name = "error", required = false) String error,
+                               @RequestParam(name = "error_msg", required = false) String errorMsg) {
         if(id != null && !id.chars().allMatch(Character::isDigit))
-            return "error";
+            return "redirect:/admin";
 
         Article modelArticle = null;
         if(id != null) {
@@ -52,27 +60,44 @@ public class AdminController {
             for(Article_Category ac : modelArticle.getArticle_category_list()) {
                 System.out.println(ac.getCategory().getNameCategory());
             }
+        }
 
+        if(error != null && errorMsg != null) {
+            if ("DescAlreadyUsed".equals(error)) {
+                error = "Cette description d'article est déjà utilisée par l'article " + errorMsg;
+            }
+        } else {
+            error = null;
         }
 
         List<Category> categories = (List<Category>) categoryRepository.findAll();
         model.addAttribute("selectedArticle", modelArticle); // article qui se trouve dans l'url
         model.addAttribute("categories", categories);
-        model.addAttribute("article", new Article());
+        model.addAttribute("article", new Article()); // article qui va être remplit dans le formulaire
+        model.addAttribute("error", error);
         return "adminArticle.html";
     }
 
     @PostMapping("/admin/article")
-    public String articleSubmit(@ModelAttribute Article article, Model model) {
-        System.out.println(article.getArticle_category_list());
-
-        /*Article_Category_Ids ids = new Article_Category_Ids(article, new Category("Armoire", new Set<Article_Category>()));
-        Set<Article_Category> articleCategories = new HashSet<>();
-        articleCategories.add(new Article_Category(ids));
-        article.setArticle_category_list(articleCategories);*/
+    public String articleSubmit(@ModelAttribute Article article, Model model, @RequestParam("image") MultipartFile image) {
+        // Vérifier que la description n'est pas déjà utilisée par un autre article
+        Optional<Article> articleWithSameDescription = articleService.findByDescription(article.getDescription());
+        if(articleWithSameDescription.isPresent()) {
+            return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+        }
 
         articleService.addArticle(article);
+        Article insertedArticle = articleService.findTopByOrderByIdDesc().get(0);
 
-        return "success";
+        try {
+            // Get the file and save it somewhere
+            byte[] bytes = image.getBytes();
+            Path path = Paths.get("F://temp//" + insertedArticle.getId());
+            Files.write(path, bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/admin";
     }
 }

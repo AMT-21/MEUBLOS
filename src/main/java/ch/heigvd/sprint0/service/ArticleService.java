@@ -34,6 +34,14 @@ public class ArticleService implements IArticleService {
         return articleRepository.findById(id);
     }
 
+    public Optional<Article> findByDescription(String description) {
+        return articleRepository.findByDescription(description);
+    }
+
+    public List<Article> findTopByOrderByIdDesc() {
+        return articleRepository.findTopByOrderByIdDesc();
+    }
+
     @Override
     public List<Cart_Article> findCartArticleFromUser(int id) {
         return new LinkedList<>(cartRepository.findById(id).get().getCart_article_list());
