@@ -59,7 +59,10 @@
                     <div class="form-group">
                         <label for="form-select">Sélectionner une/des catégorie(s) :</label>
                         <select class="form-select" multiple="multiple" th:field="*{article_category_list}" required>
-                            <option th:each="category: ${categories}" th:value="${category.nameCategory}" th:text="${category.nameCategory}"></option>
+                            <option th:each="category: ${categories}"
+                                    th:value="${category.nameCategory}"
+                                    th:text="${category.nameCategory}"
+                                    th:selected="${#lists.contains(selectedArticle.getArticle_category_list, category)}"></option>
                         </select>
                     </div>
                 </div>

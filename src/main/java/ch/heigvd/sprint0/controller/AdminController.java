@@ -2,13 +2,10 @@ package ch.heigvd.sprint0.controller;
 
 import ch.heigvd.sprint0.model.Article;
 import ch.heigvd.sprint0.model.Article_Category;
-import ch.heigvd.sprint0.model.Article_Category_Ids;
 import ch.heigvd.sprint0.model.Category;
 import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
-import ch.heigvd.sprint0.repository.ArticleRepository;
 import ch.heigvd.sprint0.repository.CategoryRepository;
 import ch.heigvd.sprint0.service.IArticleService;
-import org.apache.tomcat.util.buf.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AdminController {
@@ -57,10 +54,6 @@ public class AdminController {
             Optional<Article> article = articleService.findById(Integer.parseInt(id));
             if(article.isPresent()) {
                 modelArticle = article.get();
-            }
-
-            for(Article_Category ac : modelArticle.getArticle_category_list()) {
-                System.out.println(ac.getCategory().getNameCategory());
             }
         }
 
