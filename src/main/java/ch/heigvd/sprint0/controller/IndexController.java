@@ -16,7 +16,6 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
         model.addAttribute("articles", articleRepository.findTop3ByOrderByIdDesc());
-        model.addAttribute("session", session);
         return "index.html";
     }
 }

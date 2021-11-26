@@ -19,7 +19,6 @@ public class ShopController {
     public String findArticles(Model model, HttpSession session) {
         List<Article> articles = articleService.findAll();
         model.addAttribute("articles", articles);
-        model.addAttribute("session", session);
         return "shop.html";
     }
 }

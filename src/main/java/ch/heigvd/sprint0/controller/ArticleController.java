@@ -25,7 +25,6 @@ public class ArticleController {
     public String findArticle(@PathVariable int id, Model model, HttpSession session) {
         Optional<Article> article = articleService.findById(id);
         model.addAttribute("article", article);
-        model.addAttribute("session", session);
         return "article_detail.html";
     }
 }
