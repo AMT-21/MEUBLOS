@@ -21,10 +21,5 @@ public class Category {
         this.nameCategory = nameCategory;
     }
 
-    /*public Category(String nameCategory, Set<Article_Category> article_category_list) {
-        this.nameCategory = nameCategory;
-        this.article_category_list = article_category_list;
-    }*/
-
     public Category() { }
 }

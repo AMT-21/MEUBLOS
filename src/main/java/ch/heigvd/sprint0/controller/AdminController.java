@@ -1,7 +1,6 @@
 package ch.heigvd.sprint0.controller;
 
 import ch.heigvd.sprint0.model.Article;
-import ch.heigvd.sprint0.model.Article_Category;
 import ch.heigvd.sprint0.model.Category;
 import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
 import ch.heigvd.sprint0.repository.CategoryRepository;
@@ -67,19 +66,32 @@ public class AdminController {
         }
 
         List<Category> categories = (List<Category>) categoryRepository.findAll();
-        model.addAttribute("selectedArticle", modelArticle); // article qui se trouve dans l'url
+        if(modelArticle != null)
+            model.addAttribute("article", modelArticle); // article qui se trouve dans l'url
+        else
+            model.addAttribute("article", new Article()); // article vide qui va être remplit dans le formulaire
         model.addAttribute("categories", categories);
-        model.addAttribute("article", new Article()); // article qui va être remplit dans le formulaire
         model.addAttribute("error", error);
         return "adminArticle.html";
     }
 
     @PostMapping("/admin/article")
-    public String articleSubmit(@ModelAttribute Article article, Model model, @RequestParam(value = "image", required = false) MultipartFile image) {
-        // Vérifier que la description n'est pas déjà utilisée par un autre article
+    public String articleSubmit(@ModelAttribute Article article, Model model,
+                                @RequestParam(value = "image", required = false) MultipartFile image) {
         Optional<Article> articleWithSameDescription = articleService.findByDescription(article.getDescription());
-        if(articleWithSameDescription.isPresent()) {
-            return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+        // C'est une modification d'article
+        if(article.getId() != null) {
+            // Vérifier que la description n'est pas déjà utilisée par un autre article
+            if(articleWithSameDescription.isPresent() && articleWithSameDescription.get().getId() != article.getId()) {
+                return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+            }
+
+        // C'est un ajout d'article
+        } else {
+            // Vérifier que la description n'est pas déjà utilisée par un autre article
+            if(articleWithSameDescription.isPresent()) {
+                return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+            }
         }
 
         if(!image.isEmpty()) {
@@ -93,8 +105,9 @@ public class AdminController {
                 e.printStackTrace();
             }
 
-            articleService.addArticle(article);
-            Article insertedArticle = articleService.findTopByOrderByIdDesc().get(0);
+            articleService.saveArticle(article);
+            // Récupère l'id du nouvel élément pour l'utiliser comme nom d'image
+            Article insertedArticle = article.getId() != null ? article : articleService.findTopByOrderByIdDesc().get(0);
             // Upload de l'image
             try {
                 Path path = Paths.get("uploads");
@@ -108,7 +121,7 @@ public class AdminController {
             }
         } else {
             // ajout d'un article sans image
-            articleService.addArticle(article);
+            articleService.saveArticle(article);
         }
 
         return "redirect:/admin";

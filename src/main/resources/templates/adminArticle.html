@@ -24,10 +24,10 @@
                 <div class="col-md-12 text-center">
                     <div class="text-pageheader">
                         <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s">
-                            <div th:if="${selectedArticle} == null">
+                            <div th:if="${article.name} == null">
                                 Ajouter un article
                             </div>
-                            <div th:if="${selectedArticle} != null">
+                            <div th:if="${article.name} != null">
                                 Modifier un article
                             </div>
                         </div>
@@ -42,34 +42,38 @@
 <!-- CONTENT =============================-->
 <section class="item content" style="position: relative; z-index: 9">
     <div class="container toparea">
-        <form style="padding: unset" action="#" th:action="@{/admin/article}" th:object="${article}" method="post" enctype="multipart/form-data">
+        <form style="padding: unset" action="#"
+              th:action="@{/admin/article}"
+              th:object="${article}" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-12">
                     <div th:if="${error} != null">
                         <div class="alert alert-danger" role="alert" th:text="${error}"></div>
                     </div>
-                    <div th:if="${selectedArticle} != null" class="form-group row">
-                        <label for="staticId" class="col-sm-2 col-form-label">Id</label>
+                    <div th:if="${article.name} != null" class="form-group row">
+                        <label class="col-sm-2 col-form-label">Id</label>
                         <div class="col-sm-10">
-                            <input type="text" readonly class="form-control-plaintext" id="staticId" th:value="${selectedArticle.id}">
+                            <input type="text" readonly class="form-control-plaintext" th:field="*{id}">
                         </div>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
                         <label for="form-select">Sélectionner une/des catégorie(s) :</label>
-                        <select class="form-select" multiple="multiple" th:field="*{article_category_list}" required>
+                        <select class="form-select" multiple="multiple" name="article_category_list">
                             <option th:each="category: ${categories}"
                                     th:value="${category.nameCategory}"
                                     th:text="${category.nameCategory}"
-                                    th:selected="${#lists.contains(selectedArticle.getArticle_category_list, category)}"></option>
+                                    th:selected="${article.name} != null and ${article.containsCategory(category)}"></option>
                         </select>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
                         <label for="name">Nom :</label>
-                        <input class="form-control" id="name" th:field="*{name}" required/>
+                        <input class="form-control" id="name"
+                               th:field="*{name}"
+                               required/>
                     </div>
                 </div>
                 <div class="row">

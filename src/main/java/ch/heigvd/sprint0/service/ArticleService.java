@@ -48,7 +48,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public void addArticle(Article article) {
+    public void saveArticle(Article article) {
         articleRepository.save(article);
     }
 }
