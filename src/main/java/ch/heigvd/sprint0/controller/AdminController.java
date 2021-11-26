@@ -1,6 +1,8 @@
 package ch.heigvd.sprint0.controller;
 
 import ch.heigvd.sprint0.model.Article;
+import ch.heigvd.sprint0.model.Article_Category;
+import ch.heigvd.sprint0.model.Article_Category_Ids;
 import ch.heigvd.sprint0.model.Category;
 import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
 import ch.heigvd.sprint0.repository.CategoryRepository;
@@ -20,6 +22,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +32,7 @@ public class AdminController {
     @Autowired
     private IArticleService articleService;
     @Autowired
-    private ArticleCategoryRepository articleCategoriesService;
+    private ArticleCategoryRepository articleCategoryRepository;
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -77,13 +80,41 @@ public class AdminController {
 
     @PostMapping("/admin/article")
     public String articleSubmit(@ModelAttribute Article article, Model model,
-                                @RequestParam(value = "image", required = false) MultipartFile image) {
+                                @RequestParam(value = "image", required = false) MultipartFile image,
+                                @RequestParam(value = "article_category_list", required = false) String article_category_list) {
+
         Optional<Article> articleWithSameDescription = articleService.findByDescription(article.getDescription());
         // C'est une modification d'article
         if(article.getId() != null) {
             // Vérifier que la description n'est pas déjà utilisée par un autre article
             if(articleWithSameDescription.isPresent() && articleWithSameDescription.get().getId() != article.getId()) {
                 return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+            }
+
+            if(article_category_list == null) {
+                // aucune catégorie cochée, on les supprime tous si elles existent
+                for(Article_Category articleAc : articleCategoryRepository.findArticle_CategoriesByIds_Article(article)) {
+                    Article_Category_Ids ids = new Article_Category_Ids(article, articleAc.getCategory());
+                    articleCategoryRepository.deleteById(ids);
+                }
+            } else {
+                // supprimer les catégories qui ne sont pas cochées
+                List<Category> allCats = (List<Category>) categoryRepository.findAll();
+                String[] articleCats = article_category_list.split(",");
+                for(Category c : allCats) {
+                    // si la catégorie n'appartient pas à l'article
+                    if(!Arrays.asList(articleCats).contains(c.getNameCategory())) {
+                        // si la catégorie est une ancienne catégorie de l'article
+                        Category formerCat = new Category(c.getNameCategory());
+                        Article_Category_Ids ids = new Article_Category_Ids(article, formerCat);
+
+                        for(Article_Category articleAc : articleCategoryRepository.findArticle_CategoriesByIds_Article(article)) {
+                            if(articleAc.getCategory().getNameCategory().equals(c.getNameCategory())) {
+                                articleCategoryRepository.deleteById(ids);
+                            }
+                        }
+                    }
+                }
             }
 
         // C'est un ajout d'article
@@ -94,7 +125,10 @@ public class AdminController {
             }
         }
 
-        if(!image.isEmpty()) {
+        articleService.saveArticle(article);
+
+
+        /*if(!image.isEmpty()) {
             // On accepte que les images
             try (InputStream input = image.getInputStream()) {
                 try { ImageIO.read(input).toString(); } catch (Exception e) {
@@ -122,7 +156,7 @@ public class AdminController {
         } else {
             // ajout d'un article sans image
             articleService.saveArticle(article);
-        }
+        }*/
 
         return "redirect:/admin";
     }
