@@ -45,8 +45,10 @@ public class CartController {
         return "cart.html";
     }
 
-    @GetMapping("/cart/add/{artId}")
-    public String add(Model model, HttpSession session, @PathVariable("artId") int artId) {
+    @PostMapping("/cart/add/{artId}")
+    public String add(Model model, HttpSession session,
+                      @PathVariable("artId") int artId,
+                      @RequestParam("quantity") Integer quantity) {
 
         // Si l'utilisateur est connecté.
         Integer cartId = (Integer) session.getAttribute("userId");
@@ -58,7 +60,7 @@ public class CartController {
 
         List<Cart_Article> cart_articles;
 
-        Cart_Article objToAdd = new Cart_Article(ids, 1);
+        Cart_Article objToAdd = new Cart_Article(ids, quantity);
 
         // Rajoute l'article au panier de l'utilisateur ou dans le panier de la session
         if (isConnected) {
@@ -77,7 +79,8 @@ public class CartController {
     }
 
     @GetMapping("/cart/remove/{artId}")
-    public String remove(Model model, HttpSession session, @PathVariable("artId") int artId) {
+    public String remove(Model model, HttpSession session,
+                         @PathVariable("artId") int artId) {
 
         Integer cartId = (Integer) session.getAttribute("userId");
         boolean isConnected = cartId != null;
@@ -125,7 +128,9 @@ public class CartController {
     }
 
     @PostMapping("/cart/update/{artId}")
-    public String updateQuantity(Model model, HttpSession session, @PathVariable("artId") int artId, @RequestParam("quantity") Integer quantity) {
+    public String updateQuantity(Model model, HttpSession session,
+                                 @PathVariable("artId") int artId,
+                                 @RequestParam("quantity") Integer quantity) {
         // Si l'utilisateur est connecté.
         Integer cartId = (Integer) session.getAttribute("userId");
         boolean isConnected = cartId != null;
@@ -143,7 +148,7 @@ public class CartController {
             cart_article = cartArticleRepository.findCart_ArticleByIds_Article_IdAndIds_Cart_IdUser(artId, cartId);
 
             if (cart_article == null) {
-                add(model, session, artId);
+                add(model, session, artId, 1);
                 cart_article = cartArticleRepository.findCart_ArticleByIds_Article_IdAndIds_Cart_IdUser(artId, cartId);
             }
 
@@ -161,7 +166,7 @@ public class CartController {
             }
 
             if (cart_article == null) {
-                add(model, session, artId);
+                add(model, session, artId, 1);
                 cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
                 for(Cart_Article c : cart_articles){
                     if ( c.getArticle().getId() == artId ){
@@ -178,7 +183,7 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    // Récupère le contenu du panier si déjà dans la session. Sinon la crée
+    // Récupère le contenu du panier si déjà dans la session. Sinon la crée ou l'ajoute à l'utilisateur connecté
     private List<Cart_Article> getCartArticles(HttpSession session) {
         List<Cart_Article> cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
         if (cart_articles == null) { // Si session vide

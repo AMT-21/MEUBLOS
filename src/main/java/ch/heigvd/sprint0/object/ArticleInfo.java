@@ -1,14 +1,27 @@
 package ch.heigvd.sprint0.object;
 
 import ch.heigvd.sprint0.model.Article;
+import ch.heigvd.sprint0.model.Cart_Article;
 
 public class ArticleInfo {
     Article article;
+    Cart_Article cart_article;
     boolean canBePurchase;
+    boolean isAvailable;
+    boolean isInCart;
+    int quantity;
 
-    ArticleInfo(Article article) {
+    public ArticleInfo(Article article) {
+        this(article, null);
+    }
+
+    public ArticleInfo(Article article, Cart_Article cart_article) {
         this.article = article;
-        canBePurchase = article.getPrice() > 0 && article.getStock() > 0;
+        this.cart_article = cart_article;
+        isInCart = cart_article != null;
+        quantity = isInCart ? cart_article.getQuantity() : 0;
+        isAvailable = article.getStock() > 0;
+        canBePurchase = article.getPrice() > 0 && isAvailable;
     }
 
     public Integer getId() {
@@ -33,5 +46,17 @@ public class ArticleInfo {
 
     public boolean getCanBePurchase() {
         return canBePurchase;
+    }
+
+    public boolean getIsAvailable() {
+        return isAvailable;
+    }
+
+    public boolean getIsInCart() {
+        return isInCart;
+    }
+
+    public int getQuantity() {
+        return cart_article.getQuantity();
     }
 }
