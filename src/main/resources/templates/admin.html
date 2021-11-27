@@ -51,6 +51,7 @@
                         <th scope="col">prix</th>
                         <th scope="col">stock</th>
                         <th scope="col">catégorie(s)</th>
+                        <th scope="col">supprimer</th>
                     </tr>
                     </thead>
                     <tbody th:each="article: ${articles}" th:insert="fragments/articlesListAdminPreview :: articlesListAdminPreview(${article})">
@@ -85,6 +86,10 @@
 <script>
     function rowClicked(value) {
         location.href = "/admin/article?id=" + value;
+    }
+
+    function deleteClicked(value) {
+        location.href = "/admin/article/delete?id=" + value;
     }
 </script>
 

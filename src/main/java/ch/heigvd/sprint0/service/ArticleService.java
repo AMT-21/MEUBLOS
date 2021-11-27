@@ -51,4 +51,9 @@ public class ArticleService implements IArticleService {
     public void saveArticle(Article article) {
         articleRepository.save(article);
     }
+
+    @Override
+    public void deleteArticle(Article article) {
+        articleRepository.deleteById(article.getId());
+    }
 }

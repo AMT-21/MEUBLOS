@@ -14,5 +14,6 @@ public interface IArticleService {
     Optional<Article> findByDescription(String description);
     List<Cart_Article> findCartArticleFromUser(int id);
     void saveArticle(Article article);
-    public List<Article> findTopByOrderByIdDesc();
+    List<Article> findTopByOrderByIdDesc();
+    void deleteArticle(Article article);
 }

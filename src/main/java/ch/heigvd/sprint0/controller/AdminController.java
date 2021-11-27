@@ -160,4 +160,13 @@ public class AdminController {
 
         return "redirect:/admin";
     }
+
+    @GetMapping("/admin/article/delete")
+    public String adminArticle(Model model, @RequestParam(name = "id", required = false) String id) {
+        // L'id existe ?
+        Optional<Article> article = articleService.findById(Integer.parseInt(id));
+        article.ifPresent(value -> articleService.deleteArticle(value));
+
+        return "redirect:/admin";
+    }
 }
