@@ -23,6 +23,10 @@ public class Cart_Article implements Serializable {
         return ids.getCart();
     }
 
+    public void setCart(Cart cart) {
+        ids.setCart(cart);
+    }
+
     public Article getArticle() {
         return ids.getArticle();
     }

@@ -28,14 +28,7 @@
                             <span class="edd_price" th:text="${article.price}"></span>
                         </span>
                     </div>
-                    <div class="text-center" th:with="artId=${article.id}">
-                        <div th:if="${session.articles_in_cart.?[article.id == __${artId}__].isEmpty()}">
-                            <a class="btn btn-primary" th:href="@{/cart/add/{id}(id=${article.id})}">Ajouter au panier</a>
-                        </div>
-                        <div th:if="${not session.articles_in_cart.?[article.id == __${artId}__].isEmpty()}">
-                            <a class="btn btn-primary" th:href="@{/cart/remove/{id}(id=${article.id})}">Enlever du panier</a>
-                        </div>
-                    </div>
+                    <div th:include="fragments/actionArticle :: actionArticle(${article})"></div>
                 </div>
             </div>
         </div>

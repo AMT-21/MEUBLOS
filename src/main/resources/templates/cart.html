@@ -43,14 +43,15 @@
                 <td>
                     <form th:action="@{/cart/update/{id}(id=${art.article.id})}" method="post">
                         <input th:value="${art.quantity}" type="number" id="quantity"
-                               name="quantity" min="1" th:max="${art.article.stock}">
+                               name="quantity" min="0" th:max="${art.article.stock}">
                         <input value="save" type="submit">
                     </form>
                 </td>
-                <td><a class="btn btn-primary" th:href="@{/cart/remove/{id}(id=${art.article.id})}">remove</a></td>
+                <td><a class="btn btn-primary" th:href="@{/cart/remove/{id}(id=${art.article.id})}">Enlever</a></td>
             </tr>
             </tbody>
         </table>
+        <a class="btn btn-primary" th:href="@{/cart/removeAll}">Vider Panier</a>
     </div>
 </section>
 

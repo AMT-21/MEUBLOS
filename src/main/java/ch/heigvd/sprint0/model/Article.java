@@ -120,10 +120,6 @@ public class Article {
         this.article_category_list = articleCategories;
     }
 
-    /*public void setArticle_category_list(List<Article_Category> articleCategories) {
-        this.article_category_list = articleCategories;
-    }*/
-
     public List<Article_Category> getArticle_category_list() {
         return article_category_list;
     }

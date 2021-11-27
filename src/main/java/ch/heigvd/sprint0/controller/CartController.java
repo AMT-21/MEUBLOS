@@ -45,8 +45,10 @@ public class CartController {
         return "cart.html";
     }
 
-    @GetMapping("/cart/add/{artId}")
-    public String add(Model model, HttpSession session, @PathVariable("artId") int artId) {
+    @PostMapping("/cart/add/{artId}")
+    public String add(Model model, HttpSession session,
+                      @PathVariable("artId") int artId,
+                      @RequestParam("quantity") Integer quantity) {
 
         // Si l'utilisateur est connecté.
         Integer cartId = (Integer) session.getAttribute("userId");
@@ -58,12 +60,12 @@ public class CartController {
 
         List<Cart_Article> cart_articles;
 
-        Cart_Article objToAdd = new Cart_Article(ids, 1);
+        Cart_Article objToAdd = new Cart_Article(ids, quantity);
 
         // Rajoute l'article au panier de l'utilisateur ou dans le panier de la session
         if (isConnected) {
             cartArticleRepository.save(objToAdd);
-            cart_articles = articleService.findCartArticleFromUser(cartId);
+            cart_articles = cartArticleRepository.findCart_ArticlesByIds_Cart_IdUser(cartId);
         } else { // sinon il faut traité le panier de la session.
             cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
             cart_articles.add(objToAdd);
@@ -77,7 +79,8 @@ public class CartController {
     }
 
     @GetMapping("/cart/remove/{artId}")
-    public String remove(Model model, HttpSession session, @PathVariable("artId") int artId) {
+    public String remove(Model model, HttpSession session,
+                         @PathVariable("artId") int artId) {
 
         Integer cartId = (Integer) session.getAttribute("userId");
         boolean isConnected = cartId != null;
@@ -86,12 +89,9 @@ public class CartController {
 
         // Si l'utilisateur est connecté. Enlever l'article du panier.
         if (isConnected) {
-            Cart cart = cartRepository.findById(cartId).get();
-            Article article = articleRepository.findById(artId).get();
-            Cart_Article_Ids ids = new Cart_Article_Ids(cart, article);
-            cartArticleRepository.delete(cartArticleRepository.findById(ids).get());
-            cart_articles = articleService.findCartArticleFromUser(cartId);
-        } else { // sinon il faut juste effacé l'article du panier.
+            cartArticleRepository.deleteCart_ArticleByIds_Article_IdAndIds_Cart_IdUser(artId, cartId);
+            cart_articles = cartArticleRepository.findCart_ArticlesByIds_Cart_IdUser(cartId);
+        } else { // sinon il faut juste effacer l'article du panier.
             cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
             for(Cart_Article c : cart_articles){
                 if ( c.getArticle().getId() == artId ){
@@ -107,29 +107,72 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    @PostMapping("/cart/update/{artId}")
-    public String updateQuantity(Model model, HttpSession session, @PathVariable("artId") int artId, @RequestParam("quantity") Integer quantity) {
-        // Si l'utilisateur est connecté.
+    @GetMapping("/cart/removeAll")
+    public String remove(Model model, HttpSession session) {
+
         Integer cartId = (Integer) session.getAttribute("userId");
         boolean isConnected = cartId != null;
 
         List<Cart_Article> cart_articles;
 
+        // Si l'utilisateur est connecté. Enlever l'article du panier.
+        if (isConnected) {
+            cartArticleRepository.deleteCart_ArticlesByIds_Cart_IdUser(cartId);
+            cart_articles = cartArticleRepository.findCart_ArticlesByIds_Cart_IdUser(cartId);
+        }
+
+        // Mettre à jour la session.
+        session.setAttribute("articles_in_cart", new LinkedList<>());
+
+        return "redirect:/cart";
+    }
+
+    @PostMapping("/cart/update/{artId}")
+    public String updateQuantity(Model model, HttpSession session,
+                                 @PathVariable("artId") int artId,
+                                 @RequestParam("quantity") Integer quantity) {
+        // Si l'utilisateur est connecté.
+        Integer cartId = (Integer) session.getAttribute("userId");
+        boolean isConnected = cartId != null;
+        boolean toRemove = quantity < 1;
+
+        if (toRemove) {
+            return remove(model,session,artId);
+        }
+
+        List<Cart_Article> cart_articles;
+        Cart_Article cart_article = null;
+
         // Si l'utilisateur est connecté. Mettre à jour son panier.
         if (isConnected) {
-            Cart cart = cartRepository.findById(cartId).get();
-            Article article = articleRepository.findById(artId).get();
-            Cart_Article_Ids ids = new Cart_Article_Ids(cart, article);
-            Cart_Article cart_article = cartArticleRepository.findById(ids).get();
+            cart_article = cartArticleRepository.findCart_ArticleByIds_Article_IdAndIds_Cart_IdUser(artId, cartId);
+
+            if (cart_article == null) {
+                add(model, session, artId, 1);
+                cart_article = cartArticleRepository.findCart_ArticleByIds_Article_IdAndIds_Cart_IdUser(artId, cartId);
+            }
+
             cart_article.setQuantity(quantity);
             cartArticleRepository.save(cart_article);   // update
-            cart_articles = articleService.findCartArticleFromUser(cartId);
-        } else { // sinon il faut traité le panier de la session.
+            cart_articles = cartArticleRepository.findCart_ArticlesByIds_Cart_IdUser(cartId);
+        } else { // sinon il faut traiter le panier de la session.
             cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
             for(Cart_Article c : cart_articles){
                 if ( c.getArticle().getId() == artId ){
+                    cart_article = c;
                     c.setQuantity(quantity);
                     break;
+                }
+            }
+
+            if (cart_article == null) {
+                add(model, session, artId, 1);
+                cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
+                for(Cart_Article c : cart_articles){
+                    if ( c.getArticle().getId() == artId ){
+                        c.setQuantity(quantity);
+                        break;
+                    }
                 }
             }
         }
@@ -140,7 +183,7 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    // Récupère le contenu du panier si déjà dans la session. Sinon la crée
+    // Récupère le contenu du panier si déjà dans la session. Sinon la crée ou l'ajoute à l'utilisateur connecté
     private List<Cart_Article> getCartArticles(HttpSession session) {
         List<Cart_Article> cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
         if (cart_articles == null) { // Si session vide
@@ -149,7 +192,7 @@ public class CartController {
             // Récupère le panier de l'utilisateur si connecté.
             Integer cartId = (Integer) session.getAttribute("userId");
             if (cartId != null) {
-                cart_articles.addAll(articleService.findCartArticleFromUser(cartId));
+                cart_articles.addAll(cartArticleRepository.findCart_ArticlesByIds_Cart_IdUser(cartId));
             }
 
             // Met à jour la session

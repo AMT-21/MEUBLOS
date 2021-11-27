@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="actionArticle(article)">
+    <div th:if="${article.canBePurchase}">
+        <div class="text-center" th:with="artId=${article.id}">
+            <div th:if="${not article.isInCart}">
+                <form th:action="@{/cart/add/{id}(id=${article.id})}" method="post">
+                    <input class="form-control" th:value="1" type="number" id="quantity"
+                           name="quantity" min="1" th:max="${article.stock}">
+                    <input class="btn btn-primary" value="Ajouter au panier" type="submit">
+                </form>
+            </div>
+            <div th:if="${article.isInCart}">
+                <form th:action="@{/cart/update/{id}(id=${article.id})}" method="post">
+                    <input class="form-control" th:value="${article.quantity}" type="number" id="quantity"
+                           name="quantity" min="0" th:max="${article.stock}">
+                    <input value="Mettre à jour" type="submit">
+                </form>
+                <a class="btn btn-primary" th:href="@{/cart/remove/{id}(id=${article.id})}">Retirer du panier</a>
+            </div>
+        </div>
+    </div>
+    <div th:if="${not article.isAvailable}">
+        <h1>UNAVAILABLE</h1>
+    </div>
+</div>
+
+</body>
+</html>
