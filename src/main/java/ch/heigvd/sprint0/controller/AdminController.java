@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -162,11 +163,72 @@ public class AdminController {
     }
 
     @GetMapping("/admin/article/delete")
-    public String adminArticle(Model model, @RequestParam(name = "id", required = false) String id) {
+    public String articleDelete(Model model, @RequestParam(name = "id") String id) {
         // L'id existe ?
         Optional<Article> article = articleService.findById(Integer.parseInt(id));
         article.ifPresent(value -> articleService.deleteArticle(value));
 
         return "redirect:/admin";
     }
+
+    @GetMapping("/admin/categories")
+    public String adminCategories(Model model,
+                                  @RequestParam(name = "error", required = false) String error) {
+        List<Category> categories = (List<Category>) categoryRepository.findAll();
+        if(!categories.isEmpty()) {
+            model.addAttribute("categories", categories);
+        }
+
+        model.addAttribute("category", new Category());
+        model.addAttribute("error", error);
+        return "adminCategories.html";
+    }
+
+    @PostMapping("/admin/categories")
+    public String categorySubmit(@ModelAttribute Category category, Model model) {
+        // Vérifier que le nom de la catégorie existe pas déjà
+        Optional<Category> cat = categoryRepository.findById(category.getNameCategory());
+        if(cat.isPresent()) {
+            return "redirect:/admin/categories?error=catAlreadyExists";
+        }
+
+        categoryRepository.save(new Category(category.getNameCategory()));
+        return "redirect:/admin/categories";
+    }
+
+    @GetMapping("/admin/categories/confirmDeletion")
+    public String confirmCategoryDeletion(Model model, @RequestParam(name = "id") String id) {
+        // L'id existe ?
+        Optional<Category> category = categoryRepository.findById(id);
+        if(category.isPresent()) {
+            // Récupérer la liste des articles impactés
+            List<Article_Category> acs = articleCategoryRepository.findArticle_CategoriesByIds_Category(new Category(id));
+            if(acs.isEmpty()) {
+                categoryRepository.delete(new Category(id));
+                return "redirect:/admin/categories";
+            }
+            List<Article> concernedArticles = new ArrayList<>();
+            for(Article_Category ac : acs) {
+                concernedArticles.add(ac.getArticle());
+            }
+
+            model.addAttribute("articles", concernedArticles);
+            model.addAttribute("category", category.get());
+            return "adminCategoriesConfirmDeletion.html";
+        }
+
+        return "redirect:/admin/categories";
+    }
+
+    @GetMapping("/admin/categories/delete")
+    public String categoryDelete(Model model, @RequestParam(name = "id") String id) {
+        // L'id existe ?
+        Optional<Category> category = categoryRepository.findById(id);
+        if(category.isPresent()) {
+            categoryRepository.delete(new Category(id));
+        }
+
+        return "redirect:/admin/categories";
+    }
+
 }
