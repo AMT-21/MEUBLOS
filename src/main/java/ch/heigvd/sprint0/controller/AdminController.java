@@ -127,8 +127,7 @@ public class AdminController {
 
         articleService.saveArticle(article);
 
-
-        /*if(!image.isEmpty()) {
+        if(!image.isEmpty()) {
             // On accepte que les images
             try (InputStream input = image.getInputStream()) {
                 try { ImageIO.read(input).toString(); } catch (Exception e) {
@@ -139,7 +138,6 @@ public class AdminController {
                 e.printStackTrace();
             }
 
-            articleService.saveArticle(article);
             // Récupère l'id du nouvel élément pour l'utiliser comme nom d'image
             Article insertedArticle = article.getId() != null ? article : articleService.findTopByOrderByIdDesc().get(0);
             // Upload de l'image
@@ -149,14 +147,16 @@ public class AdminController {
                     Files.createDirectory(path);
 
                 String extension = "." + image.getOriginalFilename().split("\\.")[1];
+                Path filePath = path.resolve(insertedArticle.getId().toString() + extension);
+                // si l'image existe déjà => remplacement
+                if(Files.exists(filePath)) {
+                    Files.delete(filePath);
+                }
                 Files.copy(image.getInputStream(), path.resolve(insertedArticle.getId().toString() + extension));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            // ajout d'un article sans image
-            articleService.saveArticle(article);
-        }*/
+        }
 
         return "redirect:/admin";
     }
