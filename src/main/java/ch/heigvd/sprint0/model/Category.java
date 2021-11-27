@@ -10,6 +10,10 @@ public class Category {
     @Column(name = "nomCategorie")
     private String nameCategory;
 
+    public void setNameCategory(String nameCategory) {
+        this.nameCategory = nameCategory;
+    }
+
     public String getNameCategory() {
         return nameCategory;
     }

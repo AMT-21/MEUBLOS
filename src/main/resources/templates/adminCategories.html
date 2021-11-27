@@ -24,7 +24,7 @@
                 <div class="col-md-12 text-center">
                     <div class="text-pageheader">
                         <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s">
-                            Admin
+                            Admin - Gestion des catégories
                         </div>
                     </div>
                 </div>
@@ -37,27 +37,31 @@
 <!-- CONTENT =============================-->
 <section class="item content" style="position: relative; z-index: 9">
     <div class="container toparea">
-        <div class="row">
-            <div class="col-md-12">
-                <a class="btn btn-primary" href="/admin/article" role="button">Ajouter un article</a>
-                <a class="btn btn-primary" href="/admin/categories" role="button">Modifier les catégories</a>
-                <br />
-                <br />
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">nom</th>
-                        <th scope="col">prix</th>
-                        <th scope="col">stock</th>
-                        <th scope="col">catégorie(s)</th>
-                        <th scope="col">supprimer</th>
-                    </tr>
-                    </thead>
-                    <tbody th:each="article: ${articles}" th:insert="fragments/articlesListAdminPreview :: articlesListAdminPreview(${article})">
-                    </tbody>
-                </table>
+        <form style="padding: unset" action="#"
+              th:object="${category}"
+              th:action="@{/admin/categories}" method="post">
+            <div class="row justify-content-center">
+                <div th:if="${error} != null and ${error} == catAlreadyExists">
+                    <div class="alert alert-danger" role="alert">
+                        Erreur ! La catégorie existe déjà
+                    </div>
+                </div>
+                <div class="col-3">
+                    Nouvelle catégorie :
+                </div>
+                <div class="col-4">
+                    <input type="text" th:field="*{nameCategory}" class="form-control mx-sm-3" >
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
             </div>
+        </form>
+        <div class="row">
+            <div class="col-12" style="margin-top: 5%; margin-bottom: 5%;">
+                <u>Liste des catégories :</u>
+            </div>
+            <div class="col-4"  th:each="cat: ${categories}" th:insert="fragments/categoryAdminElement :: categoryAdminElement(${cat})"></div>
         </div>
     </div>
 </section>
@@ -84,12 +88,8 @@
     });
 </script>
 <script>
-    function rowClicked(value) {
-        location.href = "/admin/article?id=" + value;
-    }
-
     function deleteClicked(value) {
-        location.href = "/admin/article/delete?id=" + value;
+        location.href = "/admin/categories/confirmDeletion?id=" + value;
     }
 </script>
 

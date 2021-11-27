@@ -23,8 +23,8 @@
             <div class="row">
                 <div class="col-md-12 text-center">
                     <div class="text-pageheader">
-                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s">
-                            Admin
+                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s"
+                        th:text="'Admin - Confirmation de suppression de la catégorie ' +  ${category.nameCategory}">
                         </div>
                     </div>
                 </div>
@@ -37,28 +37,15 @@
 <!-- CONTENT =============================-->
 <section class="item content" style="position: relative; z-index: 9">
     <div class="container toparea">
-        <div class="row">
-            <div class="col-md-12">
-                <a class="btn btn-primary" href="/admin/article" role="button">Ajouter un article</a>
-                <a class="btn btn-primary" href="/admin/categories" role="button">Modifier les catégories</a>
-                <br />
-                <br />
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">id</th>
-                        <th scope="col">nom</th>
-                        <th scope="col">prix</th>
-                        <th scope="col">stock</th>
-                        <th scope="col">catégorie(s)</th>
-                        <th scope="col">supprimer</th>
-                    </tr>
-                    </thead>
-                    <tbody th:each="article: ${articles}" th:insert="fragments/articlesListAdminPreview :: articlesListAdminPreview(${article})">
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <u>Les articles suivants vont être impactés :</u>
+
+        <ul>
+            <li th:each="article: ${articles}" th:text="${article.name}"></li>
+        </ul>
+
+        <button class="btn btn-danger" type="button"
+                th:data-parameter1="${category.nameCategory}"
+                th:onclick="deleteClicked(this.getAttribute('data-parameter1'))">Confirmer la suppression</button>
     </div>
 </section>
 
@@ -84,12 +71,8 @@
     });
 </script>
 <script>
-    function rowClicked(value) {
-        location.href = "/admin/article?id=" + value;
-    }
-
     function deleteClicked(value) {
-        location.href = "/admin/article/delete?id=" + value;
+        location.href = "/admin/categories/delete?id=" + value;
     }
 </script>
 

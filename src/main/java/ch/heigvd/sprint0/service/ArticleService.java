@@ -33,4 +33,27 @@ public class ArticleService implements IArticleService {
     public Optional<Article> findById(int id) {
         return articleRepository.findById(id);
     }
+
+    public Optional<Article> findByDescription(String description) {
+        return articleRepository.findByDescription(description);
+    }
+
+    public List<Article> findTopByOrderByIdDesc() {
+        return articleRepository.findTopByOrderByIdDesc();
+    }
+
+    @Override
+    public List<Cart_Article> findCartArticleFromUser(int id) {
+        return new LinkedList<>(cartRepository.findById(id).get().getCart_article_list());
+    }
+
+    @Override
+    public void saveArticle(Article article) {
+        articleRepository.save(article);
+    }
+
+    @Override
+    public void deleteArticle(Article article) {
+        articleRepository.deleteById(article.getId());
+    }
 }
