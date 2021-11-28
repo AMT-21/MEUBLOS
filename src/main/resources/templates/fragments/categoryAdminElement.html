@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="categoryAdminElement(cat)">
+    <div class="input-group mb-3">
+        <input type="text" readonly class="form-control" th:value="${cat.nameCategory}">
+        <div class="input-group-append">
+            <button class="btn btn-outline-danger" type="button"
+                    th:data-parameter1="${cat.nameCategory}"
+                    th:onclick="deleteClicked(this.getAttribute('data-parameter1'))">X</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

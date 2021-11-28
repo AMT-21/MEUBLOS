@@ -19,7 +19,7 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     /* article name
      */
@@ -46,7 +46,7 @@ public class Article {
 
     }
 
-    public Article(Long id, String nom, String description, int prixVente, int quantite)
+    public Article(Integer id, String nom, String description, int prixVente, int quantite)
     {
         this.id = id;
         this.nom = nom;
@@ -55,7 +55,7 @@ public class Article {
         this.quantite = quantite;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

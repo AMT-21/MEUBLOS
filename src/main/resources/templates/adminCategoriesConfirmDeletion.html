@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
+</head>
+<body>
+
+
+<!-- HEADER =============================-->
+<header class="item header margin-top-0">
+    <div class="wrapper">
+
+        <div th:replace="fragments/header :: header"></div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <div class="text-pageheader">
+                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s"
+                        th:text="'Admin - Confirmation de suppression de la catégorie ' +  ${category.nameCategory}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<!-- CONTENT =============================-->
+<section class="item content" style="position: relative; z-index: 9">
+    <div class="container toparea">
+        <u>Les articles suivants vont être impactés :</u>
+
+        <ul>
+            <li th:each="article: ${articles}" th:text="${article.name}"></li>
+        </ul>
+
+        <button class="btn btn-danger" type="button"
+                th:data-parameter1="${category.nameCategory}"
+                th:onclick="deleteClicked(this.getAttribute('data-parameter1'))">Confirmer la suppression</button>
+    </div>
+</section>
+
+
+<!-- FOOTER =============================-->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- SCRIPTS =============================-->
+<script th:src="@{/js/jquery-.js}"></script>
+<script th:src="@{/js/bootstrap.js}"></script>
+<script th:src="@{/js/anim.js}"></script>
+<script>
+    //----HOVER CAPTION---//
+    jQuery(document).ready(function ($) {
+        $('.fadeshop').hover(
+            function () {
+                $(this).find('.captionshop').fadeIn(150);
+            },
+            function () {
+                $(this).find('.captionshop').fadeOut(150);
+            }
+        );
+    });
+</script>
+<script>
+    function deleteClicked(value) {
+        location.href = "/admin/categories/delete?id=" + value;
+    }
+</script>
+
+</body>
+</html>

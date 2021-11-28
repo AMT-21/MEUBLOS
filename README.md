@@ -1,31 +1,30 @@
-# Foobar
+# MEUBLOS
 
-Foobar is a Python library for dealing with word pluralization.
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/AMT-21/sprint0.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AMT-21/sprint0/context:java)
 
-## Installation
+MEUBLOS est un site e-commerce de meubles. Ce projet s'inscrit dans le cadre du sprint0 du cours d'AMT 2021, l'idée est de prendre en main les technologies comme Java EE Springboot, Thymeleaf. Le test de code automatique avec Travis, et l'intégration continue avec les GitHub Actions.
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+## Contribuer au projet
 
-```bash
-pip install foobar
+### Prérequis
+
+1. Installer git-flow (voir https://github.com/AMT-21/sprint0/wiki/Convention-de-nommage#workflow)
+2. Se renseigner sur les conventions de nommages utilisées dans ce projet : https://github.com/AMT-21/sprint0/wiki/Convention-de-nommage#java
+3. Créer une issue sur le repo décrivant la fonctionnalité qui va être développée et pourquoi elle serait utile.
+
+### Travailler sur le repo
+1. Cloner le repo en local :
 ```
-
-## Usage
-
-```python
-import foobar
-# returns 'words'
-foobar.pluralize('word')
-# returns 'geese'
-foobar.pluralize('goose')
-# returns 'phenomenon'
-foobar.singularize('phenomena')
+git clone https://github.com/AMT-21/sprint0
 ```
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
+2. Créer une branch feature :
+```
+git flow feature start MYFEATURE 
+```
+3. Une fois la fonctionnalité développée, créer une PR sur la branch dev. Nous ferons notre maximum pour traiter vos modifications le plus rapidement possible.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+
+
+

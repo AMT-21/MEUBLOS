@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<tr th:fragment="articlesListAdminPreview(article)" style="cursor: pointer;">
+    <th scope="row" th:text="${article.id}" th:onclick="'javascript:rowClicked(\'' + ${article.id} + '\');'"></th>
+    <td th:text="${article.name}" th:onclick="'javascript:rowClicked(\'' + ${article.id} + '\');'"></td>
+    <td th:text="${article.price}" th:onclick="'javascript:rowClicked(\'' + ${article.id} + '\');'"></td>
+    <td th:text="${article.stock}" th:onclick="'javascript:rowClicked(\'' + ${article.id} + '\');'"></td>
+    <td th:onclick="'javascript:rowClicked(\'' + ${article.id} + '\');'">
+        <div th:each="category: ${article.article_category_list}" th:text="${category.getCategory.nameCategory}"></div>
+    </td>
+    <td>
+        <button type="button" class="btn btn-danger" th:onclick="'javascript:deleteClicked(\'' + ${article.id} + '\');'">Supprimer</button>
+    </td>
+</tr>
+
+</body>
+</html>

@@ -11,6 +11,23 @@
   <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
+<tbody>
+<h2>List of articles</h2>
+
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Nom</th>
+    <th>Description</th>
+  </tr>
+
+  <tr th:each="article: ${articles}">
+    <td th:text="${article.id}" />
+    <td th:text="${article.nom}" />
+    <td th:text="${article.description}" />
+  </tr>
+</table>
+</tbody>
 </html>
 
 
@@ -34,7 +51,7 @@
             <li class="propClone"><a href="product.html">Product</a></li>
             <li class="propClone"><a href="checkout.html">Checkout</a></li>
             <li class="propClone"><a href="contact.html">Contact</a></li>
-            <li class="propClone"><a href="showArticles.html">Articles</a> </li>
+            <li class="propClone"><a href="articles">Articles</a> </li>
           </ul>
         </div>
       </div>
@@ -74,24 +91,23 @@
               </p>
               <p>
                 <a href="#" class="learn-more detailslearn"><i class="fa fa-shopping-cart"></i> Purchase</a>
-                <a href="article" th:href="@{'/article/'+${article.id}}" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
+                <a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
               </p>
             </div>
             <span class="maxproduct">
-                            <img th:src="@{'/images/'+${article.id}+'.jpg'}" th:alt="'Article n° '+${article.id}">
+                            <img th:src="@{/images/product1-1.jpg}" alt="">
                         </span>
           </div>
           <div class="product-details">
-            <a href="article" th:href="@{'/article/'+${article.id}}">
+            <a href="#">
               <h1 th:text="${article.nom}"></h1>
             </a>
             <span class="price">
-                        <span th:utext="${'&#36;'+'&nbsp;'}" ></span>
-						<span th:text="${article.prixVente}"class="edd_price">$</span>
+						<span class="edd_price">$49.00</span>
 						</span>
           </div>
         </div>
-
+      </div>
     </div>
   </div>
 </section>
