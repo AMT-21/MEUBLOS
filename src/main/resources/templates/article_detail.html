@@ -28,8 +28,12 @@
             <div class="col-md-4">
                 <div class="productbox">
                     <div class="fadeshop">
-                        <span class="maxproduct">
-                            <img th:src="@{'/uploads/'+${article.id}+'.jpg'}" th:alt="@{'/uploads/no-image.jpg'}">
+                        <span class="maxproduct" style="display: block;
+                                                          margin-left: auto;
+                                                          margin-right: auto;
+                                                          width: 50%;
+                                                          height: 50%;">
+                            <img th:src="@{'/images/'+${article.id}+'.jpg'}" onerror="this.src='/images/no-image.jpg';">
                         </span>
                     </div>
                 </div>
