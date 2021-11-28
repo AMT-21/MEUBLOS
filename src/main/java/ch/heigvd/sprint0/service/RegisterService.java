@@ -33,8 +33,8 @@ public class RegisterService {
         os.write(toServer.toString().getBytes());
         os.flush();
 
-        int test = con.getResponseCode();
-        return true;
+        int test = con.getResponseCode() ;
+        return test == 201;
     }
 
 }

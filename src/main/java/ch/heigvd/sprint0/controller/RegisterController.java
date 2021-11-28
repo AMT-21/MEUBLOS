@@ -27,9 +27,9 @@ public class RegisterController {
     @PostMapping("/register")
     public void createUser(HttpServletResponse response, @RequestParam String inputUsername, @RequestParam String inputPassword) throws IOException {
 
-        if (registerService.register(inputUsername, inputPassword, response)) { // Succes login
+        if (registerService.register(inputUsername, inputPassword, response)) {
             response.sendRedirect("./login");
-        } else { // Error login
+        } else {
             response.sendRedirect("./register?error=true");
         }
 
