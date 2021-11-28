@@ -1,0 +1,35 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Inscription</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+</head>
+
+<header class="item header margin-top-0">
+    <div class="wrapper">
+
+        <div th:replace="fragments/header :: header"></div>
+
+    </div>
+</header>
+
+<body class="text-center">
+<form class="form-register" method="POST">
+    <h1 class="h3 mb-3 font-weight-normal">Nouvel utilisateur</h1>
+    <label for="inputUsername" class="sr-only">Nom d'utilisateur</label>
+    <input type="text" id="inputUsername" name="inputUsername" class="form-control" placeholder="Nom d'utilisateur" required autofocus>
+    <label for="inputPassword" class="sr-only">Mot de passe</label>
+    <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Mot de passe" required>
+    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+</form>
+</body>
+</html>
