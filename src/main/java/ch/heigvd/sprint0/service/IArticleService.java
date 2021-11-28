@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface IArticleService {
     List<Article> findAll();
     Optional<Article> find(Long id);
+    List<Article> findByFilter(String filter);
 }

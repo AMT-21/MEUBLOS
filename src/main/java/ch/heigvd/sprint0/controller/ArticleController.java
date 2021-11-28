@@ -27,8 +27,14 @@ public class ArticleController {
     }
 
     @GetMapping("/articles")
-    public String findArticles(Model model) {
-        List<Article> articles = (List<Article>) articleService.findAll();
+    public String findArticles(@RequestParam(required = false) String categorie, Model model) {
+        List<Article> articles;
+        if(categorie.isEmpty()) { //Si aucun paramètre n'est spécifié
+            articles = articleService.findAll(); //Recherche d'article sans paramètre
+
+        } else {
+            articles = articleService.findByFilter(categorie); //Recherche via le filtre
+        }
         model.addAttribute("articles", articles);
         return "showArticles";
     }
