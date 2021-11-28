@@ -25,7 +25,7 @@ public class LoginController {
     private SessionService sessionService;
 
     @GetMapping("/login")
-    public String indexLogin(HttpServletRequest request, Model model, @RequestParam(value = "error", required = false) boolean error) {
+    public String indexLogin(Model model, @RequestParam(value = "error", required = false) boolean error) {
         if (error) {    // Login utilisateur faux
             model.addAttribute("error", "Your login failed.");
         }
