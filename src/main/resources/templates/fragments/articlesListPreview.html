@@ -5,7 +5,7 @@
 <div th:fragment="articlesListPreview(articles)">
     <div class="container">
 
-        <form th:action="@{/articles}">
+        <form th:action="@{/shop}">
             <div align="left">
             <label for="categorie">Choisissez la catégorie</label>
             <select id="categorie" th:name="categorie">
@@ -15,8 +15,6 @@
                 <button type = "submit">Search</button>
             </div>
         </form>
-
-
 
         <div class="row">
             <div th:each="article: ${articles}" class="col-md-4">
@@ -40,7 +38,7 @@
                         </span>
                     </div>
                     <div class="product-details">
-                        <a th:href="@{/articles/{id}(id=${article.id})}">
+                        <a th:href="@{/shop/{id}(id=${article.id})}">
                             <h1 th:text="${article.name}"></h1>
                         </a>
                         <span class="price">

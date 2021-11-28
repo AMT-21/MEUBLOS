@@ -35,7 +35,7 @@ public class ArticleController {
     @Autowired
     Utils utils;
 
-    @GetMapping("/articles/{id}")
+    /*@GetMapping("/shop/{id}")
     public String findArticle(@PathVariable int id, Model model, HttpSession session) {
         Optional<Article> article = articleService.findById(id);
         List<Category> categories = new ArrayList<Category>();
@@ -53,7 +53,7 @@ public class ArticleController {
         return "article_detail.html";
     }
 
-    @GetMapping("/articles")
+    @GetMapping("/shop")
     public String findArticles(@RequestParam(required = false) Optional<String> categorie, Model model, HttpSession session) {
         List<Article> articles = new ArrayList<Article>();
         Category cat = null;
@@ -79,5 +79,5 @@ public class ArticleController {
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("articles", utils.getArticlesInfo(articles,session));
         return "shop.html";
-    }
+    }*/
 }
