@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>ArticleDetail</title>
+    <title>Article</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="">
@@ -11,7 +11,8 @@
     <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
-<body>
+</html>
+
 
 <!-- HEADER =============================-->
 <header class="item header margin-top-0">
@@ -19,9 +20,56 @@
         <div th:replace="fragments/header :: header"></div>
     </div>
 </header>
+<!-- LATEST ITEMS =============================-->
+
+<section class="item content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="productbox">
+                    <div class="fadeshop">
+                        <span class="maxproduct">
+                            <img th:src="@{'/images/'+${article.id}+'.jpg'}" th:alt="'Article n° '+${article.id}">
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3">
+                <div>
+                    <h2>Nom</h2>
+                    <p th:text="${article.name}"></p>
+                    <h2>Description</h2>
+                    <p th:text="${article.description}"></p>
+                    <h2>Prix</h2>
+                    <p th:text="${'&#36;'+'&nbsp;'}+${article.price}"></p>
+                </div>
+                <div th:include="fragments/actionArticle :: actionArticle(${article})"></div>
+            </div>
+        </div>
+</section>
 
 <!-- FOOTER =============================-->
 <div th:replace="fragments/footer :: footer"></div>
 
+<!-- SCRIPTS =============================-->
+<script th:src="@{/js/jquery-.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/anim.js}"></script>
+<script>
+    //----HOVER CAPTION---//
+    jQuery(document).ready(function ($) {
+        $('.fadeshop').hover(
+            function () {
+                $(this).find('.captionshop').fadeIn(150);
+            },
+            function () {
+                $(this).find('.captionshop').fadeOut(150);
+            }
+        );
+    });
+</script>
+
 </body>
 </html>
+

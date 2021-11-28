@@ -56,10 +56,4 @@ public class ArticleService implements IArticleService {
     public void deleteArticle(Article article) {
         articleRepository.deleteById(article.getId());
     }
-
-    @Override
-    public Optional<Article> find(Long id){ return repository.findById(id);}
-
-    @Override
-    public List<Article> findByFilter(String filter) { return repository.findByFilter(filter);}
 }

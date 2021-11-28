@@ -17,7 +17,7 @@
                             </p>
                         </div>
                         <span class="maxproduct">
-                            <img th:src="@{/images/product1-1.jpg}" alt="">
+                            <img th:src="@{'/images/'+${article.id}+'.jpg'}" th:alt="'Article n° '+${article.id}">
                         </span>
                     </div>
                     <div class="product-details">
