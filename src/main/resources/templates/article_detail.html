@@ -43,6 +43,10 @@
                     <p th:text="${article.description}"></p>
                     <h2>Prix</h2>
                     <p th:text="${'&#36;'+'&nbsp;'}+${article.price}"></p>
+                    <h2>Catégories</h2>
+                    <div th:each="categorie: ${categories}">
+                        <p th:text="${categorie.nameCategory}"></p>
+                    </div>
                 </div>
                 <div th:include="fragments/actionArticle :: actionArticle(${article})"></div>
             </div>

@@ -38,25 +38,33 @@ public class ArticleController {
     @GetMapping("/articles/{id}")
     public String findArticle(@PathVariable int id, Model model, HttpSession session) {
         Optional<Article> article = articleService.findById(id);
+        List<Category> categories = new ArrayList<Category>();
         if(article.isPresent())
         {
+            // Plutôt ajouter les catégories dans ArticleInfo
+            List<Article_Category> article_category = ArticleCategoryRepository.findArticle_CategoriesByIds_Article(article.get());
+            for(Article_Category a_c : article_category)
+            {
+                categories.add(a_c.getCategory());
+            }
+            model.addAttribute("categories", categories);
             model.addAttribute("article", utils.getArticleInfo(article.get(),session));
         }
         return "article_detail.html";
     }
 
     @GetMapping("/articles")
-    public String findArticles(@RequestParam(required = false) String categorie, Model model, HttpSession session) {
+    public String findArticles(@RequestParam(required = false) Optional<String> categorie, Model model, HttpSession session) {
         List<Article> articles = new ArrayList<Article>();
         Category cat = null;
-        if(categorie.isEmpty()) {
+        if(!categorie.isPresent()) {
             articles = articleService.findAll();
         }
         else
         {
             List<Article_Category>  articlesCat;
             //Recherche d'un nom de catégorie correspondant dans la BDD
-            Optional<Category> category = categoryRepository.findByNameCategory(categorie);
+            Optional<Category> category = categoryRepository.findByNameCategory(categorie.get());
             if(category.isPresent())
             {
                 cat = category.get();
