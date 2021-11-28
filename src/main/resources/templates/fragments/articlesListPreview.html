@@ -16,8 +16,13 @@
                                 <a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
                             </p>
                         </div>
-                        <span class="maxproduct">
-                            <img th:src="@{'/uploads/'+${article.id}+'.jpg'}" th:alt="@{'/uploads/no-image.jpg'}">
+                        <span class="maxproduct" style="display: block;
+                                                          margin-left: auto;
+                                                          margin-right: auto;
+                                                          width: 50%;
+                                                          height: 50%;">
+                            <img th:src="@{'/images/'+${article.id}+'.jpg'}"
+                                 onerror="this.src='/images/no-image.jpg';">
                         </span>
                     </div>
                     <div class="product-details">

@@ -143,9 +143,7 @@ public class AdminController {
             Article insertedArticle = article.getId() != null ? article : articleService.findTopByOrderByIdDesc().get(0);
             // Upload de l'image
             try {
-                Path path = Paths.get("uploads");
-                if(!Files.exists(path))
-                    Files.createDirectory(path);
+                Path path = Paths.get("src/main/resources/static/images");
 
                 String extension = "." + image.getOriginalFilename().split("\\.")[1];
                 Path filePath = path.resolve(insertedArticle.getId().toString() + extension);
