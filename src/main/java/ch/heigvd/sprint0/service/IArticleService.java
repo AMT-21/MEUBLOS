@@ -1,6 +1,8 @@
 package ch.heigvd.sprint0.service;
 
 import ch.heigvd.sprint0.model.Article;
+import ch.heigvd.sprint0.model.Article_Category;
+import ch.heigvd.sprint0.model.Article_Category_Ids;
 import ch.heigvd.sprint0.model.Cart_Article;
 
 import java.util.List;

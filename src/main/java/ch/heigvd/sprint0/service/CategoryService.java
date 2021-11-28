@@ -25,4 +25,9 @@ public class CategoryService implements ICategoryService {
         return (List<Category>) repository.findAll();
     }
 
+    @Override
+    public Optional<Category> findByName(String nomCategorie) {
+        return repository.findByNameCategory(nomCategorie);
+    }
+
 }

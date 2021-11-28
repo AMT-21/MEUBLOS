@@ -1,7 +1,12 @@
 package ch.heigvd.sprint0.controller;
 
 import ch.heigvd.sprint0.model.Article;
+import ch.heigvd.sprint0.model.Article_Category;
+import ch.heigvd.sprint0.model.Category;
+import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
+import ch.heigvd.sprint0.repository.CategoryRepository;
 import ch.heigvd.sprint0.service.IArticleService;
+import ch.heigvd.sprint0.service.ICategoryService;
 import ch.heigvd.sprint0.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +25,12 @@ public class ArticleController {
 
     @Autowired
     private IArticleService articleService;
+
+    @Autowired
+    private ArticleCategoryRepository ArticleCategoryRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     Utils utils;
@@ -34,10 +46,29 @@ public class ArticleController {
     }
 
     @GetMapping("/articles")
-    public String findArticles(@RequestParam(required = false) String categorie, Model model) {
-        List<Article> articles;
-        articles = articleService.findAll();
-        model.addAttribute("articles", articles);
+    public String findArticles(@RequestParam(required = false) String categorie, Model model, HttpSession session) {
+        List<Article> articles = new ArrayList<Article>();
+        Category cat = null;
+        if(categorie.isEmpty()) {
+            articles = articleService.findAll();
+        }
+        else
+        {
+            List<Article_Category>  articlesCat;
+            //Recherche d'un nom de catégorie correspondant dans la BDD
+            Optional<Category> category = categoryRepository.findByNameCategory(categorie);
+            if(category.isPresent())
+            {
+                cat = category.get();
+            }
+            //Recherche des entrées de cette catégorie contenant également un article
+            articlesCat = ArticleCategoryRepository.findArticle_CategoriesByIds_Category(cat);
+            for(Article_Category a : articlesCat)
+            {
+                articles.add(a.getArticle());
+            }
+        }
+        model.addAttribute("articles", utils.getArticlesInfo(articles,session));
         return "shop.html";
     }
 }
