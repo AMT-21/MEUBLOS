@@ -4,6 +4,20 @@
 
 <div th:fragment="articlesListPreview(articles)">
     <div class="container">
+
+        <form th:action="@{/articles}">
+            <div align="left">
+            <label for="categorie">Choisissez la catégorie</label>
+            <select id="categorie" th:name="categorie">
+                <option selected disabled hidden style='display: none' value=''></option>
+                <option th:each = "categorie: ${categories}" th:value = "${categorie.nameCategory}" th:text = "${categorie.nameCategory}" th:data = "${categorie.nameCategory}"></option>
+            </select>
+                <button type = "submit">Search</button>
+            </div>
+        </form>
+
+
+
         <div class="row">
             <div th:each="article: ${articles}" class="col-md-4">
                 <div class="productbox">

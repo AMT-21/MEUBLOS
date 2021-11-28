@@ -76,6 +76,7 @@ public class ArticleController {
                 articles.add(a.getArticle());
             }
         }
+        model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("articles", utils.getArticlesInfo(articles,session));
         return "shop.html";
     }
