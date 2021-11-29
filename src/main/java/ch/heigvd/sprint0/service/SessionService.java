@@ -16,7 +16,7 @@ import java.net.URL;
 @Service
 public class SessionService {
 
-    private final String apiLoginServerUrl = "http://localhost:8081/auth/login";
+    private final String apiLoginServerUrl = "http://10.0.1.92:8080/auth/login";
 
     @Autowired
     private JWTService jwtService;
