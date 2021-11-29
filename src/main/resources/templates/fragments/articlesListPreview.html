@@ -22,7 +22,7 @@
                                                           width: 50%;
                                                           height: 50%;">
                             <img th:src="@{'/images/'+${article.id}+'.jpg'}"
-                                 onerror="this.src='/images/no-image.jpg';">
+                                 th:onerror="'this.src=\'' + @{'/images/no-image.jpg'} + '\''">
                         </span>
                     </div>
                     <div class="product-details">
