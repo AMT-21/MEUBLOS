@@ -144,8 +144,11 @@ public class AdminController {
             // Upload de l'image
             try {
                 Path path = Paths.get("src/main/resources/static/images");
-
-                String extension = "." + image.getOriginalFilename().split("\\.")[1];
+                String extension = "." + image.getOriginalFilename().split("\\.")[image.getOriginalFilename().split("\\.").length - 1];
+                // On accepte que les .jpg
+                if(!extension.equals(".jpg")) {
+                    return "redirect:/admin/article?error=NotAnImage";
+                }
                 Path filePath = path.resolve(insertedArticle.getId().toString() + extension);
                 // si l'image existe déjà => remplacement
                 if(Files.exists(filePath)) {
