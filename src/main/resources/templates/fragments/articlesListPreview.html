@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="articlesListPreview(articles)">
+    <div class="container">
+        <div class="row">
+            <div th:each="article: ${articles}" class="col-md-4">
+                <div class="productbox">
+                    <div class="fadeshop">
+                        <div class="captionshop text-center" style="display: none;">
+                            <h3 th:text="${article.name}"></h3>
+                            <p th:text="${article.description}"></p>
+                            <p>
+                                <a href="#" class="learn-more detailslearn"><i class="fa fa-shopping-cart"></i> Purchase</a>
+                                <a href="#" class="learn-more detailslearn"><i class="fa fa-link"></i> Details</a>
+                            </p>
+                        </div>
+                        <span class="maxproduct" style="display: block;
+                                                          margin-left: auto;
+                                                          margin-right: auto;
+                                                          width: 50%;
+                                                          height: 50%;">
+                            <img th:src="@{'/images/'+${article.id}+'.jpg'}"
+                                 onerror="this.src='/images/no-image.jpg';">
+                        </span>
+                    </div>
+                    <div class="product-details">
+                        <a th:href="@{/shop/{id}(id=${article.id})}">
+                            <h1 th:text="${article.name}"></h1>
+                        </a>
+                        <span class="price">
+                            <span class="edd_price" th:text="${article.price}"></span>
+                        </span>
+                    </div>
+                    <div th:include="fragments/actionArticle :: actionArticle(${article})"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

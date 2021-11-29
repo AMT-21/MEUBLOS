@@ -22,12 +22,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <div class="text-homeimage">
-                        <div class="maintext-image" data-scrollreveal="enter top over 1.5s after 0.1s">
-                            MEUBLOS
-                        </div>
-                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.3s">
-                            Vente de meuble depuis chez vous
+                    <div class="text-pageheader">
+                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s">
+                            Admin - Gestion des catégories
                         </div>
                     </div>
                 </div>
@@ -37,36 +34,37 @@
 </header>
 
 
-<!-- LATEST ITEMS =============================-->
-<section class="item content">
-    <div class="container">
-        <div class="underlined-title">
-            <div class="editContent">
-                <h1 class="text-center latestitems">Derniers produits</h1>
+<!-- CONTENT =============================-->
+<section class="item content" style="position: relative; z-index: 9">
+    <div class="container toparea">
+        <form style="padding: unset" action="#"
+              th:object="${category}"
+              th:action="@{/admin/categories}" method="post">
+            <div class="row justify-content-center">
+                <div th:if="${error} != null and ${error} == catAlreadyExists">
+                    <div class="alert alert-danger" role="alert">
+                        Erreur ! La catégorie existe déjà
+                    </div>
+                </div>
+                <div class="col-3">
+                    Nouvelle catégorie :
+                </div>
+                <div class="col-4">
+                    <input type="text" th:field="*{nameCategory}" class="form-control mx-sm-3" >
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
             </div>
+        </form>
+        <div class="row">
+            <div class="col-12" style="margin-top: 5%; margin-bottom: 5%;">
+                <u>Liste des catégories :</u>
+            </div>
+            <div class="col-4"  th:each="cat: ${categories}" th:insert="fragments/categoryAdminElement :: categoryAdminElement(${cat})"></div>
         </div>
-
-        <div th:include="fragments/articlesListPreview :: articlesListPreview(${articles})"></div>
-
     </div>
 </section>
-
-
-<!-- BUTTON =============================-->
-<div class="item content container text-center">
-    <a href="./shop" class="homebrowseitems">Voir tous nos produits</a>
-</div>
-<br/>
-
-<!-- AREA =============================-->
-
-<!-- TESTIMONIAL =============================-->
-<div class="item content container col-md-10 col-md-offset-1 slide-text">
-    <h2><span class="uppercase">100% satisfait !</span></h2>
-    <p>
-        Une superbe expérience que d'acheter mes meubles sur MEUBLOS, je suis comblée !
-    </p>
-</div>
 
 
 <!-- FOOTER =============================-->
@@ -88,6 +86,11 @@
             }
         );
     });
+</script>
+<script>
+    function deleteClicked(value) {
+        location.href = "/admin/categories/confirmDeletion?id=" + value;
+    }
 </script>
 
 </body>

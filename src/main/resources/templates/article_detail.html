@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Article</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="">
@@ -10,71 +11,58 @@
     <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
-<body>
+</html>
 
 
 <!-- HEADER =============================-->
 <header class="item header margin-top-0">
     <div class="wrapper">
-
         <div th:replace="fragments/header :: header"></div>
-
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <div class="text-homeimage">
-                        <div class="maintext-image" data-scrollreveal="enter top over 1.5s after 0.1s">
-                            MEUBLOS
-                        </div>
-                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.3s">
-                            Vente de meuble depuis chez vous
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </header>
-
-
 <!-- LATEST ITEMS =============================-->
+
 <section class="item content">
     <div class="container">
-        <div class="underlined-title">
-            <div class="editContent">
-                <h1 class="text-center latestitems">Derniers produits</h1>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="productbox">
+                    <div class="fadeshop">
+                        <span class="maxproduct" style="display: block;
+                                                          margin-left: auto;
+                                                          margin-right: auto;
+                                                          width: 50%;
+                                                          height: 50%;">
+                            <img th:src="@{'/images/'+${article.id}+'.jpg'}" onerror="this.src='/images/no-image.jpg';">
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-3">
+                <div>
+                    <h2>Nom</h2>
+                    <p th:text="${article.name}"></p>
+                    <h2>Description</h2>
+                    <p th:text="${article.description}"></p>
+                    <h2>Catégories</h2>
+                    <div th:each="categorie: ${categories}">
+                        <p th:text="${categorie.nameCategory}"></p>
+                    </div>
+                    <h2>Prix</h2>
+                    <p th:text="${'&#36;'+'&nbsp;'}+${article.price}"></p>
+                </div>
+                <div th:include="fragments/actionArticle :: actionArticle(${article})"></div>
             </div>
         </div>
-
-        <div th:include="fragments/articlesListPreview :: articlesListPreview(${articles})"></div>
-
-    </div>
 </section>
-
-
-<!-- BUTTON =============================-->
-<div class="item content container text-center">
-    <a href="./shop" class="homebrowseitems">Voir tous nos produits</a>
-</div>
-<br/>
-
-<!-- AREA =============================-->
-
-<!-- TESTIMONIAL =============================-->
-<div class="item content container col-md-10 col-md-offset-1 slide-text">
-    <h2><span class="uppercase">100% satisfait !</span></h2>
-    <p>
-        Une superbe expérience que d'acheter mes meubles sur MEUBLOS, je suis comblée !
-    </p>
-</div>
-
 
 <!-- FOOTER =============================-->
 <div th:replace="fragments/footer :: footer"></div>
 
 <!-- SCRIPTS =============================-->
 <script th:src="@{/js/jquery-.js}"></script>
-<script th:src="@{/js/bootstrap.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 <script th:src="@{/js/anim.js}"></script>
 <script>
     //----HOVER CAPTION---//
@@ -92,3 +80,4 @@
 
 </body>
 </html>
+

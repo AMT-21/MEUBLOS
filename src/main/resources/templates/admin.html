@@ -22,12 +22,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <div class="text-homeimage">
-                        <div class="maintext-image" data-scrollreveal="enter top over 1.5s after 0.1s">
-                            MEUBLOS
-                        </div>
-                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.3s">
-                            Vente de meuble depuis chez vous
+                    <div class="text-pageheader">
+                        <div class="subtext-image" data-scrollreveal="enter bottom over 1.7s after 0.0s">
+                            Admin
                         </div>
                     </div>
                 </div>
@@ -37,36 +34,33 @@
 </header>
 
 
-<!-- LATEST ITEMS =============================-->
-<section class="item content">
-    <div class="container">
-        <div class="underlined-title">
-            <div class="editContent">
-                <h1 class="text-center latestitems">Derniers produits</h1>
+<!-- CONTENT =============================-->
+<section class="item content" style="position: relative; z-index: 9">
+    <div class="container toparea">
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-primary" href="/admin/article" role="button">Ajouter un article</a>
+                <a class="btn btn-primary" href="/admin/categories" role="button">Modifier les catégories</a>
+                <br />
+                <br />
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">nom</th>
+                        <th scope="col">prix</th>
+                        <th scope="col">stock</th>
+                        <th scope="col">catégorie(s)</th>
+                        <th scope="col">supprimer</th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="article: ${articles}" th:insert="fragments/articlesListAdminPreview :: articlesListAdminPreview(${article})">
+                    </tbody>
+                </table>
             </div>
         </div>
-
-        <div th:include="fragments/articlesListPreview :: articlesListPreview(${articles})"></div>
-
     </div>
 </section>
-
-
-<!-- BUTTON =============================-->
-<div class="item content container text-center">
-    <a href="./shop" class="homebrowseitems">Voir tous nos produits</a>
-</div>
-<br/>
-
-<!-- AREA =============================-->
-
-<!-- TESTIMONIAL =============================-->
-<div class="item content container col-md-10 col-md-offset-1 slide-text">
-    <h2><span class="uppercase">100% satisfait !</span></h2>
-    <p>
-        Une superbe expérience que d'acheter mes meubles sur MEUBLOS, je suis comblée !
-    </p>
-</div>
 
 
 <!-- FOOTER =============================-->
@@ -88,6 +82,15 @@
             }
         );
     });
+</script>
+<script>
+    function rowClicked(value) {
+        location.href = "/admin/article?id=" + value;
+    }
+
+    function deleteClicked(value) {
+        location.href = "/admin/article/delete?id=" + value;
+    }
 </script>
 
 </body>

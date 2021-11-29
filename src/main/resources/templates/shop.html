@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <title>Articles</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
+</head>
+
+
+<!-- HEADER =============================-->
+<header class="item header margin-top-0">
+    <div class="wrapper">
+        <div th:replace="fragments/header :: header"></div>
+    </div>
+</header>
+
+<!-- LATEST ITEMS =============================-->
+<section class="item content">
+    <form th:action="@{/shop}">
+        <div align="left">
+            <label for="categorie">Choisissez la catégorie</label>
+            <select id="categorie" th:name="categorie">
+                <option selected disabled hidden style='display: none' value=''></option>
+                <option th:each = "categorie: ${categories}" th:value = "${categorie.nameCategory}" th:text = "${categorie.nameCategory}" th:data = "${categorie.nameCategory}"></option>
+            </select>
+            <button type = "submit">Search</button>
+        </div>
+    </form>
+    <div th:include="fragments/articlesListPreview :: articlesListPreview(${articles})"></div>
+</section>
+
+<!-- FOOTER =============================-->
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- SCRIPTS =============================-->
+<script th:src="@{/static/js/jquery-.js}"></script>
+<script th:src="@{/static/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/js/anim.js}"></script>
+<script>
+    //----HOVER CAPTION---//
+    jQuery(document).ready(function ($) {
+        $('.fadeshop').hover(
+            function () {
+                $(this).find('.captionshop').fadeIn(150);
+            },
+            function () {
+                $(this).find('.captionshop').fadeOut(150);
+            }
+        );
+    });
+</script>
+
+</body>
+</html>
+
