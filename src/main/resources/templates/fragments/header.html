@@ -5,17 +5,17 @@
 <div th:fragment="header">
     <nav role="navigation" class="navbar navbar-white navbar-fixed-top">
         <ul class="nav navbar-nav">
-            <a href="/" class="navbar-brand brand"> MEUBLOS </a>
+            <a th:href="@{/}" class="navbar-brand brand"> MEUBLOS </a>
         </ul>
         <ul class="nav justify-content-end">
             <li class="nav-item">
-                <a class="nav-link active" href="/cart">Panier</a>
+                <a class="nav-link active" th:href="@{/cart}">Panier</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/login">Connexion</a>
+                <a class="nav-link" th:href="@{/login}">Connexion</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/register">S'inscrire</a>
+                <a class="nav-link" th:href="@{/register}">S'inscrire</a>
             </li>
         </ul>
     </nav>
