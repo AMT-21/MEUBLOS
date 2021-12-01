@@ -21,7 +21,7 @@
                                                           margin-right: auto;
                                                           width: 50%;
                                                           height: 50%;">
-                            <img th:src="@{'/images/'+${article.id}+'.jpg'}"
+                            <img th:src="@{'/upload-dir/'+${article.id}+'.jpg'}"
                                  th:onerror="'this.src=\'' + @{'/images/no-image.jpg'} + '\''">
                         </span>
                     </div>

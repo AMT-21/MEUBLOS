@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -143,18 +144,24 @@ public class AdminController {
             Article insertedArticle = article.getId() != null ? article : articleService.findTopByOrderByIdDesc().get(0);
             // Upload de l'image
             try {
-                Path path = Paths.get("src/main/resources/static/images");
                 String extension = "." + image.getOriginalFilename().split("\\.")[image.getOriginalFilename().split("\\.").length - 1];
                 // On accepte que les .jpg
                 if(!extension.equals(".jpg")) {
                     return "redirect:/admin/article?error=NotAnImage";
                 }
-                Path filePath = path.resolve(insertedArticle.getId().toString() + extension);
-                // si l'image existe déjà => remplacement
-                if(Files.exists(filePath)) {
-                    Files.delete(filePath);
+
+                String uploadPath = "/Applications/javaee/apache-tomcat-9.0.54/work/Catalina/localhost/upload-dir";
+                if (!Files.exists(Paths.get(uploadPath))) {
+                    Files.createDirectories(Paths.get(uploadPath));
                 }
-                Files.copy(image.getInputStream(), path.resolve(insertedArticle.getId().toString() + extension));
+
+                Path destinationFile = Paths.get(uploadPath).resolve(
+                                Paths.get(insertedArticle.getId().toString() + extension)).normalize().toAbsolutePath();
+
+                try (InputStream inputStream = image.getInputStream()) {
+                    Files.copy(inputStream, destinationFile,
+                            StandardCopyOption.REPLACE_EXISTING);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
