@@ -8,6 +8,7 @@ import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
 import ch.heigvd.sprint0.repository.CategoryRepository;
 import ch.heigvd.sprint0.service.IArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,8 @@ public class AdminController {
     private ArticleCategoryRepository articleCategoryRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Value("${server.tomcat.upload-dir}")
+    private String uploadPath;
 
     @GetMapping("/admin")
     public String admin(Model model) {
@@ -150,7 +153,6 @@ public class AdminController {
                     return "redirect:/admin/article?error=NotAnImage";
                 }
 
-                String uploadPath = "/Applications/javaee/apache-tomcat-9.0.54/work/Catalina/localhost/upload-dir";
                 if (!Files.exists(Paths.get(uploadPath))) {
                     Files.createDirectories(Paths.get(uploadPath));
                 }
