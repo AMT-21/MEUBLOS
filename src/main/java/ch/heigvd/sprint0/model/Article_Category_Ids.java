@@ -10,6 +10,8 @@ import java.util.Objects;
 // Composite key :
 // https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#identifiers-composite
 @Embeddable
+// TODO DPO - Je vous laisse relire vos convention de nommage pour les classes ^^
+//  https://github.com/AMT-21/MEUBLOS/wiki/Convention-de-nommage
 public class Article_Category_Ids implements Serializable {
 
     @ManyToOne

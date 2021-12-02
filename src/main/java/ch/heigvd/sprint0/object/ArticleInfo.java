@@ -3,6 +3,8 @@ package ch.heigvd.sprint0.object;
 import ch.heigvd.sprint0.model.Article;
 import ch.heigvd.sprint0.model.Cart_Article;
 
+// TODO DPO - Si ça vous intéresse, je vous invite à vous documenter sur la lib 'lombok' https://projectlombok.org/
+//  elle vous simplifiera le code auto-générer et vos classes java seront plus rapides à lire
 public class ArticleInfo {
     Article article;
     Cart_Article cart_article;
