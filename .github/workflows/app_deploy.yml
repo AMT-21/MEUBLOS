@@ -34,17 +34,17 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       #Write database mysql and password to application.properties
-      - name: Write value to Properties-file
-        uses: christian-draeger/write-properties@1.1.0
-        with:
-          path: './src/main/resources/application.properties'
-          property: |
-            'spring.datasource.username'
-            'spring.datasource.password'
-          value: |
-            '${{ secrets.DB_USERNAME }}'
-            '${{ secrets.DB_PASSWORD }}'
-         
+      #- name: Write value to Properties-file
+      #  uses: christian-draeger/write-properties@1.1.0
+      #  with:
+      #    path: './src/main/resources/application.properties'
+      #    property: |
+      #      'spring.datasource.username'
+      #      'spring.datasource.password'
+      #    value: |
+      #      '${{ secrets.DB_USERNAME }}'
+      #      '${{ secrets.DB_PASSWORD }}'
+
       - name: Write DMZ SSH Key on the runner
         run: echo "${{ secrets.DMZ_SSH_KEY }}" > DMZ_KEY.pem && chmod 400 DMZ_KEY.pem
         
