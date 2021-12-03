@@ -53,8 +53,8 @@ jobs:
             'spring.datasource.username'
             'spring.datasource.password'
           value: |
-            ${{ secrets.DB_USERNAME }}
-            ${{ secrets.DB_PASSWORD }}
+            '${{ secrets.DB_USERNAME }}'
+            '${{ secrets.DB_PASSWORD }}'
 
       #Build the application using Maven
       - name: Build with Maven
