@@ -43,7 +43,19 @@ jobs:
         uses: s4u/maven-settings-action@v2.4.1
         with:
           servers: '[{"id": "TomcatServer", "username": "${{ secrets.TOMCAT_USERNAME }}", "password": "${{ secrets.TOMCAT_PASSWORD }}"}]'
-          
+
+      #Write database mysql and password to application.properties
+      - name: Write value to Properties-file
+        uses: christian-draeger/write-properties@1.0.2
+        with:
+          path: './src/main/resources/application.properties'
+          property: |
+            'spring.datasource.username'
+            'spring.datasource.password'
+          value: |
+            ${{ secrets.DB_USERNAME }}
+            ${{ secrets.DB_PASSWORD }}
+
       #Build the application using Maven
       - name: Build with Maven
         run: mvn -B package -DskipTests --file pom.xml
