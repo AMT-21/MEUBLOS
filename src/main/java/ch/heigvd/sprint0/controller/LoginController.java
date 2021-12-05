@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,10 +26,11 @@ public class LoginController {
     private SessionService sessionService;
 
     @GetMapping("/login")
-    public String indexLogin(Model model, @RequestParam(value = "error", required = false) boolean error) {
+    public String indexLogin(Model model, @RequestParam(value = "error", required = false) boolean error, HttpServletRequest request) {
         if (error) {    // Login utilisateur faux
             model.addAttribute("error", "Your login failed.");
         }
+
 
         return "login.html";
 
