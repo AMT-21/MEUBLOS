@@ -24,7 +24,7 @@ CREATE TABLE `Meuble` (
 
 
 CREATE TABLE `Panier` (
-                          idUser INT UNSIGNED NOT NULL,
+                          idUser VARCHAR(50) NOT NULL,
 
                           CONSTRAINT PK_Panier PRIMARY KEY (idUser)
 ) ENGINE = InnoDB;
@@ -50,7 +50,7 @@ CREATE TABLE `Meuble_Categorie` (
 
 CREATE TABLE `Panier_Meuble` (
                                  idMeuble INT UNSIGNED NOT NULL,
-                                 idUserPanier INT UNSIGNED NOT NULL,
+                                 idUserPanier VARCHAR(50) NOT NULL,
                                  quantite INT UNSIGNED NOT NULL,
 
                                  CONSTRAINT PK_Panier_Meuble PRIMARY KEY (idMeuble, idUserPanier),
@@ -78,7 +78,7 @@ INSERT INTO `Categorie` (`nomCategorie`) VALUES
 INSERT INTO `Meuble` (`id`, `nom`, `description`, `prixVente`, `quantite`) VALUES
 (1, 'Un meuble du grenier', 'Il était dans mon grenier pendant des années', 10.55, 4),
 (2, 'Table en marbre', 'En super état ! Comme neuf. \r\n\r\nPersonne non sérieuse s\'abstenir.', 430.00, 2),
-(3, 'Armoire style "Louis XVI"', 'Petite pépite avec quelques dégats presque pas visible\r\nMerci de me contacter pour plus d\'informations.', 249.90, 1);
+	(3, 'Armoire style "Louis XVI"', 'Petite pépite avec quelques dégats presque pas visible\r\nMerci de me contacter pour plus d\'informations.', 249.90, 1);
 
 INSERT INTO `Meuble_Categorie` (`idMeuble`, `nomCategorie`) VALUES
 (3, 'Armoire'),
