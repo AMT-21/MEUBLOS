@@ -16,7 +16,7 @@ import java.net.URL;
 @Service
 public class RegisterService {
 
-    private final String apiLoginServerUrl = "http://localhost:9081/accounts/register";
+    private final String apiLoginServerUrl = "http://10.0.1.92:8080/accounts/register";
 
     public boolean register(String username, String password, HttpServletResponse response) throws IOException {
 

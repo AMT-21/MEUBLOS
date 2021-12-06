@@ -16,8 +16,11 @@ import java.net.URL;
 @Service
 public class SessionService {
 
-    private final String apiLoginServerUrl = "http://localhost:9081/auth/login";
+    private final String apiLoginServerUrl = "http://10.0.1.92:8080/auth/login";
 
+    // TODO DPO - Utilisez Autowired, c'est cool (je le faisais également avant), mais ceci implique un petit arrachage
+    //  de cheveux si vous faites des tests d'intégration comparé à l'utilisation des constructeurs.
+    //  Je vous conseille, à moins que vous soyez au clair là-dessus, d'utiliser les constructeurs.
     @Autowired
     private JWTService jwtService;
 

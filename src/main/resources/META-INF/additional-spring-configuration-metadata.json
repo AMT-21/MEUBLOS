@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "server.tomcat.upload-dir",
+      "type": "java.lang.String",
+      "description": "Upload dir file path"
+  }
+] }
