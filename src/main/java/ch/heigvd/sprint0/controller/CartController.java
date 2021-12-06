@@ -92,8 +92,10 @@ public class CartController {
 
         String cartId = (String) session.getAttribute("userId");
 
-        Cart cart = cartService.findById(cartId).orElse(null);
-
+        Cart cart = null;
+        if (cartId != null) {
+            cart = cartService.findById(cartId).orElse(null);
+        }
         List<CartArticle> cart_articles;
 
         // Si l'utilisateur est connecté. Enlever l'article du panier.
