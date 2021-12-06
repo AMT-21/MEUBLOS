@@ -1,5 +1,7 @@
 package ch.heigvd.sprint0.controller;
 
+import ch.heigvd.sprint0.model.Cart;
+import ch.heigvd.sprint0.repository.CartRepository;
 import ch.heigvd.sprint0.service.JWTService;
 import ch.heigvd.sprint0.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
@@ -23,6 +26,9 @@ public class LoginController {
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @GetMapping("/login")
     public String indexLogin(Model model, @RequestParam(value = "error", required = false) boolean error) {
@@ -36,10 +42,16 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public void createUserLoginToken(HttpServletResponse response, @RequestParam String inputLogin, @RequestParam String inputPassword) throws IOException {
+    public void createUserLoginToken(HttpServletResponse response, HttpSession session, @RequestParam String inputLogin, @RequestParam String inputPassword) throws IOException {
 
         if (sessionService.setLogin(inputLogin, inputPassword, response)) { // Succes login
             response.sendRedirect("./");
+            session.setAttribute("userId", inputLogin);
+
+            Cart cart = cartRepository.findById(inputLogin).orElse(null);
+            if (cart == null) {
+                cartRepository.save(new Cart(inputLogin));
+            }
         } else { // Error login
             response.sendRedirect("./login?error=true");
         }

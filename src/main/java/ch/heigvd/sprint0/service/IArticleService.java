@@ -13,7 +13,7 @@ public interface IArticleService {
     List<Article> findAll();
     Optional<Article> findById(int id);
     Optional<Article> findByDescription(String description);
-    List<Cart_Article> findCartArticleFromUser(int id);
+    List<Cart_Article> findCartArticleFromUser(String id);
     void saveArticle(Article article);
     List<Article> findTopByOrderByIdDesc();
     void deleteArticle(Article article);

@@ -51,7 +51,7 @@ public class CartController {
                       @RequestParam("quantity") Integer quantity) {
 
         // Si l'utilisateur est connecté.
-        Integer cartId = (Integer) session.getAttribute("userId");
+        String cartId = (String) session.getAttribute("userId");
         boolean isConnected = cartId != null;
 
         Cart cart = isConnected ? cartRepository.findById(cartId).get() : null;
@@ -82,7 +82,7 @@ public class CartController {
     public String remove(Model model, HttpSession session,
                          @PathVariable("artId") int artId) {
 
-        Integer cartId = (Integer) session.getAttribute("userId");
+        String cartId = (String) session.getAttribute("userId");
         boolean isConnected = cartId != null;
 
         List<Cart_Article> cart_articles;
@@ -110,7 +110,7 @@ public class CartController {
     @GetMapping("/cart/removeAll")
     public String remove(Model model, HttpSession session) {
 
-        Integer cartId = (Integer) session.getAttribute("userId");
+        String cartId = (String) session.getAttribute("userId");
         boolean isConnected = cartId != null;
 
         List<Cart_Article> cart_articles;
@@ -132,7 +132,7 @@ public class CartController {
                                  @PathVariable("artId") int artId,
                                  @RequestParam("quantity") Integer quantity) {
         // Si l'utilisateur est connecté.
-        Integer cartId = (Integer) session.getAttribute("userId");
+        String cartId = (String) session.getAttribute("userId");
         boolean isConnected = cartId != null;
         boolean toRemove = quantity < 1;
 
@@ -190,7 +190,7 @@ public class CartController {
             cart_articles = new LinkedList<>();
 
             // Récupère le panier de l'utilisateur si connecté.
-            Integer cartId = (Integer) session.getAttribute("userId");
+            String cartId = (String) session.getAttribute("userId");
             if (cartId != null) {
                 cart_articles.addAll(cartArticleRepository.findCart_ArticlesByIds_Cart_IdUser(cartId));
             }

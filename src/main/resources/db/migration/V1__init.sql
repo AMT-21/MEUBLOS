@@ -24,7 +24,7 @@ CREATE TABLE `Meuble` (
 
 
 CREATE TABLE `Panier` (
-                          idUser INT UNSIGNED NOT NULL,
+                          idUser VARCHAR(50) NOT NULL,
 
                           CONSTRAINT PK_Panier PRIMARY KEY (idUser)
 ) ENGINE = InnoDB;
@@ -50,7 +50,7 @@ CREATE TABLE `Meuble_Categorie` (
 
 CREATE TABLE `Panier_Meuble` (
                                  idMeuble INT UNSIGNED NOT NULL,
-                                 idUserPanier INT UNSIGNED NOT NULL,
+                                 idUserPanier VARCHAR(50) NOT NULL,
                                  quantite INT UNSIGNED NOT NULL,
 
                                  CONSTRAINT PK_Panier_Meuble PRIMARY KEY (idMeuble, idUserPanier),

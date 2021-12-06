@@ -43,7 +43,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public List<Cart_Article> findCartArticleFromUser(int id) {
+    public List<Cart_Article> findCartArticleFromUser(String id) {
         return new LinkedList<>(cartRepository.findById(id).get().getCart_article_list());
     }
 

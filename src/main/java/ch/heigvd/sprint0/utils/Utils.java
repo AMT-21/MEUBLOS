@@ -51,7 +51,7 @@ public class Utils {
     public void mergeCarts(HttpSession session) {
 
         // Récupère le panier de l'utilisateur si connecté.
-        Integer cartId = (Integer) session.getAttribute("userId");
+        String cartId = (String) session.getAttribute("userId");
         if (cartId != null) {
             List<Cart_Article> cart_articles = (List<Cart_Article>) session.getAttribute("articles_in_cart");
 
