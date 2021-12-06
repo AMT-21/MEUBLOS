@@ -8,29 +8,39 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@ControllerAdvice
 @Controller
 public class LoginController {
 
     @Autowired
     private SessionService sessionService;
 
+    @ModelAttribute("userData")
+    public String[] getUser(HttpServletRequest request) {
+        return sessionService.checkLogin(request);
+    }
+
     @GetMapping("/login")
-    public String indexLogin(Model model, @RequestParam(value = "error", required = false) boolean error) {
+    public String indexLogin(Model model, @RequestParam(value = "error", required = false) boolean error, HttpServletRequest request) {
         if (error) {    // Login utilisateur faux
             model.addAttribute("error", "Your login failed.");
+            return "login.html";
         }
 
-        return "login.html";
+        if (sessionService.checkLogin(request) != null) {   // Le user est déjà loggué
+            return "index.html";
+        } else {
+            return "login.html";
+        }
+
 
     }
 
