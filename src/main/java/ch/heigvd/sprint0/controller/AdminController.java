@@ -3,7 +3,6 @@ package ch.heigvd.sprint0.controller;
 import ch.heigvd.sprint0.model.Article;
 import ch.heigvd.sprint0.model.ArticleCategory;
 import ch.heigvd.sprint0.model.Category;
-import ch.heigvd.sprint0.repository.CategoryRepository;
 import ch.heigvd.sprint0.service.IArticleCategoryService;
 import ch.heigvd.sprint0.service.IArticleService;
 import ch.heigvd.sprint0.service.ICategoryService;
@@ -24,25 +23,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class AdminController {
 
-    @Autowired
-    private IArticleService articleService;
+    private final IArticleService articleService;
 
-    @Autowired
-    private IArticleCategoryService articleCategoryService;
+    private final IArticleCategoryService articleCategoryService;
 
-    @Autowired
-    private ICategoryService categoryService;
+    private final ICategoryService categoryService;
 
     @Value("${server.tomcat.upload-dir}")
     private String uploadPath;
+
+    @Autowired
+    public AdminController(IArticleService articleService, IArticleCategoryService articleCategoryService, ICategoryService categoryService) {
+        this.articleService = articleService;
+        this.articleCategoryService = articleCategoryService;
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/admin")
     public String admin(Model model) {
@@ -57,14 +57,12 @@ public class AdminController {
                                @RequestParam(name = "error", required = false) String error,
                                @RequestParam(name = "error_msg", required = false) String errorMsg) {
         if(id != null && !id.chars().allMatch(Character::isDigit))
-            return "redirect:/admin";
+            return admin(model);
+
 
         Article modelArticle = null;
-        if(id != null) {
-            Optional<Article> article = articleService.findById(Integer.parseInt(id));
-            if(article.isPresent()) {
-                modelArticle = article.get();
-            }
+        if (id != null) {
+            modelArticle = articleService.findById(Integer.parseInt(id)).orElse(null);
         }
 
         if(error != null) {
@@ -95,13 +93,13 @@ public class AdminController {
         // C'est une modification d'article
         if(article.getId() != null) {
             // Vérifier que la description n'est pas déjà utilisée par un autre article
-            if(articleWithSameDescription.isPresent() && articleWithSameDescription.get().getId() != article.getId()) {
-                return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+            if(articleWithSameDescription.isPresent() && !articleWithSameDescription.get().getId().equals(article.getId())) {
+                return adminArticle(model, null, "DescAlreadyUsed", articleWithSameDescription.get().getName());
             }
 
             if(article_category_list == null) {
                 // aucune catégorie cochée, on les supprime tous si elles existent
-                articleCategoryService.deleteAll(article.getId());
+                articleCategoryService.deleteAllByArticle(article.getId());
             } else {
                 // supprimer les catégories qui ne sont pas cochées
                 List<Category> allCats = categoryService.findAll();
@@ -110,7 +108,7 @@ public class AdminController {
                     // si la catégorie n'appartient pas à l'article
                     if(!Arrays.asList(articleCats).contains(c.getNameCategory())) {
                         // si la catégorie est une ancienne catégorie de l'article
-                        for(ArticleCategory articleAc : articleCategoryService.findArticleCategoriesByIdArticle(article.getId())) {
+                        for(ArticleCategory articleAc : articleCategoryService.findAllByArticle(article.getId())) {
                             if(articleAc.getCategory().getNameCategory().equals(c.getNameCategory())) {
                                 articleCategoryService.delete(article.getId(), c.getNameCategory());
                             }
@@ -118,12 +116,10 @@ public class AdminController {
                     }
                 }
             }
-
-        // C'est un ajout d'article
-        } else {
+        } else {    // C'est un ajout d'article
             // Vérifier que la description n'est pas déjà utilisée par un autre article
             if(articleWithSameDescription.isPresent()) {
-                return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+                return adminArticle(model, null, "DescAlreadyUsed", articleWithSameDescription.get().getName());
             }
         }
 
@@ -134,7 +130,7 @@ public class AdminController {
             try (InputStream input = image.getInputStream()) {
                 try { ImageIO.read(input).toString(); } catch (Exception e) {
                     // It's not an image.
-                    return "redirect:/admin/article?error=NotAnImage";
+                    return adminArticle(model,null, "NotAnImage", null);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -142,12 +138,13 @@ public class AdminController {
 
             // Récupère l'id du nouvel élément pour l'utiliser comme nom d'image
             Article insertedArticle = article.getId() != null ? article : articleService.findLatestArticle().get();
+
             // Upload de l'image
             try {
                 String extension = "." + image.getOriginalFilename().split("\\.")[image.getOriginalFilename().split("\\.").length - 1];
                 // On accepte que les .jpg
                 if(!extension.equals(".jpg")) {
-                    return "redirect:/admin/article?error=NotAnImage";
+                    return adminArticle(model,null, "NotAnImage", null);
                 }
 
                 if (!Files.exists(Paths.get(uploadPath))) {
@@ -170,7 +167,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin/article/delete")
-    public String articleDelete(Model model, @RequestParam(name = "id") String id) {
+    public String articleDelete(@RequestParam(name = "id") String id) {
         // L'id existe ?
         Optional<Article> article = articleService.findById(Integer.parseInt(id));
         article.ifPresent(value -> articleService.deleteById(value.getId()));
@@ -192,15 +189,15 @@ public class AdminController {
     }
 
     @PostMapping("/admin/categories")
-    public String categorySubmit(@ModelAttribute Category category, Model model) {
+    public String categorySubmit(Model model, @ModelAttribute Category category) {
         // Vérifier que le nom de la catégorie existe pas déjà
         Optional<Category> cat = categoryService.findByName(category.getNameCategory());
         if(cat.isPresent()) {
-            return "redirect:/admin/categories?error=catAlreadyExists";
+            return adminCategories(model, "catAlreadyExists");
         }
 
         categoryService.save(new Category(category.getNameCategory()));
-        return "redirect:/admin/categories";
+        return adminCategories(model, null);
     }
 
     @GetMapping("/admin/categories/confirmDeletion")
@@ -209,10 +206,10 @@ public class AdminController {
         Optional<Category> category = categoryService.findByName(id);
         if(category.isPresent()) {
             // Récupérer la liste des articles impactés
-            List<ArticleCategory> acs = articleCategoryService.findArticleCategoriesByNameCategory(id);
+            List<ArticleCategory> acs = articleCategoryService.findAllByCategory(id);
             if(acs.isEmpty()) {
                 categoryService.delete(id);
-                return "redirect:/admin/categories";
+                return adminCategories(model,null);
             }
             List<Article> concernedArticles = new ArrayList<>();
             for(ArticleCategory ac : acs) {
@@ -224,7 +221,7 @@ public class AdminController {
             return "adminCategoriesConfirmDeletion";
         }
 
-        return "redirect:/admin/categories";
+        return adminCategories(model,null);
     }
 
     @GetMapping("/admin/categories/delete")
@@ -235,7 +232,6 @@ public class AdminController {
             categoryService.delete(id);
         }
 
-        return "redirect:/admin/categories";
+        return adminCategories(model,null);
     }
-
 }

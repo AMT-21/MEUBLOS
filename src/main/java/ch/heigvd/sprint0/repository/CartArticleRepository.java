@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartArticleRepository extends CrudRepository<CartArticle, CartArticleIds> {
-    List<CartArticle> findCartArticlesByIds_Cart_IdUser(String idUser);
-    Optional<CartArticle> findCartArticleByIds_Article_IdAndIds_Cart_IdUser(Integer idArticle, String idCart);
-    void deleteCartArticleByIds_Article_IdAndIds_Cart_IdUser(Integer idArticle, String idCart);
-    void deleteCartArticlesByIds_Cart_IdUser(String idCart);
+    List<CartArticle> findByIds_Cart_IdUser(String idUser);
+    Optional<CartArticle> findByIds_Article_IdAndIds_Cart_IdUser(Integer idArticle, String idCart);
+    void deleteByIds_Article_IdAndIds_Cart_IdUser(Integer idArticle, String idCart);
+    void deleteByIds_Cart_IdUser(String idCart);
+    void deleteByIds_Article_Id(Integer idArticle);
 }

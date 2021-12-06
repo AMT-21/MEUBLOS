@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ICartArticleService {
-    List<CartArticle> findCartArticlesByIdCart(String idCart);
-    Optional<CartArticle> findCartArticleByIdArticleAndIdCart(Integer idArticle, String idCart);
+    List<CartArticle> findAllByIdCart(String idCart);
+    Optional<CartArticle> find(Integer idArticle, String idCart);
     void save(CartArticle cartArticle);
     void saveAll(List<CartArticle> cartArticles);
-    void deleteCartArticleByIdArticleAndIdCart(Integer idArticle, String idCart);
-    void deleteCartArticlesByIdCart(String idCart);
+    void delete(Integer idArticle, String idCart);
+    void deleteAllByIdCart(String idCart);
+    void deleteAllByIdArticle(Integer idArticle);
 }

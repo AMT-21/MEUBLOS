@@ -13,6 +13,7 @@ public interface IArticleService {
     Optional<Article> findLatestArticle();
     List<Article> find3LatestArticles();
     List<Article> findLatestArticles();
+    List<Article> findAllWithCategory(String nameCategory);
     void saveArticle(Article article);
     void deleteById(Integer idArticle);
 }

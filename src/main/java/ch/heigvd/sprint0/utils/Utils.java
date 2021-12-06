@@ -64,7 +64,7 @@ public class Utils {
             cartArticleService.saveAll(cart_articles);
 
             // Met à jour la session
-            session.setAttribute("articles_in_cart", cartArticleService.findCartArticlesByIdCart(cartId));
+            session.setAttribute("articles_in_cart", cartArticleService.findAllByIdCart(cartId));
         }
     }
 }
