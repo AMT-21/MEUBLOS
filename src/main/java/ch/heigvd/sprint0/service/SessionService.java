@@ -76,26 +76,30 @@ public class SessionService {
     /**
      * Permet de vérifier si un user est connecté. Si oui, on récupère son rôle et username.
      * @param request
-     * @return Un tableau de string contenant le rôle à l'indice 0 et le username à l'indice 2.
-     *         Si il n'y a pas de login, ou une erreur d'authenticité renvoie Null
+     * @return Un tableau de string contenant le rôle à l'indice 0 et le username à l'indice 1.
+     *         Si il n'y a pas de login ou une erreur d'authenticité, renvoie null
      */
-    public String[] checkIfLogin(HttpServletRequest request) {
+    public String[] checkLogin(HttpServletRequest request) {
         Objects.requireNonNull(request);
 
-        String output;
+        String[] output = null;
         Cookie tokenLoginCookie = null;
+        Cookie[] cookies = request.getCookies();
 
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals(tokenName)) {
-                tokenLoginCookie = cookie;
-                break;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(tokenName)) {
+                    tokenLoginCookie = cookie;
+                    break;
+                }
             }
         }
 
         if (tokenLoginCookie != null) {     // Le token de login est présent, check de son authenticité
-            jwtService.checkTokenAuthenticity(tokenLoginCookie.getValue());
-
+            output = jwtService.extractToken(tokenLoginCookie.getValue());
         }
+
+        return output;
     }
 
 

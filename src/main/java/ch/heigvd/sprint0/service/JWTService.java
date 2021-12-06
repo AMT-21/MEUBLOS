@@ -25,17 +25,28 @@ public class JWTService {
         return builder.sign(Algorithm.HMAC256(SECRET));
     }
 
-    public boolean checkTokenAuthenticity(String token) {
+    /**
+     * Décode le token pour extraire le rôle et le username. Si token pas valide, retourne Null
+     * @param token token JWT en String
+     * @return Tableau de String, indice 0 = username, indice 1 = rôle
+     */
+    public String[] extractToken(String token) {
         Objects.requireNonNull(token);
 
-        //DecodedJWT decodedJWT = JWT.decode(token);
+        // Vérification de l'authenticité du token
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
         try {
             verifier.verify(token);
         } catch (JWTVerificationException exception) {
-            return false;
+            return null;
         }
 
-        return true;
+        String[] output = new String[2];
+        // Extraction des infos nécessaires dans le token
+        DecodedJWT decodedJWT = JWT.decode(token);
+        output[0] = decodedJWT.getClaim("sub").asString();
+        output[1] = decodedJWT.getClaim("rôle").asString();
+
+        return output;
     }
 }
