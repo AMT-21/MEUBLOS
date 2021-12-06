@@ -209,7 +209,7 @@ public class AdminController {
             List<ArticleCategory> acs = articleCategoryService.findAllByCategory(id);
             if(acs.isEmpty()) {
                 categoryService.delete(id);
-                return adminCategories(model,null);
+                return adminCategories(model, null);
             }
             List<Article> concernedArticles = new ArrayList<>();
             for(ArticleCategory ac : acs) {
@@ -221,7 +221,7 @@ public class AdminController {
             return "adminCategoriesConfirmDeletion";
         }
 
-        return adminCategories(model,null);
+        return adminCategories(model, null);
     }
 
     @GetMapping("/admin/categories/delete")
