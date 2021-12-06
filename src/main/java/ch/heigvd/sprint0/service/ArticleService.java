@@ -1,9 +1,8 @@
 package ch.heigvd.sprint0.service;
 
 import ch.heigvd.sprint0.model.Article;
-import ch.heigvd.sprint0.model.Cart_Article;
+import ch.heigvd.sprint0.model.CartArticle;
 import ch.heigvd.sprint0.repository.ArticleRepository;
-import ch.heigvd.sprint0.repository.CartArticleRepository;
 import ch.heigvd.sprint0.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +17,12 @@ import java.util.Optional;
 @Service
 public class ArticleService implements IArticleService {
     //ArticleRepository is injected
-    @Autowired
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
     @Autowired
-    private CartRepository cartRepository;
+    public ArticleService(ArticleRepository articleRepository) {
+        this.articleRepository = articleRepository;
+    }
 
     //The findAll() method of the repository returns the list of articles
     @Override
@@ -30,7 +30,7 @@ public class ArticleService implements IArticleService {
         return (List<Article>) articleRepository.findAll();
     }
 
-    public Optional<Article> findById(int id) {
+    public Optional<Article> findById(Integer id) {
         return articleRepository.findById(id);
     }
 
@@ -38,13 +38,18 @@ public class ArticleService implements IArticleService {
         return articleRepository.findByDescription(description);
     }
 
-    public List<Article> findTopByOrderByIdDesc() {
-        return articleRepository.findTopByOrderByIdDesc();
+    @Override
+    public Optional<Article> findLatestArticle() {
+        return articleRepository.findTop1ByOrderByIdDesc();
     }
 
     @Override
-    public List<Cart_Article> findCartArticleFromUser(String id) {
-        return new LinkedList<>(cartRepository.findById(id).get().getCart_article_list());
+    public List<Article> find3LatestArticles() {
+        return articleRepository.findTop3ByOrderByIdDesc();
+    }
+
+    public List<Article> findLatestArticles() {
+        return articleRepository.findTopByOrderByIdDesc();
     }
 
     @Override
@@ -53,7 +58,7 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public void deleteArticle(Article article) {
-        articleRepository.deleteById(article.getId());
+    public void deleteById(Integer idArticle) {
+        articleRepository.deleteById(idArticle);
     }
 }

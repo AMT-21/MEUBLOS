@@ -6,15 +6,15 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Meuble_Categorie")
-public class Article_Category implements Serializable {
+public class ArticleCategory implements Serializable {
     @EmbeddedId
-    private Article_Category_Ids ids;
+    private ArticleCategoryIds ids;
 
-    public Article_Category(Article_Category_Ids ids) {
+    public ArticleCategory(ArticleCategoryIds ids) {
         this.ids = ids;
     }
 
-    public Article_Category() { }
+    public ArticleCategory() { }
 
     public Article getArticle() {
         return ids.getArticle();
@@ -28,7 +28,7 @@ public class Article_Category implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Article_Category that = (Article_Category) o;
+        ArticleCategory that = (ArticleCategory) o;
         return Objects.equals(ids, that.ids);
     }
 

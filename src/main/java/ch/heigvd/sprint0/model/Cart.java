@@ -1,7 +1,6 @@
 package ch.heigvd.sprint0.model;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -13,7 +12,7 @@ public class Cart {
     private String idUser;
 
     @OneToMany(mappedBy = "ids.cart")
-    private Set<Cart_Article> cart_article_list;
+    private Set<CartArticle> cart_article_list;
 
     public Cart(String idUser) {
         this.idUser = idUser;
@@ -23,11 +22,11 @@ public class Cart {
         return idUser;
     }
 
-    public Set<Cart_Article> getCart_article_list() {
+    public Set<CartArticle> getCart_article_list() {
         return cart_article_list;
     }
 
-    public void setCart_article_list(Set<Cart_Article> cart_article_list) {
+    public void setCart_article_list(Set<CartArticle> cart_article_list) {
         this.cart_article_list = cart_article_list;
     }
 }

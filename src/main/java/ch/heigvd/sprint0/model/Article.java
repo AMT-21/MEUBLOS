@@ -1,15 +1,7 @@
 package ch.heigvd.sprint0.model;
-import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
-import ch.heigvd.sprint0.repository.CategoryRepository;
-import org.hibernate.annotations.Type;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 //The @Entity annotation specifies that the class is an entity and is mapped to a database table while the @Table
@@ -49,10 +41,10 @@ public class Article {
     private int stock;
 
     @OneToMany(mappedBy = "ids.article")
-    private Set<Cart_Article> cart_article_list;
+    private Set<CartArticle> cart_article_list;
 
     @OneToMany(mappedBy = "ids.article", cascade = CascadeType.ALL)
-    private List<Article_Category> article_category_list;
+    private List<ArticleCategory> article_category_list;
 
     public Article(){
 
@@ -111,16 +103,16 @@ public class Article {
     }
 
     public void setArticle_category_list(String categoryName) {
-        List<Article_Category> articleCategories = new ArrayList<>();
+        List<ArticleCategory> articleCategories = new ArrayList<>();
         for(String category : categoryName.split(",")) {
             Category c = new Category(category);
-            Article_Category_Ids ids = new Article_Category_Ids(this, c);
-            articleCategories.add(new Article_Category(ids));
+            ArticleCategoryIds ids = new ArticleCategoryIds(this, c);
+            articleCategories.add(new ArticleCategory(ids));
         }
         this.article_category_list = articleCategories;
     }
 
-    public List<Article_Category> getArticle_category_list() {
+    public List<ArticleCategory> getArticle_category_list() {
         return article_category_list;
     }
 
@@ -130,7 +122,7 @@ public class Article {
      * @return vrai / faux
      */
     public boolean containsCategory(Category category) {
-        for(Article_Category ac : this.getArticle_category_list()) {
+        for(ArticleCategory ac : this.getArticle_category_list()) {
             if(ac.getCategory().equals(category))
                 return true;
         }

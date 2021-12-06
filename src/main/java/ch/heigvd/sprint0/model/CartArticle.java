@@ -6,15 +6,15 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Panier_Meuble")
-public class Cart_Article implements Serializable {
+public class CartArticle implements Serializable {
 
     @EmbeddedId
-    private Cart_Article_Ids ids;
+    private CartArticleIds ids;
 
     @Column(name = "quantite")
     private int quantity;
 
-    public Cart_Article(Cart_Article_Ids ids, int quantity) {
+    public CartArticle(CartArticleIds ids, int quantity) {
         this.ids = ids;
         this.quantity = quantity;
     }
@@ -43,7 +43,7 @@ public class Cart_Article implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Cart_Article that = (Cart_Article) o;
+        CartArticle that = (CartArticle) o;
         return quantity == that.quantity && Objects.equals(ids, that.ids);
     }
 

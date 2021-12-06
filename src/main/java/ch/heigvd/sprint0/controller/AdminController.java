@@ -1,12 +1,12 @@
 package ch.heigvd.sprint0.controller;
 
 import ch.heigvd.sprint0.model.Article;
-import ch.heigvd.sprint0.model.Article_Category;
-import ch.heigvd.sprint0.model.Article_Category_Ids;
+import ch.heigvd.sprint0.model.ArticleCategory;
 import ch.heigvd.sprint0.model.Category;
-import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
 import ch.heigvd.sprint0.repository.CategoryRepository;
+import ch.heigvd.sprint0.service.IArticleCategoryService;
 import ch.heigvd.sprint0.service.IArticleService;
+import ch.heigvd.sprint0.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -34,10 +34,13 @@ public class AdminController {
 
     @Autowired
     private IArticleService articleService;
+
     @Autowired
-    private ArticleCategoryRepository articleCategoryRepository;
+    private IArticleCategoryService articleCategoryService;
+
     @Autowired
-    private CategoryRepository categoryRepository;
+    private ICategoryService categoryService;
+
     @Value("${server.tomcat.upload-dir}")
     private String uploadPath;
 
@@ -46,7 +49,7 @@ public class AdminController {
         List<Article> articles = articleService.findAll();
 
         model.addAttribute("articles", articles);
-        return "admin.html";
+        return "admin";
     }
 
     @GetMapping("/admin/article")
@@ -73,14 +76,14 @@ public class AdminController {
             }
         }
 
-        List<Category> categories = (List<Category>) categoryRepository.findAll();
+        List<Category> categories = categoryService.findAll();
         if(modelArticle != null)
             model.addAttribute("article", modelArticle); // article qui se trouve dans l'url
         else
             model.addAttribute("article", new Article()); // article vide qui va être remplit dans le formulaire
         model.addAttribute("categories", categories);
         model.addAttribute("error", error);
-        return "adminArticle.html";
+        return "adminArticle";
     }
 
     @PostMapping("/admin/article")
@@ -98,24 +101,18 @@ public class AdminController {
 
             if(article_category_list == null) {
                 // aucune catégorie cochée, on les supprime tous si elles existent
-                for(Article_Category articleAc : articleCategoryRepository.findArticle_CategoriesByIds_Article(article)) {
-                    Article_Category_Ids ids = new Article_Category_Ids(article, articleAc.getCategory());
-                    articleCategoryRepository.deleteById(ids);
-                }
+                articleCategoryService.deleteAll(article.getId());
             } else {
                 // supprimer les catégories qui ne sont pas cochées
-                List<Category> allCats = (List<Category>) categoryRepository.findAll();
+                List<Category> allCats = categoryService.findAll();
                 String[] articleCats = article_category_list.split(",");
                 for(Category c : allCats) {
                     // si la catégorie n'appartient pas à l'article
                     if(!Arrays.asList(articleCats).contains(c.getNameCategory())) {
                         // si la catégorie est une ancienne catégorie de l'article
-                        Category formerCat = new Category(c.getNameCategory());
-                        Article_Category_Ids ids = new Article_Category_Ids(article, formerCat);
-
-                        for(Article_Category articleAc : articleCategoryRepository.findArticle_CategoriesByIds_Article(article)) {
+                        for(ArticleCategory articleAc : articleCategoryService.findArticleCategoriesByIdArticle(article.getId())) {
                             if(articleAc.getCategory().getNameCategory().equals(c.getNameCategory())) {
-                                articleCategoryRepository.deleteById(ids);
+                                articleCategoryService.delete(article.getId(), c.getNameCategory());
                             }
                         }
                     }
@@ -144,7 +141,7 @@ public class AdminController {
             }
 
             // Récupère l'id du nouvel élément pour l'utiliser comme nom d'image
-            Article insertedArticle = article.getId() != null ? article : articleService.findTopByOrderByIdDesc().get(0);
+            Article insertedArticle = article.getId() != null ? article : articleService.findLatestArticle().get();
             // Upload de l'image
             try {
                 String extension = "." + image.getOriginalFilename().split("\\.")[image.getOriginalFilename().split("\\.").length - 1];
@@ -176,7 +173,7 @@ public class AdminController {
     public String articleDelete(Model model, @RequestParam(name = "id") String id) {
         // L'id existe ?
         Optional<Article> article = articleService.findById(Integer.parseInt(id));
-        article.ifPresent(value -> articleService.deleteArticle(value));
+        article.ifPresent(value -> articleService.deleteById(value.getId()));
 
         return "redirect:/admin";
     }
@@ -184,47 +181,47 @@ public class AdminController {
     @GetMapping("/admin/categories")
     public String adminCategories(Model model,
                                   @RequestParam(name = "error", required = false) String error) {
-        List<Category> categories = (List<Category>) categoryRepository.findAll();
+        List<Category> categories = categoryService.findAll();
         if(!categories.isEmpty()) {
             model.addAttribute("categories", categories);
         }
 
         model.addAttribute("category", new Category());
         model.addAttribute("error", error);
-        return "adminCategories.html";
+        return "adminCategories";
     }
 
     @PostMapping("/admin/categories")
     public String categorySubmit(@ModelAttribute Category category, Model model) {
         // Vérifier que le nom de la catégorie existe pas déjà
-        Optional<Category> cat = categoryRepository.findById(category.getNameCategory());
+        Optional<Category> cat = categoryService.findByName(category.getNameCategory());
         if(cat.isPresent()) {
             return "redirect:/admin/categories?error=catAlreadyExists";
         }
 
-        categoryRepository.save(new Category(category.getNameCategory()));
+        categoryService.save(new Category(category.getNameCategory()));
         return "redirect:/admin/categories";
     }
 
     @GetMapping("/admin/categories/confirmDeletion")
     public String confirmCategoryDeletion(Model model, @RequestParam(name = "id") String id) {
         // L'id existe ?
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryService.findByName(id);
         if(category.isPresent()) {
             // Récupérer la liste des articles impactés
-            List<Article_Category> acs = articleCategoryRepository.findArticle_CategoriesByIds_Category(new Category(id));
+            List<ArticleCategory> acs = articleCategoryService.findArticleCategoriesByNameCategory(id);
             if(acs.isEmpty()) {
-                categoryRepository.delete(new Category(id));
+                categoryService.delete(id);
                 return "redirect:/admin/categories";
             }
             List<Article> concernedArticles = new ArrayList<>();
-            for(Article_Category ac : acs) {
+            for(ArticleCategory ac : acs) {
                 concernedArticles.add(ac.getArticle());
             }
 
             model.addAttribute("articles", concernedArticles);
             model.addAttribute("category", category.get());
-            return "adminCategoriesConfirmDeletion.html";
+            return "adminCategoriesConfirmDeletion";
         }
 
         return "redirect:/admin/categories";
@@ -233,9 +230,9 @@ public class AdminController {
     @GetMapping("/admin/categories/delete")
     public String categoryDelete(Model model, @RequestParam(name = "id") String id) {
         // L'id existe ?
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryService.findByName(id);
         if(category.isPresent()) {
-            categoryRepository.delete(new Category(id));
+            categoryService.delete(id);
         }
 
         return "redirect:/admin/categories";

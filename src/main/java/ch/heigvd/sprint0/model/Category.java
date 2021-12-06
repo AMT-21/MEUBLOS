@@ -19,7 +19,7 @@ public class Category {
     }
 
     @OneToMany(mappedBy = "ids.category")
-    private Set<Article_Category> article_category_list;
+    private Set<ArticleCategory> article_category_list;
 
     public Category(String nameCategory) {
         this.nameCategory = nameCategory;
