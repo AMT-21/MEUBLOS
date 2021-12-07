@@ -32,7 +32,7 @@ public class CartController {
     @GetMapping("/cart")
     public String index(HttpSession session) {
 
-        // Put in session the content of the cart.
+        // Met le contenu du panier dans la session.
         List<CartArticle> cart_articles = (List<CartArticle>) session.getAttribute("articles_in_cart");
 
         // Récupère le panier de l'utilisateur si connecté.
