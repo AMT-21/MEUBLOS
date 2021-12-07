@@ -9,18 +9,22 @@
 
     <title>Login page</title>
 
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
-
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/signin.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:200,300,400,500,600,700" rel="stylesheet">
 </head>
 
 <body class="text-center">
-<div th:if="${not #strings.isEmpty(error)}" th:text="${error}" class="alert alert-danger" role="alert">
-</div>
+<div th:if="${not #strings.isEmpty(error)}" th:text="${error}" class="alert alert-danger" role="alert"></div>
+<!-- HEADER =============================-->
+<header class="item header margin-top-0">
+    <div class="wrapper">
+        <div th:replace="fragments/header :: header"></div>
+    </div>
+</header>
+
 
 
 <form class="form-signin" method="POST">
