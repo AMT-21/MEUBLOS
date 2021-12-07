@@ -45,7 +45,7 @@ public class JWTService {
         // Extraction des infos nécessaires dans le token
         DecodedJWT decodedJWT = JWT.decode(token);
         output[0] = decodedJWT.getClaim("sub").asString();
-        output[1] = decodedJWT.getClaim("rôle").asString();
+        output[1] = decodedJWT.getClaim("role").asString();
 
         return output;
     }

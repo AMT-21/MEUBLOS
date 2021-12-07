@@ -19,7 +19,7 @@ import java.util.Objects;
 @Service
 public class SessionService {
 
-    private final String apiLoginServerUrl = "http://10.0.1.92:8080/auth/login";
+    private final String apiLoginServerUrl = "http://localhost:8081/auth/login";
 
     // TODO DPO - Utilisez Autowired, c'est cool (je le faisais également avant), mais ceci implique un petit arrachage
     //  de cheveux si vous faites des tests d'intégration comparé à l'utilisation des constructeurs.
@@ -76,7 +76,7 @@ public class SessionService {
     /**
      * Permet de vérifier si un user est connecté. Si oui, on récupère son rôle et username.
      * @param request
-     * @return Un tableau de string contenant le rôle à l'indice 0 et le username à l'indice 1.
+     * @return Un tableau de string contenant le rôle à l'indice 1 et le username à l'indice 0.
      *         Si il n'y a pas de login ou une erreur d'authenticité, renvoie null
      */
     public String[] checkLogin(HttpServletRequest request) {

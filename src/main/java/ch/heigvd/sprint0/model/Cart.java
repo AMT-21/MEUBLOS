@@ -7,12 +7,13 @@ import java.util.Set;
 @Table(name = "Panier")
 public class Cart {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idUser")
     private String idUser;
 
     @OneToMany(mappedBy = "ids.cart")
     private Set<CartArticle> cart_article_list;
+
+    public Cart() { }
 
     public Cart(String idUser) {
         this.idUser = idUser;

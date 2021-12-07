@@ -14,8 +14,15 @@ public class CartArticle implements Serializable {
     @Column(name = "quantite")
     private int quantity;
 
+    public CartArticle() { }
+
     public CartArticle(CartArticleIds ids, int quantity) {
         this.ids = ids;
+        this.quantity = quantity;
+    }
+
+    public CartArticle(Cart cart, Article article, int quantity) {
+        this.ids = new CartArticleIds(cart, article);
         this.quantity = quantity;
     }
 

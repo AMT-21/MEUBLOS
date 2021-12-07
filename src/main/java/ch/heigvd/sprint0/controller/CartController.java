@@ -5,11 +5,13 @@ import ch.heigvd.sprint0.model.Cart;
 import ch.heigvd.sprint0.model.CartArticle;
 import ch.heigvd.sprint0.model.CartArticleIds;
 import ch.heigvd.sprint0.service.*;
+import ch.heigvd.sprint0.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,44 +24,28 @@ public class CartController {
 
     private final ICartService cartService;
 
+    private final Utils utils;
+
     @Autowired
-    public CartController(IArticleService articleService, ICartArticleService cartArticleService, ICartService cartService) {
+    public CartController(IArticleService articleService, ICartArticleService cartArticleService, ICartService cartService, Utils utils) {
         this.articleService = articleService;
         this.cartArticleService = cartArticleService;
         this.cartService = cartService;
+        this.utils = utils;
     }
 
     @GetMapping("/cart")
-    public String index(HttpSession session) {
-
-        // Met le contenu du panier dans la session.
-        List<CartArticle> cart_articles = (List<CartArticle>) session.getAttribute("articles_in_cart");
-
-        // Récupère le panier de l'utilisateur si connecté.
-        String cartId = (String) session.getAttribute("userId");
-        if (cartId != null) {
-            cart_articles.addAll(cartArticleService.findAllByIdCart(cartId));
-        }
-
-        // Met à jour la session
-        session.setAttribute("articles_in_cart", cart_articles);
-
+    public String index() {
         return "cart";
     }
 
     @PostMapping("/cart/add/{artId}")
-    public String add(HttpSession session,
+    public String add(HttpSession session, HttpServletRequest request,
                       @RequestHeader(value = HttpHeaders.REFERER, required = false) final String referrer,
                       @PathVariable("artId") int artId,
                       @RequestParam("quantity") Integer quantity) {
 
-        // Si l'utilisateur est connecté.
-        String cartId = (String) session.getAttribute("userId");
-
-        Cart cart = null;
-        if (cartId != null) {
-            cart = cartService.findById(cartId).orElse(null);
-        }
+        Cart cart = utils.loadCartLogged(request);
         Article article = articleService.findById(artId).orElse(null);
 
         if (article == null) { // Invalid article id.
@@ -67,13 +53,12 @@ public class CartController {
         }
 
         List<CartArticle> cart_articles;
-        CartArticleIds ids = new CartArticleIds(cart, article);
-        CartArticle objToAdd = new CartArticle(ids, quantity);
+        CartArticle objToAdd = new CartArticle(cart, article, quantity);
 
         // Rajoute l'article au panier de l'utilisateur ou dans le panier de la session
         if (cart != null) {
             cartArticleService.save(objToAdd);
-            cart_articles = cartArticleService.findAllByIdCart(cartId);
+            cart_articles = cartArticleService.findAllByIdCart(cart.getIdUser());
         } else { // sinon il faut traité le panier de la session.
             cart_articles = (List<CartArticle>) session.getAttribute("articles_in_cart");
             cart_articles.add(objToAdd);
@@ -86,22 +71,17 @@ public class CartController {
     }
 
     @GetMapping("/cart/remove/{artId}")
-    public String remove(HttpSession session,
+    public String remove(HttpSession session, HttpServletRequest request,
                          @RequestHeader(value = HttpHeaders.REFERER, required = false) final String referrer,
                          @PathVariable("artId") int artId) {
 
-        String cartId = (String) session.getAttribute("userId");
-
-        Cart cart = null;
-        if (cartId != null) {
-            cart = cartService.findById(cartId).orElse(null);
-        }
+        Cart cart = utils.loadCartLogged(request);
         List<CartArticle> cart_articles;
 
         // Si l'utilisateur est connecté. Enlever l'article du panier.
         if (cart != null) {
-            cartArticleService.delete(artId, cartId);
-            cart_articles = cartArticleService.findAllByIdCart(cartId);
+            cartArticleService.delete(artId, cart.getIdUser());
+            cart_articles = cartArticleService.findAllByIdCart(cart.getIdUser());
         } else { // Sinon il faut juste effacer l'article du panier.
             cart_articles = (List<CartArticle>) session.getAttribute("articles_in_cart");
             for(CartArticle c : cart_articles){
@@ -119,18 +99,16 @@ public class CartController {
     }
 
     @GetMapping("/cart/removeAll")
-    public String remove(@RequestHeader(value = HttpHeaders.REFERER, required = false) final String referrer,
-                         HttpSession session) {
+    public String remove(HttpSession session, HttpServletRequest request,
+                         @RequestHeader(value = HttpHeaders.REFERER, required = false) final String referrer) {
 
-        String cartId = (String) session.getAttribute("userId");
-        boolean isConnected = cartId != null;
-
+        Cart cart = utils.loadCartLogged(request);
         List<CartArticle> cart_articles = new LinkedList<>();
 
         // Si l'utilisateur est connecté. Enlever l'article du panier.
-        if (isConnected) {
-            cartArticleService.deleteAllByIdCart(cartId);
-            cart_articles = cartArticleService.findAllByIdCart(cartId);
+        if (cart != null) {
+            cartArticleService.deleteAllByIdCart(cart.getIdUser());
+            cart_articles = cartArticleService.findAllByIdCart(cart.getIdUser());
         }
 
         // Mettre à jour la session.
@@ -140,36 +118,36 @@ public class CartController {
     }
 
     @PostMapping("/cart/update/{artId}")
-    public String updateQuantity(HttpSession session,
+    public String updateQuantity(HttpSession session, HttpServletRequest request,
                                  @RequestHeader(value = HttpHeaders.REFERER, required = false) final String referrer,
                                  @PathVariable("artId") int artId,
                                  @RequestParam("quantity") Integer quantity) {
-        // Si l'utilisateur est connecté.
-        String cartId = (String) session.getAttribute("userId");
-        boolean isConnected = cartId != null;
+
+        Cart cart = utils.loadCartLogged(request);
         boolean toRemove = quantity < 1;
 
         if (toRemove) {
-            return remove(session,referrer,artId);
+            return remove(session, request, referrer, artId);
         }
 
         List<CartArticle> cart_articles;
         CartArticle cart_article = null;
 
         // Si l'utilisateur est connecté. Mettre à jour son panier.
-        if (isConnected) {
-            cart_article = cartArticleService.find(artId, cartId).orElse(null);
+        if (cart != null) {
+            cart_article = cartArticleService.find(artId, cart.getIdUser()).orElse(null);
             if (cart_article == null) {
-                add(session, referrer, artId, 1);
-                cart_article = cartArticleService.find(artId, cartId).orElse(null);
+                add(session, request, referrer, artId, 1);
+                cart_article = cartArticleService.find(artId, cart.getIdUser()).orElse(null);
             }
-            if (cart_article == null) { // Cannot add article to user.
+
+            if (cart_article == null) { // Si toujours null alors il y a un rien. Requête invalide.
                 return "redirect:" + referrer;
             }
 
             cart_article.setQuantity(quantity);
             cartArticleService.save(cart_article);   // update
-            cart_articles = cartArticleService.findAllByIdCart(cartId);
+            cart_articles = cartArticleService.findAllByIdCart(cart.getIdUser());
         } else { // sinon il faut traiter le panier de la session.
             cart_articles = (List<CartArticle>) session.getAttribute("articles_in_cart");
             for(CartArticle c : cart_articles){
@@ -181,7 +159,7 @@ public class CartController {
             }
 
             if (cart_article == null) {
-                add(session, referrer, artId, 1);
+                add(session, request, referrer, artId, 1);
                 cart_articles = (List<CartArticle>) session.getAttribute("articles_in_cart");
                 for(CartArticle c : cart_articles){
                     if ( c.getArticle().getId() == artId ){

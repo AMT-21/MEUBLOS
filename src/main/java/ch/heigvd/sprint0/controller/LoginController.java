@@ -1,7 +1,5 @@
 package ch.heigvd.sprint0.controller;
 
-import ch.heigvd.sprint0.model.Cart;
-import ch.heigvd.sprint0.service.ICartService;
 import ch.heigvd.sprint0.service.SessionService;
 import ch.heigvd.sprint0.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +22,11 @@ public class LoginController {
 
     private final SessionService sessionService;
 
-    private final ICartService cartService;
-
     private final Utils utils;
 
     @Autowired
-    public LoginController(SessionService sessionService, ICartService cartService, Utils utils) {
+    public LoginController(SessionService sessionService, Utils utils) {
         this.sessionService = sessionService;
-        this.cartService = cartService;
         this.utils = utils;
     }
 
@@ -54,23 +49,15 @@ public class LoginController {
         return "login";
     }
 
-
     @PostMapping("/login")
     public void createUserLoginToken(HttpServletResponse response, HttpSession session, @RequestParam String inputLogin, @RequestParam String inputPassword) throws IOException {
 
         if (sessionService.setLogin(inputLogin, inputPassword, response)) { // Succes login
+            utils.mergeCarts(session, inputLogin);
             response.sendRedirect("./");
-            session.setAttribute("userId", inputLogin);
-
-            Cart cart = cartService.findById(inputLogin).orElse(null);
-            if (cart == null) {
-                cartService.save(new Cart(inputLogin));
-            }
-            utils.mergeCarts(session);
         } else { // Error login
             response.sendRedirect("./login?error=true");
         }
-
 
     }
 
