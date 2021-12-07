@@ -23,6 +23,9 @@
 </header>
 
 <body class="text-center">
+<div th:if="${not #strings.isEmpty(error)}" th:text="${error}" class="alert alert-danger" role="alert">
+</div>
+
 <form class="form-register" method="POST">
     <h1 class="h3 mb-3 font-weight-normal">Nouvel utilisateur</h1>
     <label for="inputUsername" class="sr-only">Nom d'utilisateur</label>
