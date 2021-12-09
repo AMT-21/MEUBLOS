@@ -21,7 +21,6 @@ import java.util.Objects;
 @Service
 public class SessionService {
 
-    private final String apiLoginServerUrl = "http://10.0.1.92:8080/auth/login";
     private final String login = "/auth/login";
     private final String register = "/accounts/register";
     private FileReader apiLoginServerUrlJson;
