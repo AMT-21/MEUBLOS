@@ -1,6 +1,7 @@
 package ch.heigvd.sprint0.service;
 
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,8 +101,10 @@ public class SessionService {
         int code = con.getResponseCode();
 
         InputStream responseStream = con.getErrorStream();
-
-        JSONObject res = new JSONObject(new JSONTokener(responseStream));
+        JSONObject res = new JSONObject();
+        if (responseStream != null) {
+            res = new JSONObject(new JSONTokener(responseStream));
+        }
 
         switch (code){
             case 201: return null;
@@ -109,6 +112,13 @@ public class SessionService {
             case 409: return (String) res.get("error");
 
             case 422:
+                JSONArray arrayErrors = res.getJSONArray("errors");
+                StringBuilder errorMessage = new StringBuilder();
+                for (int i = 0; i < arrayErrors.length(); i++) {
+                    JSONObject error = arrayErrors.getJSONObject(0);
+                    errorMessage.append(error.getString("message"));
+                }
+                return errorMessage.toString();
 
             default: return "Erreur inconnue";
         }
