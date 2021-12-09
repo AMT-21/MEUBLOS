@@ -14,12 +14,14 @@ import java.io.IOException;
 public class RegisterController {
 
     @Autowired
-    private RegisterService registerService;
+    private SessionService sessionService;
+
+    private String errorMessage;
 
     @GetMapping("/register")
     public String index(Model model, @RequestParam(value = "error", required = false) boolean error) {
         if(error){
-            model.addAttribute("error", "echec de création du compte");
+            model.addAttribute("error", errorMessage);
         }
         return "register.html";
     }
@@ -27,7 +29,8 @@ public class RegisterController {
     @PostMapping("/register")
     public void createUser(HttpServletResponse response, @RequestParam String inputUsername, @RequestParam String inputPassword) throws IOException {
 
-        if (registerService.register(inputUsername, inputPassword, response)) {
+         errorMessage = sessionService.doRegister(inputUsername, inputPassword, response);
+        if (errorMessage == null) {
             response.sendRedirect("./login");
         } else {
             response.sendRedirect("./register?error=true");
