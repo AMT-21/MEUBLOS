@@ -1,7 +1,7 @@
 
 package ch.heigvd.sprint0.controller;
 
-import ch.heigvd.sprint0.service.RegisterService;
+import ch.heigvd.sprint0.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,14 +13,11 @@ import java.io.IOException;
 
 @Controller
 public class RegisterController {
-
-    private final RegisterService registerService;
 	
-    private SessionService sessionService;
+    private final SessionService sessionService;
 
     @Autowired
-    public RegisterController(RegisterService registerService, SessionService sessionService) {
-        this.registerService = registerService;
+    public RegisterController(SessionService sessionService) {
 		this.sessionService = sessionService;
     }
 
@@ -37,7 +34,7 @@ public class RegisterController {
     @PostMapping("/register")
     public void createUser(HttpServletResponse response, @RequestParam String inputUsername, @RequestParam String inputPassword) throws IOException {
 
-         errorMessage = sessionService.doRegister(inputUsername, inputPassword, response);
+         errorMessage = sessionService.doRegister(inputUsername, inputPassword);
         if (errorMessage == null) {
             response.sendRedirect("./login");
         } else {
