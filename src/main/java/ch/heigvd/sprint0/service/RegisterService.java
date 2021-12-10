@@ -18,7 +18,7 @@ public class RegisterService {
 
     private final String apiLoginServerUrl = "http://10.0.1.92:8080/accounts/register";
 
-    public boolean register(String username, String password, HttpServletResponse response) throws IOException {
+    public String register(String username, String password, HttpServletResponse response) throws IOException {
 
         URL url = new URL(apiLoginServerUrl);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -33,8 +33,21 @@ public class RegisterService {
         os.write(toServer.toString().getBytes());
         os.flush();
 
-        int test = con.getResponseCode() ;
-        return test == 201;
+        int code = con.getResponseCode();
+
+        InputStream responseStream = con.getInputStream();
+
+        JSONObject res = new JSONObject(new JSONTokener(responseStream));
+
+        switch (code){
+            case 201: return null;
+
+            case 409: return (String) res.get("error");
+
+            case 422:
+
+            default: return "Erreur inconnue";
+        }
     }
 
 }
