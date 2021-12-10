@@ -35,7 +35,16 @@ public class CartController {
     }
 
     @GetMapping("/cart")
-    public String index() {
+    public String index(HttpSession session, HttpServletRequest request) {
+
+        Cart cart = utils.loadCartLogged(request);
+        if (cart != null) {
+            List<CartArticle> cart_articles = cartArticleService.findAllByIdCart(cart.getIdUser());
+
+            // Mettre à jour la session.
+            session.setAttribute("articles_in_cart", cart_articles);
+        }
+
         return "cart";
     }
 
