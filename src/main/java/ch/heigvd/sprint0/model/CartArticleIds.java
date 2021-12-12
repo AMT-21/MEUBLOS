@@ -10,7 +10,7 @@ import java.util.Objects;
 // Composite key :
 // https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#identifiers-composite
 @Embeddable
-public class Cart_Article_Ids implements Serializable {
+public class CartArticleIds implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "idUserPanier", referencedColumnName = "idUser")
@@ -20,12 +20,12 @@ public class Cart_Article_Ids implements Serializable {
     @JoinColumn(name = "idMeuble", referencedColumnName = "id")
     private Article article;
 
-    public Cart_Article_Ids(Cart cart, Article article) {
+    public CartArticleIds(Cart cart, Article article) {
         this.cart = cart;
         this.article = article;
     }
 
-    public Cart_Article_Ids() { }
+    public CartArticleIds() { }
 
     public Cart getCart() {
         return cart;
@@ -51,7 +51,7 @@ public class Cart_Article_Ids implements Serializable {
         if ( o == null || getClass() != o.getClass() ) {
             return false;
         }
-        Cart_Article_Ids ids = (Cart_Article_Ids) o;
+        CartArticleIds ids = (CartArticleIds) o;
         return Objects.equals( cart, ids.cart ) &&
                 Objects.equals( article, ids.article );
     }

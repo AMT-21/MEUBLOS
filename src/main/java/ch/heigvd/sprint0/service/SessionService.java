@@ -1,7 +1,5 @@
 package ch.heigvd.sprint0.service;
 
-
-import com.sun.istack.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -13,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -23,30 +20,22 @@ public class SessionService {
 
     private final String login = "/auth/login";
     private final String register = "/accounts/register";
-    private FileReader apiLoginServerUrlJson;
-    private JSONObject loginConfig;
     private String apiLoginServerUrl;
-
-
-    // TODO DPO - Utilisez Autowired, c'est cool (je le faisais également avant), mais ceci implique un petit arrachage
-    //  de cheveux si vous faites des tests d'intégration comparé à l'utilisation des constructeurs.
-    //  Je vous conseille, à moins que vous soyez au clair là-dessus, d'utiliser les constructeurs.
-    @Autowired
-    private JWTService jwtService;
-
+    private final JWTService jwtService;
 
     private final String tokenName = "tokenJWT";
 
-    public SessionService(){
+    @Autowired
+    public SessionService(JWTService jwtService){
         try {
-            apiLoginServerUrlJson = new FileReader("./config.json", StandardCharsets.UTF_8);
-        }
-        catch (IOException ex) {
+            FileReader apiLoginServerUrlJson = new FileReader("./config.json", StandardCharsets.UTF_8);
+            JSONObject loginConfig = new JSONObject(new JSONTokener(new BufferedReader (apiLoginServerUrlJson)));
+            apiLoginServerUrl = (String) loginConfig.get("apiAuthenticationServer");
+        } catch (IOException ex) {
             System.out.println("Error, config(s) file(s) missing or cannot been read. Please check README.");
             System.exit(-1);
         }
-        loginConfig = new JSONObject(new JSONTokener(new BufferedReader (apiLoginServerUrlJson)));
-        apiLoginServerUrl = (String) loginConfig.get("apiAuthenticationServer");
+        this.jwtService = jwtService;
     }
 
     public boolean setLogin(String username, String password, HttpServletResponse response) {
@@ -95,7 +84,7 @@ public class SessionService {
     /**
      * Permet de vérifier si un user est connecté. Si oui, on récupère son rôle et username.
      * @param request
-     * @return Un tableau de string contenant le rôle à l'indice 0 et le username à l'indice 1.
+     * @return Un tableau de string contenant le rôle à l'indice 1 et le username à l'indice 0.
      *         Si il n'y a pas de login ou une erreur d'authenticité, renvoie null
      */
     public String[] checkLogin(HttpServletRequest request) {
@@ -122,7 +111,7 @@ public class SessionService {
     }
 
 
-    public String doRegister(String username, String password, HttpServletResponse response) throws IOException {
+    public String doRegister(String username, String password) throws IOException {
 
         URL url = new URL(apiLoginServerUrl + register);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();

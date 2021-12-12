@@ -1,6 +1,6 @@
 package ch.heigvd.sprint0.controller;
 
-import ch.heigvd.sprint0.repository.ArticleRepository;
+import ch.heigvd.sprint0.service.ArticleService;
 import ch.heigvd.sprint0.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,16 +12,20 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class IndexController {
 
-    @Autowired
-    private Utils utils;
+    private final Utils utils;
+
+    private final ArticleService articleService;
 
     @Autowired
-    private ArticleRepository articleRepository;
+    public IndexController(Utils utils, ArticleService articleService) {
+        this.utils = utils;
+        this.articleService = articleService;
+    }
 
     @GetMapping("/")
     public String index(Model model, HttpSession session) {
-        model.addAttribute("articles", utils.getArticlesInfo(articleRepository.findTop3ByOrderByIdDesc(), session));
-        return "index.html";
+        model.addAttribute("articles", utils.getArticlesInfo(articleService.find3LatestArticles(), session));
+        return "index";
     }
 }
 

@@ -1,12 +1,11 @@
 package ch.heigvd.sprint0.controller;
 
 import ch.heigvd.sprint0.model.Article;
-import ch.heigvd.sprint0.model.Article_Category;
-import ch.heigvd.sprint0.model.Article_Category_Ids;
+import ch.heigvd.sprint0.model.ArticleCategory;
 import ch.heigvd.sprint0.model.Category;
-import ch.heigvd.sprint0.repository.ArticleCategoryRepository;
-import ch.heigvd.sprint0.repository.CategoryRepository;
+import ch.heigvd.sprint0.service.IArticleCategoryService;
 import ch.heigvd.sprint0.service.IArticleService;
+import ch.heigvd.sprint0.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -24,29 +23,33 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class AdminController {
 
-    @Autowired
-    private IArticleService articleService;
-    @Autowired
-    private ArticleCategoryRepository articleCategoryRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final IArticleService articleService;
+
+    private final IArticleCategoryService articleCategoryService;
+
+    private final ICategoryService categoryService;
+
     @Value("${server.tomcat.upload-dir}")
     private String uploadPath;
+
+    @Autowired
+    public AdminController(IArticleService articleService, IArticleCategoryService articleCategoryService, ICategoryService categoryService) {
+        this.articleService = articleService;
+        this.articleCategoryService = articleCategoryService;
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/admin")
     public String admin(Model model) {
         List<Article> articles = articleService.findAll();
 
         model.addAttribute("articles", articles);
-        return "admin.html";
+        return "admin";
     }
 
     @GetMapping("/admin/article")
@@ -54,14 +57,12 @@ public class AdminController {
                                @RequestParam(name = "error", required = false) String error,
                                @RequestParam(name = "error_msg", required = false) String errorMsg) {
         if(id != null && !id.chars().allMatch(Character::isDigit))
-            return "redirect:/admin";
+            return admin(model);
+
 
         Article modelArticle = null;
-        if(id != null) {
-            Optional<Article> article = articleService.findById(Integer.parseInt(id));
-            if(article.isPresent()) {
-                modelArticle = article.get();
-            }
+        if (id != null) {
+            modelArticle = articleService.findById(Integer.parseInt(id)).orElse(null);
         }
 
         if(error != null) {
@@ -73,14 +74,14 @@ public class AdminController {
             }
         }
 
-        List<Category> categories = (List<Category>) categoryRepository.findAll();
+        List<Category> categories = categoryService.findAll();
         if(modelArticle != null)
             model.addAttribute("article", modelArticle); // article qui se trouve dans l'url
         else
             model.addAttribute("article", new Article()); // article vide qui va être remplit dans le formulaire
         model.addAttribute("categories", categories);
         model.addAttribute("error", error);
-        return "adminArticle.html";
+        return "adminArticle";
     }
 
     @PostMapping("/admin/article")
@@ -92,41 +93,33 @@ public class AdminController {
         // C'est une modification d'article
         if(article.getId() != null) {
             // Vérifier que la description n'est pas déjà utilisée par un autre article
-            if(articleWithSameDescription.isPresent() && articleWithSameDescription.get().getId() != article.getId()) {
-                return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+            if(articleWithSameDescription.isPresent() && !articleWithSameDescription.get().getId().equals(article.getId())) {
+                return adminArticle(model, null, "DescAlreadyUsed", articleWithSameDescription.get().getName());
             }
 
             if(article_category_list == null) {
                 // aucune catégorie cochée, on les supprime tous si elles existent
-                for(Article_Category articleAc : articleCategoryRepository.findArticle_CategoriesByIds_Article(article)) {
-                    Article_Category_Ids ids = new Article_Category_Ids(article, articleAc.getCategory());
-                    articleCategoryRepository.deleteById(ids);
-                }
+                articleCategoryService.deleteAllByArticle(article.getId());
             } else {
                 // supprimer les catégories qui ne sont pas cochées
-                List<Category> allCats = (List<Category>) categoryRepository.findAll();
+                List<Category> allCats = categoryService.findAll();
                 String[] articleCats = article_category_list.split(",");
                 for(Category c : allCats) {
                     // si la catégorie n'appartient pas à l'article
                     if(!Arrays.asList(articleCats).contains(c.getNameCategory())) {
                         // si la catégorie est une ancienne catégorie de l'article
-                        Category formerCat = new Category(c.getNameCategory());
-                        Article_Category_Ids ids = new Article_Category_Ids(article, formerCat);
-
-                        for(Article_Category articleAc : articleCategoryRepository.findArticle_CategoriesByIds_Article(article)) {
+                        for(ArticleCategory articleAc : articleCategoryService.findAllByArticle(article.getId())) {
                             if(articleAc.getCategory().getNameCategory().equals(c.getNameCategory())) {
-                                articleCategoryRepository.deleteById(ids);
+                                articleCategoryService.delete(article.getId(), c.getNameCategory());
                             }
                         }
                     }
                 }
             }
-
-        // C'est un ajout d'article
-        } else {
+        } else {    // C'est un ajout d'article
             // Vérifier que la description n'est pas déjà utilisée par un autre article
             if(articleWithSameDescription.isPresent()) {
-                return "redirect:/admin/article?error=DescAlreadyUsed&error_msg=" + articleWithSameDescription.get().getName();
+                return adminArticle(model, null, "DescAlreadyUsed", articleWithSameDescription.get().getName());
             }
         }
 
@@ -137,20 +130,21 @@ public class AdminController {
             try (InputStream input = image.getInputStream()) {
                 try { ImageIO.read(input).toString(); } catch (Exception e) {
                     // It's not an image.
-                    return "redirect:/admin/article?error=NotAnImage";
+                    return adminArticle(model,null, "NotAnImage", null);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             // Récupère l'id du nouvel élément pour l'utiliser comme nom d'image
-            Article insertedArticle = article.getId() != null ? article : articleService.findTopByOrderByIdDesc().get(0);
+            Article insertedArticle = article.getId() != null ? article : articleService.findLatestArticle().get();
+
             // Upload de l'image
             try {
                 String extension = "." + image.getOriginalFilename().split("\\.")[image.getOriginalFilename().split("\\.").length - 1];
                 // On accepte que les .jpg
                 if(!extension.equals(".jpg")) {
-                    return "redirect:/admin/article?error=NotAnImage";
+                    return adminArticle(model,null, "NotAnImage", null);
                 }
 
                 if (!Files.exists(Paths.get(uploadPath))) {
@@ -173,10 +167,10 @@ public class AdminController {
     }
 
     @GetMapping("/admin/article/delete")
-    public String articleDelete(Model model, @RequestParam(name = "id") String id) {
+    public String articleDelete(@RequestParam(name = "id") String id) {
         // L'id existe ?
         Optional<Article> article = articleService.findById(Integer.parseInt(id));
-        article.ifPresent(value -> articleService.deleteArticle(value));
+        article.ifPresent(value -> articleService.deleteById(value.getId()));
 
         return "redirect:/admin";
     }
@@ -184,61 +178,60 @@ public class AdminController {
     @GetMapping("/admin/categories")
     public String adminCategories(Model model,
                                   @RequestParam(name = "error", required = false) String error) {
-        List<Category> categories = (List<Category>) categoryRepository.findAll();
+        List<Category> categories = categoryService.findAll();
         if(!categories.isEmpty()) {
             model.addAttribute("categories", categories);
         }
 
         model.addAttribute("category", new Category());
         model.addAttribute("error", error);
-        return "adminCategories.html";
+        return "adminCategories";
     }
 
     @PostMapping("/admin/categories")
-    public String categorySubmit(@ModelAttribute Category category, Model model) {
+    public String categorySubmit(Model model, @ModelAttribute Category category) {
         // Vérifier que le nom de la catégorie existe pas déjà
-        Optional<Category> cat = categoryRepository.findById(category.getNameCategory());
+        Optional<Category> cat = categoryService.findByName(category.getNameCategory());
         if(cat.isPresent()) {
-            return "redirect:/admin/categories?error=catAlreadyExists";
+            return adminCategories(model, "catAlreadyExists");
         }
 
-        categoryRepository.save(new Category(category.getNameCategory()));
-        return "redirect:/admin/categories";
+        categoryService.save(new Category(category.getNameCategory()));
+        return adminCategories(model, null);
     }
 
     @GetMapping("/admin/categories/confirmDeletion")
     public String confirmCategoryDeletion(Model model, @RequestParam(name = "id") String id) {
         // L'id existe ?
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryService.findByName(id);
         if(category.isPresent()) {
             // Récupérer la liste des articles impactés
-            List<Article_Category> acs = articleCategoryRepository.findArticle_CategoriesByIds_Category(new Category(id));
+            List<ArticleCategory> acs = articleCategoryService.findAllByCategory(id);
             if(acs.isEmpty()) {
-                categoryRepository.delete(new Category(id));
-                return "redirect:/admin/categories";
+                categoryService.delete(id);
+                return adminCategories(model, null);
             }
             List<Article> concernedArticles = new ArrayList<>();
-            for(Article_Category ac : acs) {
+            for(ArticleCategory ac : acs) {
                 concernedArticles.add(ac.getArticle());
             }
 
             model.addAttribute("articles", concernedArticles);
             model.addAttribute("category", category.get());
-            return "adminCategoriesConfirmDeletion.html";
+            return "adminCategoriesConfirmDeletion";
         }
 
-        return "redirect:/admin/categories";
+        return adminCategories(model, null);
     }
 
     @GetMapping("/admin/categories/delete")
     public String categoryDelete(Model model, @RequestParam(name = "id") String id) {
         // L'id existe ?
-        Optional<Category> category = categoryRepository.findById(id);
+        Optional<Category> category = categoryService.findByName(id);
         if(category.isPresent()) {
-            categoryRepository.delete(new Category(id));
+            categoryService.delete(id);
         }
 
-        return "redirect:/admin/categories";
+        return adminCategories(model,null);
     }
-
 }

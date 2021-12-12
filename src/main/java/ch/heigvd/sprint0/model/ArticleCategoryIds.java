@@ -12,7 +12,7 @@ import java.util.Objects;
 @Embeddable
 // TODO DPO - Je vous laisse relire vos convention de nommage pour les classes ^^
 //  https://github.com/AMT-21/MEUBLOS/wiki/Convention-de-nommage
-public class Article_Category_Ids implements Serializable {
+public class ArticleCategoryIds implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "idMeuble", referencedColumnName = "id")
@@ -22,12 +22,12 @@ public class Article_Category_Ids implements Serializable {
     @JoinColumn(name = "nomCategorie", referencedColumnName = "nomCategorie")
     private Category category;
 
-    public Article_Category_Ids(Article article, Category category) {
+    public ArticleCategoryIds(Article article, Category category) {
         this.article = article;
         this.category = category;
     }
 
-    public Article_Category_Ids() { }
+    public ArticleCategoryIds() { }
 
     public Article getArticle() {
         return article;
@@ -49,7 +49,7 @@ public class Article_Category_Ids implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Article_Category_Ids that = (Article_Category_Ids) o;
+        ArticleCategoryIds that = (ArticleCategoryIds) o;
         return Objects.equals(article, that.article) && Objects.equals(category, that.category);
     }
 
