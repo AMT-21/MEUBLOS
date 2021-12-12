@@ -41,6 +41,8 @@ Les paramètres `spring.datasource.username` et `spring.datasource.password` doi
 5. Dans le dossier `certificates`, lancer la commande ssh -L <PORT>:10.0.1.92:8080 MEUBLOS@16.170.194.237 -i AMT-DMZ-MEUBLOS.pem pour créer un tunnel ssh avec le service de login. <PORT> correspond au port spécifié dans `config.json`
 
 6. Une fois la fonctionnalité développée, créer une PR sur la branch dev. Nous ferons notre maximum pour traiter vos modifications le plus rapidement possible.
+  
+Plus d'informations sont disponibles sur le [wiki](https://github.com/AMT-21/MEUBLOS/wiki)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
