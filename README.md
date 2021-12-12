@@ -31,7 +31,15 @@ git clone https://github.com/AMT-21/sprint0
 ```
 git flow feature start MYFEATURE 
 ```
-3. Une fois la fonctionnalité développée, créer une PR sur la branch dev. Nous ferons notre maximum pour traiter vos modifications le plus rapidement possible.
+
+3. Dans le répertoire `resources`, modifier le fichier `application.properties`. Le paramètre `server.port` doit contenir le port utilisé lors de l'accès au site. 
+Les paramètres `spring.datasource.username` et `spring.datasource.password` doivent renseigner le mot de passe et nom d'utilisateur utilisés pour créer la base de données.
+
+4. Dans le répertoire principal, modifier le port contenu dans `config.json` qui sera utilisé pour la connexion au service de login.
+
+5. Dans le dossier `certificates`, lancer la commande ssh -L <PORT>:10.0.1.92:8080 MEUBLOS@16.170.194.237 -i AMT-DMZ-MEUBLOS.pem pour créer un tunnel ssh avec le service de login. <PORT> correspond au port spécifié dans `config.json`
+
+6. Une fois la fonctionnalité développée, créer une PR sur la branch dev. Nous ferons notre maximum pour traiter vos modifications le plus rapidement possible.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
