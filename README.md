@@ -8,9 +8,10 @@ MEUBLOS est un site e-commerce de meubles. Ce projet s'inscrit dans le cadre du 
 
 ### Prérequis
 
-1. Installer git-flow (voir https://github.com/AMT-21/sprint0/wiki/Convention-de-nommage#workflow)
-2. Se renseigner sur les conventions de nommages utilisées dans ce projet : https://github.com/AMT-21/sprint0/wiki/Convention-de-nommage#java
-3. Créer une issue sur le repo décrivant la fonctionnalité qui va être développée et pourquoi elle serait utile.
+1. Ce projet utilise Java 8, il faut s'assurer d'utiliser la bonne version.
+2. Installer git-flow (voir https://github.com/AMT-21/sprint0/wiki/Convention-de-nommage#workflow)
+3. Se renseigner sur les conventions de nommages utilisées dans ce projet : https://github.com/AMT-21/sprint0/wiki/Convention-de-nommage#java
+4. Créer une issue sur le repo décrivant la fonctionnalité qui va être développée et pourquoi elle serait utile.
 
 > TODO DPO - Un peu court ce README, non ? ;-)
 > Il manque pas mal d'informations pour que je puisse commencer à dev en tant que nouveau développeur ou si je dois passer le projet
