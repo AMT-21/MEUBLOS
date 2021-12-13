@@ -1,5 +1,8 @@
 package ch.heigvd.sprint0.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +11,8 @@ import java.util.Set;
 // annotation specifies the name of the database table to be used for mapping.
 
 @Entity
+@Getter
+@Setter
 @Table(name="Meuble")
 public class Article {
 
@@ -58,51 +63,7 @@ public class Article {
         this.stock = stock;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setPrixVente(int price) {
-        this.price = price;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
-    public void setArticle_category_list(String categoryName) {
+    public void setArticleCategoryList(String categoryName) {
         List<ArticleCategory> articleCategories = new ArrayList<>();
         for(String category : categoryName.split(",")) {
             Category c = new Category(category);
@@ -112,7 +73,7 @@ public class Article {
         this.article_category_list = articleCategories;
     }
 
-    public List<ArticleCategory> getArticle_category_list() {
+    public List<ArticleCategory> getArticleCategoryList() {
         return article_category_list;
     }
 
@@ -122,7 +83,7 @@ public class Article {
      * @return vrai / faux
      */
     public boolean containsCategory(Category category) {
-        for(ArticleCategory ac : this.getArticle_category_list()) {
+        for(ArticleCategory ac : this.getArticleCategoryList()) {
             if(ac.getCategory().equals(category))
                 return true;
         }

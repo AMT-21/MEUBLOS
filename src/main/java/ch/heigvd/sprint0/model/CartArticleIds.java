@@ -1,5 +1,8 @@
 package ch.heigvd.sprint0.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -10,6 +13,8 @@ import java.util.Objects;
 // Composite key :
 // https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#identifiers-composite
 @Embeddable
+@Getter
+@Setter
 public class CartArticleIds implements Serializable {
 
     @ManyToOne
@@ -26,22 +31,6 @@ public class CartArticleIds implements Serializable {
     }
 
     public CartArticleIds() { }
-
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
-    }
 
     @Override
     public boolean equals(Object o) {
