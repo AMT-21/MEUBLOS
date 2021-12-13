@@ -62,8 +62,9 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
         sessionService.logout(request, response);
+        utils.dropCart(session);
         response.sendRedirect("./");
     }
 
