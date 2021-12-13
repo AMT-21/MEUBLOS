@@ -1,10 +1,15 @@
 package ch.heigvd.sprint0.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Meuble_Categorie")
 public class ArticleCategory implements Serializable {
     @EmbeddedId
