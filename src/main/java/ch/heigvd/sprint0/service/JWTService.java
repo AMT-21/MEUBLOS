@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -48,5 +49,13 @@ public class JWTService {
         output[1] = decodedJWT.getClaim("role").asString();
 
         return output;
+    }
+
+    public int getValiditySecondsFromNow(String jwt) {
+        DecodedJWT decodedJWT = JWT.decode(jwt);
+        Date expires = decodedJWT.getExpiresAt();
+        Date now = new Date();
+        long secondsToExpire = expires.getTime() / 1000L - now.getTime() / 1000L;
+        return (int) secondsToExpire;
     }
 }

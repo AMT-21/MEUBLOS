@@ -8,7 +8,7 @@
             <a th:href="@{/}" class="navbar-brand brand"> MEUBLOS </a>
         </ul>
         <ul class="nav justify-content-end">
-            <button th:if="${not #arrays.isEmpty(userData)}" th:text="${userData[0]}" type="button" class="btn btn-light"></button>
+            <button th:if="${not #arrays.isEmpty(userData)}" type="button" class="btn btn-warning" onclick="window.location.href='./logout';">Déconnexion <span class="badge bg-secondary" th:text="${userData[0]}"></span></button>
             <li class="nav-item">
                 <a class="nav-link active" th:href="@{/cart}">Panier</a>
             </li>
