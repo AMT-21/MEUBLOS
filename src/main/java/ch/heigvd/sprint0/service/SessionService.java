@@ -20,21 +20,22 @@ public class SessionService {
 
     private final String login = "/auth/login";
     private final String register = "/accounts/register";
-    private String apiLoginServerUrl;
+    private String apiLoginServerUrl = "http://localhost:8081";
     private final JWTService jwtService;
 
     private final String tokenName = "tokenJWT";
 
     @Autowired
     public SessionService(JWTService jwtService){
-        try {
-            FileReader apiLoginServerUrlJson = new FileReader("./config.json", StandardCharsets.UTF_8);
+/*        try {
+            FileReader apiLoginServerUrlJson = new FileReader("../../../config.json", StandardCharsets.UTF_8);
             JSONObject loginConfig = new JSONObject(new JSONTokener(new BufferedReader (apiLoginServerUrlJson)));
             apiLoginServerUrl = (String) loginConfig.get("apiAuthenticationServer");
         } catch (IOException ex) {
             System.out.println("Error, config(s) file(s) missing or cannot been read. Please check README.");
+            ex.printStackTrace();
             System.exit(-1);
-        }
+        }*/
         this.jwtService = jwtService;
     }
 
@@ -49,6 +50,7 @@ public class SessionService {
 
         if(jwtToken != null) {
             Cookie session = new Cookie(tokenName, jwtToken);
+            session.setMaxAge(jwtService.getValiditySecondsFromNow(jwtToken));
             response.addCookie(session);
             return true;
         } else {
@@ -91,17 +93,7 @@ public class SessionService {
         Objects.requireNonNull(request);
 
         String[] output = null;
-        Cookie tokenLoginCookie = null;
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(tokenName)) {
-                    tokenLoginCookie = cookie;
-                    break;
-                }
-            }
-        }
+        Cookie tokenLoginCookie = findTokenCookie(request);
 
         if (tokenLoginCookie != null) {     // Le token de login est présent, check de son authenticité
             output = jwtService.extractToken(tokenLoginCookie.getValue());
@@ -150,6 +142,27 @@ public class SessionService {
 
             default: return "Erreur inconnue";
         }
+    }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        //Cookie cookie = new Cookie(tokenName, "");
+        //cookie.setMaxAge(0);
+        //response.addCookie(cookie);
+        response.setHeader("Set-Cookie", tokenName +"=; SameSite=strict; Max-Age=0");
+    }
+
+
+    private Cookie findTokenCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(tokenName)) {
+                    return cookie;
+                }
+            }
+        }
+
+        return null;
     }
 
 }
