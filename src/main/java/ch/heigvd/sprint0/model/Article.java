@@ -63,7 +63,17 @@ public class Article {
         this.stock = stock;
     }
 
-    public List<ArticleCategory> getArticle_category_list() {
+    public void setArticleCategoryList(String categoryName) {
+        List<ArticleCategory> articleCategories = new ArrayList<>();
+        for(String category : categoryName.split(",")) {
+            Category c = new Category(category);
+            ArticleCategoryIds ids = new ArticleCategoryIds(this, c);
+            articleCategories.add(new ArticleCategory(ids));
+        }
+        this.article_category_list = articleCategories;
+    }
+
+    public List<ArticleCategory> getArticleCategoryList() {
         return article_category_list;
     }
 
@@ -73,7 +83,7 @@ public class Article {
      * @return vrai / faux
      */
     public boolean containsCategory(Category category) {
-        for(ArticleCategory ac : this.getArticle_category_list()) {
+        for(ArticleCategory ac : this.getArticleCategoryList()) {
             if(ac.getCategory().equals(category))
                 return true;
         }

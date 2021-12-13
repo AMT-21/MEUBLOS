@@ -2,9 +2,10 @@ package ch.heigvd.sprint0.object;
 
 import ch.heigvd.sprint0.model.Article;
 import ch.heigvd.sprint0.model.CartArticle;
+import lombok.Getter;
+import lombok.Setter;
 
-// TODO DPO - Si ça vous intéresse, je vous invite à vous documenter sur la lib 'lombok' https://projectlombok.org/
-//  elle vous simplifiera le code auto-générer et vos classes java seront plus rapides à lire
+@Getter
 public class ArticleInfo {
     Article article;
     CartArticle cart_article;
@@ -44,18 +45,6 @@ public class ArticleInfo {
 
     public int getStock() {
         return article.getStock();
-    }
-
-    public boolean getCanBePurchase() {
-        return canBePurchase;
-    }
-
-    public boolean getIsAvailable() {
-        return isAvailable;
-    }
-
-    public boolean getIsInCart() {
-        return isInCart;
     }
 
     public int getQuantity() {
