@@ -25,6 +25,9 @@ public class ImageController {
         Path destinationFile = Paths.get(uploadPath).resolve(
                 Paths.get(imageName)).normalize().toAbsolutePath();
 
-        return Files.readAllBytes(destinationFile);
+        if(Files.exists(destinationFile))
+            return Files.readAllBytes(destinationFile);
+        else
+            return null;
     }
 }
