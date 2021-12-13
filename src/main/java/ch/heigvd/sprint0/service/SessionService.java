@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -20,22 +21,14 @@ public class SessionService {
 
     private final String login = "/auth/login";
     private final String register = "/accounts/register";
-    private String apiLoginServerUrl = "http://localhost:8081";
+    @Value("${server.auth.url}")
+    private String apiLoginServerUrl = "";
     private final JWTService jwtService;
 
     private final String tokenName = "tokenJWT";
 
     @Autowired
     public SessionService(JWTService jwtService){
-/*        try {
-            FileReader apiLoginServerUrlJson = new FileReader("../../../config.json", StandardCharsets.UTF_8);
-            JSONObject loginConfig = new JSONObject(new JSONTokener(new BufferedReader (apiLoginServerUrlJson)));
-            apiLoginServerUrl = (String) loginConfig.get("apiAuthenticationServer");
-        } catch (IOException ex) {
-            System.out.println("Error, config(s) file(s) missing or cannot been read. Please check README.");
-            ex.printStackTrace();
-            System.exit(-1);
-        }*/
         this.jwtService = jwtService;
     }
 

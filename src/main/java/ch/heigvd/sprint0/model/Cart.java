@@ -1,9 +1,14 @@
 package ch.heigvd.sprint0.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Panier")
 public class Cart {
     @Id
@@ -17,17 +22,5 @@ public class Cart {
 
     public Cart(String idUser) {
         this.idUser = idUser;
-    }
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public Set<CartArticle> getCart_article_list() {
-        return cart_article_list;
-    }
-
-    public void setCart_article_list(Set<CartArticle> cart_article_list) {
-        this.cart_article_list = cart_article_list;
     }
 }

@@ -1,10 +1,15 @@
 package ch.heigvd.sprint0.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Panier_Meuble")
 public class CartArticle implements Serializable {
 
@@ -15,11 +20,6 @@ public class CartArticle implements Serializable {
     private int quantity;
 
     public CartArticle() { }
-
-    public CartArticle(CartArticleIds ids, int quantity) {
-        this.ids = ids;
-        this.quantity = quantity;
-    }
 
     public CartArticle(Cart cart, Article article, int quantity) {
         this.ids = new CartArticleIds(cart, article);
@@ -36,14 +36,6 @@ public class CartArticle implements Serializable {
 
     public Article getArticle() {
         return ids.getArticle();
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     @Override
