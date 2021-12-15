@@ -30,11 +30,23 @@ public class LoginController {
         this.utils = utils;
     }
 
+    /**
+     * Model persistant pour remplir le header avec les infos utilisateurs.
+     * @param request
+     * @return Données utilisateurs, null si pas de session en cours.
+     */
     @ModelAttribute("userData")
     public String[] getUser(HttpServletRequest request) {
         return sessionService.checkLogin(request);
     }
 
+    /**
+     * Route pour la page de login
+     * @param model
+     * @param error Présent en cas d'erreur avec le message d'erreur
+     * @param request
+     * @return La view du login
+     */
     @GetMapping("/login")
     public String indexLogin(Model model, @RequestParam(value = "error", required = false) boolean error, HttpServletRequest request) {
         if (error) {    // Login utilisateur faux
@@ -49,6 +61,14 @@ public class LoginController {
         return "login";
     }
 
+    /**
+     * Route pour l'envoi des données utilisateurs pour le login
+     * @param response
+     * @param session
+     * @param inputLogin
+     * @param inputPassword
+     * @throws IOException Si erreur de redirection
+     */
     @PostMapping("/login")
     public void createUserLoginToken(HttpServletResponse response, HttpSession session, @RequestParam String inputLogin, @RequestParam String inputPassword) throws IOException {
 
@@ -61,9 +81,15 @@ public class LoginController {
 
     }
 
+    /**
+     * Route pour le logout
+     * @param response
+     * @param session
+     * @throws IOException Si erreur de redirection
+     */
     @GetMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        sessionService.logout(request, response);
+    public void logout(HttpServletResponse response, HttpSession session) throws IOException {
+        sessionService.logout(response);
         utils.dropCart(session);
         response.sendRedirect("./");
     }
