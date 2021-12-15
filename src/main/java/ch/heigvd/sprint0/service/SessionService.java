@@ -32,6 +32,13 @@ public class SessionService {
         this.jwtService = jwtService;
     }
 
+    /**
+     * S'occupe de mettre en place le tokenJWT en tant que cookie si la combinaison username/password est acceptée.
+     * @param username username de l'utilisateur
+     * @param password password de l'utilisateur
+     * @param response
+     * @return true si le login s'est bien passé et le user est légitime, false sinon
+     */
     public boolean setLogin(String username, String password, HttpServletResponse response) {
         String jwtToken = null;
         try {
@@ -52,13 +59,16 @@ public class SessionService {
 
     }
 
+    /**
+     * Communique avec le service d'authentification pour récupérer le tokenJWT du login
+     * @param username username de l'utilisateur
+     * @param password password de l'utilisateur
+     * @return Token JWT sous forme de String
+     * @throws IOException Si erreur avec la communication avec le service d'authentification
+     */
     private String doLogin(String username, String password) throws IOException {
 
-        URL url = new URL(apiLoginServerUrl + login);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setDoOutput(true);
+        HttpURLConnection con = preparePostJsonToAuthService(apiLoginServerUrl + login);
 
         JSONObject toServer = new JSONObject();
         toServer.put("username", username).put("password", password);
@@ -96,13 +106,16 @@ public class SessionService {
     }
 
 
+    /**
+     * Permet d'enregistrer un nouvel utilisateur
+     * @param username username du nouvel utilisateur
+     * @param password password du nouvel utilisateur
+     * @return Null si tout s'est bien passé, messageur d'erreur sinon
+     * @throws IOException Si erreur avec la communication avec le service d'authentification
+     */
     public String doRegister(String username, String password) throws IOException {
 
-        URL url = new URL(apiLoginServerUrl + register);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setDoOutput(true);
+        HttpURLConnection con = preparePostJsonToAuthService(apiLoginServerUrl + register);
 
         JSONObject toServer = new JSONObject();
         toServer.put("username", username).put("password", password);
@@ -137,14 +150,22 @@ public class SessionService {
         }
     }
 
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        //Cookie cookie = new Cookie(tokenName, "");
-        //cookie.setMaxAge(0);
-        //response.addCookie(cookie);
+    /**
+     * Permet de supprimer le cookie côté utilisateur lors d'une déconnexion
+     * @param response
+     */
+    public void logout(HttpServletResponse response) {
+        // Permet de set l'option SameSite impossible avec l'object Cookie
+        // SameSite à 'none' provoque une erreur sur le navigateur
         response.setHeader("Set-Cookie", tokenName +"=; SameSite=strict; Max-Age=0");
     }
 
 
+    /**
+     * Recherche le cookie de session (tokenJWT) parmi les cookies du client
+     * @param request
+     * @return Le cookie si trouvé, null sinon
+     */
     private Cookie findTokenCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -156,6 +177,23 @@ public class SessionService {
         }
 
         return null;
+    }
+
+    /**
+     * Permet d'initaliser la communication avec le serveur d'authentification.
+     * Prépare à une requête POST contenant des data en JSON
+     * @param urlToApi l'URL de l'API du serveur d'authentification
+     * @return Objet HttpURLConnection préparé pour une requête POST contenant du JSON
+     * @throws IOException Si erreur de communication avec le serveur.
+     */
+    private HttpURLConnection preparePostJsonToAuthService(String urlToApi) throws IOException {
+        URL url = new URL(urlToApi);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("POST");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setDoOutput(true);
+
+        return con;
     }
 
 }
