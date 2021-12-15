@@ -18,6 +18,9 @@
             <li class="nav-item">
                 <a th:if="${#arrays.isEmpty(userData)}" class="nav-link" th:href="@{/register}">S'inscrire</a>
             </li>
+            <li class="nav-item">
+                <a th:if="${not #arrays.isEmpty(userData) and #strings.equals(userData[1], 'admin')}" class="nav-link" th:href="@{/admin}">Admin</a>
+            </li>
         </ul>
     </nav>
 </div>
