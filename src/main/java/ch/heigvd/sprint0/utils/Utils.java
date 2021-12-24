@@ -37,6 +37,9 @@ public class Utils {
 
     public ArticleInfo getArticleInfo(Article article, HttpSession session) {
         List<CartArticle> cart_articles = (List<CartArticle>) session.getAttribute("articles_in_cart");
+        if (cart_articles == null) {
+            cart_articles = new LinkedList<>();
+        }
         for (CartArticle cart_article: cart_articles) {
             if (cart_article.getArticle().getId().equals(article.getId())) {
                 return new ArticleInfo(article, cart_article);
