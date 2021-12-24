@@ -34,4 +34,4 @@ build/
 .DS_Store
 
 ### Spring boot ###
-src/main/resources/application.properties
+*.properties
