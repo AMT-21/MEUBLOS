@@ -11,15 +11,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultHandler;
 
+import javax.servlet.http.Cookie;
 import java.util.LinkedList;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -94,14 +97,156 @@ class Sprint0ApplicationTests {
     }
 
     @Test
+    @Order(5)
     void addArticle() throws Exception {
-        mvc.perform(post("/login")
+        // Récupérer le token admin
+        MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
                 .param("inputLogin", "meublos")
-                .param("inputPassword", "0bQkghqoy-uKplp6#ywm"))
+                .param("inputPassword", adminPassword))
+                .andReturn();
+
+        Cookie cookie = result.getResponse().getCookie("tokenJWT");
+
+        // Créer l'article
+        mvc.perform(post("/admin/article")
+        .cookie(cookie)
+        .param("name", "newTestProduct")
+        .param("description", "Test description"))
                 .andDo(print());
 
-        // faire une requête pour créer un article avec le token récupéré depuis le login puis vérifier que le nouvel article est bien ajouté
+        // Vérifier que le nouvel article est bien présent
+        mvc.perform(get("/admin")
+                .cookie(cookie))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        content().string(containsString("newTestProduct")));
+    }
+
+    @Test
+    @Order(6)
+    void addArticleWithSameDescription() throws Exception {
+        // Récupérer le token admin
+        MvcResult result = mvc.perform(post("/login")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("inputLogin", "meublos")
+                .param("inputPassword", adminPassword))
+                .andReturn();
+
+        Cookie cookie = result.getResponse().getCookie("tokenJWT");
+
+        // Créer l'article avec une même description, et vérifier que le message d'erreur soit levé
+        mvc.perform(post("/admin/article")
+                .cookie(cookie)
+                .param("name", "anotherNewTestProduct")
+                .param("description", "Il était dans mon grenier pendant des années"))
+                .andDo(print())
+                .andExpectAll(
+                        content().string(containsString("Cette description d&#39;article est déjà utilisée par l&#39;article Un meuble du grenier")));
+
+    }
+
+    @Test
+    @Order(7)
+    void modifyArticle() throws Exception {
+        // Récupérer le token admin
+        MvcResult result = mvc.perform(post("/login")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("inputLogin", "meublos")
+                .param("inputPassword", adminPassword))
+                .andReturn();
+
+        Cookie cookie = result.getResponse().getCookie("tokenJWT");
+
+        // Modifier l'article
+        mvc.perform(post("/admin/article?id=4")
+                .cookie(cookie)
+                .param("name", "newTestProductModified")
+                .param("description", "Test description"))
+                .andDo(print());
+
+        // Vérifier que l'article modifié est bien présent
+        mvc.perform(get("/admin")
+                .cookie(cookie))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        content().string(containsString("newTestProductModified")));
+
+    }
+
+    @Test
+    @Order(8)
+    void deleteArticle() throws Exception {
+        // Récupérer le token admin
+        MvcResult result = mvc.perform(post("/login")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("inputLogin", "meublos")
+                .param("inputPassword", adminPassword))
+                .andReturn();
+
+        Cookie cookie = result.getResponse().getCookie("tokenJWT");
+
+        // Supprimer l'article
+        mvc.perform(get("/admin/article/delete")
+                .cookie(cookie)
+                .param("id", "4"))
+                .andDo(print());
+
+        // Vérifier que l'article modifié est bien supprimé
+        mvc.perform(get("/admin")
+                .cookie(cookie))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        content().string(not(containsString("newTestProductModified"))));
+
+    }
+
+    @Test
+    @Order(9)
+    void addCategory() throws Exception {
+        // Récupérer le token admin
+        MvcResult result = mvc.perform(post("/login")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("inputLogin", "meublos")
+                .param("inputPassword", adminPassword))
+                .andReturn();
+
+        Cookie cookie = result.getResponse().getCookie("tokenJWT");
+
+        // Créer une nouvelle catégorie
+        mvc.perform(post("/admin/categories")
+                .cookie(cookie)
+                .param("nameCategory", "newTestCategory"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        content().string(containsString("newTestCategory")));
+
+    }
+
+    @Test
+    @Order(10)
+    void deleteCategory() throws Exception {
+        // Récupérer le token admin
+        MvcResult result = mvc.perform(post("/login")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("inputLogin", "meublos")
+                .param("inputPassword", adminPassword))
+                .andReturn();
+
+        Cookie cookie = result.getResponse().getCookie("tokenJWT");
+
+        // Supprimer la catégorie précédemment créée
+        mvc.perform(get("/admin/categories/confirmDeletion?id=newTestCategory")
+                .cookie(cookie))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpectAll(
+                        content().string(not(containsString("newTestCategory"))));
+
     }
 
 }
