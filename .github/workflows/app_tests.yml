@@ -10,7 +10,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  deploy:
+  test-app:
     runs-on: ubuntu-latest # The type of runner that the job will run on
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -40,5 +40,5 @@ jobs:
         run: sudo ssh -tt -o StrictHostKeyChecking=no -L 8081:${{ secrets.AUTH_SERVER_IP_ADDRESS }}:8080 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
 
       #Test the application using Maven
-      - name: Build with Maven
+      - name: Test with Maven
         run: mvn clean test
