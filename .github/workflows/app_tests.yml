@@ -55,11 +55,11 @@ jobs:
       - name: Adding admin user password
         run: |
             echo $DEV_PROP_FILE >> src/main/resources/application-integrationtest.properties
-            cat src/main/resources/application.properties
+            cat src/main/resources/application-integrationtest.properties
         shell: bash
         env:
           DEV_PROP_FILE: ${{ secrets.AUTH_SERVER_ADMIN_PASSWORD }}
 
       #Test the application using Maven
       - name: Test with Maven
-        run: mvn -B test
+        run: mvn -B test --file pom.xml
