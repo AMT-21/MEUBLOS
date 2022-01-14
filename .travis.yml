@@ -2,4 +2,4 @@ language: java
 
 branches:
   only:
-    - dev
+    - develop
