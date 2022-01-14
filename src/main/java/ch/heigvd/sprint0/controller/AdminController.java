@@ -134,7 +134,7 @@ public class AdminController {
 
         articleService.saveArticle(article);
 
-        if(!image.isEmpty()) {
+        if(image != null && !image.isEmpty()) {
             // On accepte que les images
             try (InputStream input = image.getInputStream()) {
                 try { ImageIO.read(input).toString(); } catch (Exception e) {
