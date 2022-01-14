@@ -41,4 +41,4 @@ jobs:
 
       #Test the application using Maven
       - name: Test with Maven
-        run: mvn clean test
+        run: mvn clean test -Dtest=Sprint0ApplicationTests
