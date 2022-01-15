@@ -37,7 +37,7 @@ git flow feature start MYFEATURE
 3. Dans le répertoire `resources`, modifier le fichier `application.properties`. Le paramètre `server.port` doit contenir le port utilisé lors de l'accès au site. 
 Les paramètres `spring.datasource.username` et `spring.datasource.password` doivent renseigner le mot de passe et nom d'utilisateur utilisés pour créer la base de données. Le paramètre `server.tomcat.upload-dir` doit indiquer le chemin aux images du site et le paramètre `server.auth.url` doit contenir l'adresse et le port du service d'authentification. 
 
-4. Dans le dossier `certificates`, ajouter vos certificats et lancer la commande `ssh -L <PORT>:10.0.1.92:8080 MEUBLOS@16.170.194.237 -i <CERTIFICATE>.pem` pour créer un tunnel ssh avec le service de login. <PORT> correspond au port spécifié dans `application.properties` dans le paramètre `server.auth.url` et <CERTIFICATE> au fichier contenant votre certificat.
+4. Lancer la commande `ssh -L <PORT>:10.0.1.92:8080 MEUBLOS@16.170.194.237 -i <CERTIFICATE>.pem` pour créer un tunnel ssh avec le service de login. <PORT> correspond au port spécifié dans `application.properties` dans le paramètre `server.auth.url` et <CERTIFICATE> au fichier contenant votre certificat.
 
 5. Une fois la fonctionnalité développée, créer une PR sur la branch dev. Nous ferons notre maximum pour traiter vos modifications le plus rapidement possible.
 
@@ -45,37 +45,3 @@ Plus d'informations sont disponibles sur le [wiki](https://github.com/AMT-21/MEU
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
-
-> TODO DPO - L'avancement est super et vous avez bien avancé sur les fonctionnalités. Mais je me rends compte en lisant le code que 
-> ça a eu un coup sur certains points qu'on va améliorer avant d'aller plus loin. 
-> Je vous ai mis quelques commentaires dans le code, mais je vous ferais une review live.
->
-> L'un des premiers points, c'est l'architecture du projet. 
-> Je vous invite à effectuer un peu de recherche sur les interactions et le code qui devrait se trouver dans un contrôleur, service, repository, dao, dto, entités, mappers, ...
-> Voici un peu de doc de pourquoi utiliser des services https://blog1.westagilelabs.com/why-to-use-service-layer-in-spring-mvc-5f4fc52643c0
-> Passez du temps à refactor ce qui a été créer, car il y a du code et des appels de composants qui ne sont pas cohérents.
-> Exemple: le contrôleur appel les repository alors que vous avez un service
->
-> le 2ème point (et c'est souvent le cas), la doc. Si vous effectuez un livrable, je fois pouvoir l'utiliser sans me devoir trop réfléchir
-> à ce que je dois faire. Voir les commentaires plus haut pour le README et plus bas pour le WIKI. Je vous laisse complèter ces parties.
->
-> Enfin, il n'y a pas de tests unitaire ou d'intégration pour le moment. Avez-vous pu effectuer quelques recherches à ce propos ?
-> Besoin de documentation ou avez-vous des questions à ce propos ?
-
-> TODO DPO - Je vous mets les commentaires du wiki ici car je n'ai pas les droits de modifier votre wiki
->
-> Choix technologiques
-> Vous utilisez java 8 sorti en 2014 et entre temps est sorti java 11 qui est une LTS sorti depuis 3 ans. Y a-t-il une raison à ne pas utiliser cette version ? https://www.oracle.com/java/technologies/java-se-support-roadmap.html
-> La page est pauvre... Vous indiquez ce que vous avez choisi sans mentionner d'autres technologies existantes, sans compter ceux qui manquent 
-> (framework, serveur, ORM ou pas, base de données, ...). Il serait bien d'étoffer cette partie afin que vous puissiez être au clair sur ce qui existe et que vous puissiez avoir une discussion si on vous pose la question
-> même si votre argument final serait "Nous avons choisi ces technologies, car elles sont familières à l'ensemble de l'équipe" ou 
-> "Nous les avons sélectionné, car elle nous intéresse".
->
-> Schéma et conception
-> Aïe pas de diagramme de classe, de la base de données, de diagramme des payload, de diagramme de l'infra et/ou de diagramme de séquence. 
-> Il va falloir ajouter cette partie.
->
-> Technologies pour l'interface utilisateur
-> Vous avez utilisé un template ?
->
-> Bonne review et bonne continuation.
