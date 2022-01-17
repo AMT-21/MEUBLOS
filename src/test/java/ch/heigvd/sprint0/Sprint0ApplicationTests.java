@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultHandler;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer;
 
 import javax.servlet.http.Cookie;
 import java.util.LinkedList;
@@ -40,6 +42,8 @@ class Sprint0ApplicationTests {
 
     @Value("${tests.admin.password}")
     private String adminPassword;
+    @Value("${tests.admin.name}")
+    private String adminName;
 
     @BeforeAll
     public void init() { // Reset database content
@@ -98,11 +102,130 @@ class Sprint0ApplicationTests {
 
     @Test
     @Order(5)
+    void emptyCart() throws Exception {
+        mvc.perform(get("/cart")
+                .sessionAttr("articles_in_cart", new LinkedList<>()))
+                .andDo(print())
+                .andExpect(content().string(containsString("Le panier est vide")));
+    }
+
+    @Test
+    @Order(6)
+    void addArticleToCart() throws Exception {
+        assert mvc.getDispatcherServlet().getWebApplicationContext() != null;
+        MockMvc mvcWithSession = MockMvcBuilders.webAppContextSetup(
+                mvc.getDispatcherServlet().getWebApplicationContext())
+                .apply(SharedHttpSessionConfigurer.sharedHttpSession()).build();
+
+        mvcWithSession.perform(post("/cart/add/1")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("quantity", "2")
+                .header(HttpHeaders.REFERER, "/cart")).andDo(print());
+
+        mvcWithSession.perform(get("/cart")).andDo(print())
+                .andExpect(content().string(containsString("Un meuble du grenier")));
+    }
+
+    @Test
+    @Order(7)
+    void removeArticleInCart() throws Exception {
+        assert mvc.getDispatcherServlet().getWebApplicationContext() != null;
+        MockMvc mvcWithSession = MockMvcBuilders.webAppContextSetup(
+                mvc.getDispatcherServlet().getWebApplicationContext())
+                .apply(SharedHttpSessionConfigurer.sharedHttpSession()).build();
+
+        mvcWithSession.perform(post("/cart/add/1")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("quantity", "2"));
+
+        mvcWithSession.perform(get("/cart/remove/1"));
+
+        mvcWithSession.perform(get("/cart")).andDo(print())
+                .andExpect(content().string(CoreMatchers.not(containsString("Un meuble du grenier"))));
+    }
+
+    @Test
+    @Order(8)
+    void removeAllArticleInCart() throws Exception {
+        assert mvc.getDispatcherServlet().getWebApplicationContext() != null;
+        MockMvc mvcWithSession = MockMvcBuilders.webAppContextSetup(
+                mvc.getDispatcherServlet().getWebApplicationContext())
+                .apply(SharedHttpSessionConfigurer.sharedHttpSession()).build();
+
+        mvcWithSession.perform(post("/cart/add/1")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("quantity", "2"));
+
+        mvcWithSession.perform(post("/cart/add/2")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("quantity", "2"));
+
+        mvcWithSession.perform(get("/cart")).andDo(print())
+                .andExpect(content().string(containsString("Un meuble du grenier")))
+                .andExpect(content().string(containsString("Table en marbre")));
+
+        mvcWithSession.perform(get("/cart/removeAll"));
+
+        mvcWithSession.perform(get("/cart")).andDo(print())
+                .andExpect(content().string(CoreMatchers.not(containsString("Un meuble du grenier"))))
+                .andExpect(content().string(CoreMatchers.not(containsString("Table en marbre"))));
+    }
+
+    @Test
+    @Order(9)
+    void updateQuantityToZeroForArticleInCart() throws Exception {
+        assert mvc.getDispatcherServlet().getWebApplicationContext() != null;
+        MockMvc mvcWithSession = MockMvcBuilders.webAppContextSetup(
+                mvc.getDispatcherServlet().getWebApplicationContext())
+                .apply(SharedHttpSessionConfigurer.sharedHttpSession()).build();
+
+        mvcWithSession.perform(post("/cart/add/1")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("quantity", "2"));
+
+        mvcWithSession.perform(post("/cart/update/1")
+                .param("quantity", "0"));
+
+        mvcWithSession.perform(get("/cart")).andDo(print())
+                .andExpect(content().string(CoreMatchers.not(containsString("Un meuble du grenier"))));
+    }
+
+    @Test
+    @Order(10)
+    void articleInCartPersistAfterLogin() throws Exception {
+        assert mvc.getDispatcherServlet().getWebApplicationContext() != null;
+        MockMvc mvcWithSession = MockMvcBuilders.webAppContextSetup(
+                mvc.getDispatcherServlet().getWebApplicationContext())
+                .apply(SharedHttpSessionConfigurer.sharedHttpSession()).build();
+
+        mvcWithSession.perform(post("/cart/add/1")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("quantity", "2"));
+
+        mvcWithSession.perform(get("/cart")).andDo(print())
+                .andExpect(content().string(containsString("Un meuble du grenier")));
+
+        MvcResult result = mvcWithSession.perform(post("/login")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("inputLogin", adminName)
+                .param("inputPassword", adminPassword))
+                .andReturn();
+
+        Cookie cookie = result.getResponse().getCookie("tokenJWT");
+
+        // Créer l'article
+        mvcWithSession.perform(get("/cart")
+                .cookie(cookie))
+                .andExpect(content().string(containsString("Un meuble du grenier")));
+    }
+
+    @Test
+    @Order(11)
     void addArticle() throws Exception {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", adminName)
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -125,12 +248,12 @@ class Sprint0ApplicationTests {
     }
 
     @Test
-    @Order(6)
+    @Order(12)
     void addArticleWithSameDescription() throws Exception {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", adminName)
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -148,12 +271,12 @@ class Sprint0ApplicationTests {
     }
 
     @Test
-    @Order(7)
+    @Order(13)
     void modifyArticle() throws Exception {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", adminName)
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -177,12 +300,12 @@ class Sprint0ApplicationTests {
     }
 
     @Test
-    @Order(8)
+    @Order(14)
     void deleteArticle() throws Exception {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", adminName)
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -205,12 +328,12 @@ class Sprint0ApplicationTests {
     }
 
     @Test
-    @Order(9)
+    @Order(15)
     void addCategory() throws Exception {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", adminName)
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -224,16 +347,15 @@ class Sprint0ApplicationTests {
                 .andExpect(status().isOk())
                 .andExpectAll(
                         content().string(containsString("newTestCategory")));
-
     }
 
     @Test
-    @Order(10)
+    @Order(16)
     void deleteCategory() throws Exception {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", adminName)
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -246,7 +368,5 @@ class Sprint0ApplicationTests {
                 .andExpect(status().isOk())
                 .andExpectAll(
                         content().string(not(containsString("newTestCategory"))));
-
     }
-
 }
