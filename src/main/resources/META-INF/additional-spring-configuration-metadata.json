@@ -4,5 +4,10 @@
       "name": "server.tomcat.upload-dir",
       "type": "java.lang.String",
       "description": "Upload dir file path"
-  }
-] }
+    },
+    {
+      "name": "server.auth.url",
+      "type": "java.lang.String",
+      "description": "url for authentication service"
+    }
+  ] }

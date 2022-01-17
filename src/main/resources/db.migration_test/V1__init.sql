@@ -1,15 +1,10 @@
 
-USE meublos;
-
-
+USE meublos_test;
 
 CREATE TABLE `Categorie` (
                              nomCategorie VARCHAR(50) NOT NULL,
-
                              CONSTRAINT PK_Categorie PRIMARY KEY (nomCategorie)
 ) ENGINE = InnoDB;
-
-
 
 CREATE TABLE `Meuble` (
                           id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -78,7 +73,7 @@ INSERT INTO `Categorie` (`nomCategorie`) VALUES
 INSERT INTO `Meuble` (`id`, `nom`, `description`, `prixVente`, `quantite`) VALUES
 (1, 'Un meuble du grenier', 'Il était dans mon grenier pendant des années', 10.55, 4),
 (2, 'Table en marbre', 'En super état ! Comme neuf. \r\n\r\nPersonne non sérieuse s\'abstenir.', 430.00, 2),
-	(3, 'Armoire style "Louis XVI"', 'Petite pépite avec quelques dégats presque pas visible\r\nMerci de me contacter pour plus d\'informations.', 249.90, 1);
+(3, 'Armoire style "Louis XVI"', 'Petite pépite avec quelques dégats presque pas visible\r\nMerci de me contacter pour plus d\'informations.', 249.90, 1);
 
 INSERT INTO `Meuble_Categorie` (`idMeuble`, `nomCategorie`) VALUES
 (3, 'Armoire'),
@@ -87,7 +82,6 @@ INSERT INTO `Meuble_Categorie` (`idMeuble`, `nomCategorie`) VALUES
 
 INSERT INTO `Panier` (`idUser`) VALUES
 (1);
-
 
 INSERT INTO `Panier_Meuble` (`idMeuble`, `idUserPanier`, `quantite`) VALUES
 (1, 1, 1),

@@ -1,11 +1,14 @@
 package ch.heigvd.sprint0.object;
 
 import ch.heigvd.sprint0.model.Article;
-import ch.heigvd.sprint0.model.Cart_Article;
+import ch.heigvd.sprint0.model.CartArticle;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public class ArticleInfo {
     Article article;
-    Cart_Article cart_article;
+    CartArticle cart_article;
     boolean canBePurchase;
     boolean isAvailable;
     boolean isInCart;
@@ -15,7 +18,7 @@ public class ArticleInfo {
         this(article, null);
     }
 
-    public ArticleInfo(Article article, Cart_Article cart_article) {
+    public ArticleInfo(Article article, CartArticle cart_article) {
         this.article = article;
         this.cart_article = cart_article;
         isInCart = cart_article != null;
@@ -42,18 +45,6 @@ public class ArticleInfo {
 
     public int getStock() {
         return article.getStock();
-    }
-
-    public boolean getCanBePurchase() {
-        return canBePurchase;
-    }
-
-    public boolean getIsAvailable() {
-        return isAvailable;
-    }
-
-    public boolean getIsInCart() {
-        return isInCart;
     }
 
     public int getQuantity() {

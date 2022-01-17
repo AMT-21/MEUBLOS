@@ -1,20 +1,19 @@
 package ch.heigvd.sprint0.service;
 
 import ch.heigvd.sprint0.model.Article;
-import ch.heigvd.sprint0.model.Article_Category;
-import ch.heigvd.sprint0.model.Article_Category_Ids;
-import ch.heigvd.sprint0.model.Cart_Article;
+import ch.heigvd.sprint0.model.CartArticle;
 
 import java.util.List;
 import java.util.Optional;
 
-//IArticleService provides the findAll() contract method declaration to get all cities from the data source.
 public interface IArticleService {
     List<Article> findAll();
-    Optional<Article> findById(int id);
+    Optional<Article> findById(Integer id);
     Optional<Article> findByDescription(String description);
-    List<Cart_Article> findCartArticleFromUser(int id);
+    Optional<Article> findLatestArticle();
+    List<Article> find3LatestArticles();
+    List<Article> findLatestArticles();
+    List<Article> findAllWithCategory(String nameCategory);
     void saveArticle(Article article);
-    List<Article> findTopByOrderByIdDesc();
-    void deleteArticle(Article article);
+    void deleteById(Integer idArticle);
 }

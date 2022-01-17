@@ -8,14 +8,18 @@
             <a th:href="@{/}" class="navbar-brand brand"> MEUBLOS </a>
         </ul>
         <ul class="nav justify-content-end">
+            <button th:if="${not #arrays.isEmpty(userData)}" type="button" class="btn btn-warning" onclick="window.location.href='./logout';">Déconnexion <span class="badge bg-secondary" th:text="${userData[0]}"></span></button>
             <li class="nav-item">
                 <a class="nav-link active" th:href="@{/cart}">Panier</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/login}">Connexion</a>
+                <a th:if="${#arrays.isEmpty(userData)}" class="nav-link" th:href="@{/login}">Connexion</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/register}">S'inscrire</a>
+                <a th:if="${#arrays.isEmpty(userData)}" class="nav-link" th:href="@{/register}">S'inscrire</a>
+            </li>
+            <li class="nav-item">
+                <a th:if="${not #arrays.isEmpty(userData) and #strings.equals(userData[1], 'admin')}" class="nav-link" th:href="@{/admin}">Admin</a>
             </li>
         </ul>
     </nav>

@@ -1,0 +1,66 @@
+name: Test app
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ develop ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test-app:
+    runs-on: ubuntu-latest # The type of runner that the job will run on
+    services:
+      #Start the mysql server
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_DATABASE: meublos_test
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_USER: amt
+          MYSQL_PASSWORD: AMTMeublos-21
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Using java 8
+      - name: Setup JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+
+      #Set up Maven cache
+      - name: Cache Maven packages
+        #This action allows caching dependencies and build outputs to improve workflow execution time.
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Write DMZ SSH Key on the runner
+        run: echo "${{ secrets.DMZ_SSH_KEY }}" > DMZ_KEY.pem && chmod 400 DMZ_KEY.pem
+
+      - name: Start DMZ tunnel
+        run: sudo ssh -tt -o StrictHostKeyChecking=no -L 8081:${{ secrets.AUTH_SERVER_IP_ADDRESS }}:8080 ${{ secrets.DMZ_USERNAME }}@${{ secrets.DMZ_IP_ADDRESS }} -i DMZ_KEY.pem &
+
+      - name: Adding admin user password
+        run: |
+            echo $DEV_PROP_FILE >> src/main/resources/application-integrationtest.properties
+            cat src/main/resources/application-integrationtest.properties
+        shell: bash
+        env:
+          DEV_PROP_FILE: ${{ secrets.AUTH_SERVER_ADMIN_PASSWORD }}
+
+      #Test the application using Maven
+      - name: Test with Maven
+        run: mvn -B test --file pom.xml
+    
