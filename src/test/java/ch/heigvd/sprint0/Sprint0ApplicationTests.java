@@ -102,7 +102,7 @@ class Sprint0ApplicationTests {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", "admin")
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -130,7 +130,7 @@ class Sprint0ApplicationTests {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", "admin")
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -153,7 +153,7 @@ class Sprint0ApplicationTests {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", "admin")
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -182,7 +182,7 @@ class Sprint0ApplicationTests {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", "admin")
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -210,7 +210,7 @@ class Sprint0ApplicationTests {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", "admin")
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
@@ -233,7 +233,7 @@ class Sprint0ApplicationTests {
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
-                .param("inputLogin", "meublos")
+                .param("inputLogin", "admin")
                 .param("inputPassword", adminPassword))
                 .andReturn();
 
