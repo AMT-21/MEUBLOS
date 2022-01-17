@@ -29,7 +29,7 @@ Les paramètres `spring.datasource.username` et `spring.datasource.password` doi
 
 4. Lancer la commande `ssh -L <PORT>:10.0.1.92:8080 MEUBLOS@16.170.194.237 -i <CERTIFICATE>.pem` pour créer un tunnel ssh avec le service de login. <PORT> correspond au port spécifié dans `application.properties` dans le paramètre `server.auth.url` et <CERTIFICATE> au fichier contenant votre certificat.
 
-5. Le site est accessible à l'adresse `localhost:<PORT>` ou <PORT> correspond au port spécifié dans `application.properties`  
+5. Le site est accessible à l'adresse `localhost:<PORT>` ou `<PORT>` correspond au port spécifié dans `application.properties`  
   
 6. Une fois la fonctionnalité développée, créer une PR sur la branch dev. Nous ferons notre maximum pour traiter vos modifications le plus rapidement possible.
 
