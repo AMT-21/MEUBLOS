@@ -25,7 +25,7 @@ git flow feature start MYFEATURE
 ```
 
 3. Dans le répertoire `resources`, modifier le fichier `application.properties`. Le paramètre `server.port` doit contenir le port utilisé lors de l'accès au site. 
-Les paramètres `spring.datasource.username` et `spring.datasource.password` doivent renseigner le mot de passe et nom d'utilisateur utilisés pour créer la base de données. Le paramètre `server.tomcat.upload-dir` doit indiquer le chemin aux images du site et le paramètre `server.auth.url` doit contenir l'adresse et le port du service d'authentification. 
+Les paramètres `spring.datasource.username` et `spring.datasource.password` doivent renseigner le mot de passe et nom d'utilisateur utilisés pour créer la base de données. Le paramètre `server.tomcat.upload-dir` doit indiquer le chemin aux images du site et le paramètre `server.auth.url` doit contenir l'adresse et le port du service d'authentification. Le paramètre `jwt.secret` doit contenir le secret utilisé pour vérifier les token JWT distribués par le micro-service d'authentification. Attention, le secret utilisé doit être le même que celui utilisé dans le micro-service d'authentification.
 
 4. Pour configurer le micro-service d'authentification, se référer à la documentation disponible à l'adresse https://github.com/AMT-21/auth-service#d%C3%A9marrer-le-projet ou utiliser le micro-service créé par M. Didier Page
 
@@ -38,6 +38,12 @@ Les paramètres `spring.datasource.username` et `spring.datasource.password` doi
 6. Une fois la fonctionnalité développée, créer une PR sur la branch dev. Nous ferons notre maximum pour traiter vos modifications le plus rapidement possible.
 
 Plus d'informations sont disponibles sur le [wiki](https://github.com/AMT-21/MEUBLOS/wiki)
+  
+Pour pouvoir lancer les tests, il y a d'autre points à configurer :
+1. Dans le fichier `src/main/resources/application-integrationtest.properties`, configurer comme précédemment les champs `server.port`, `spring.datasource.username`, `spring.datasource.password` et `server.auth.url`.
+  
+2. Toujours dans le même fichier, configurer les accès au compte administrateur sur l'application web avec les paramètres `tests.admin.password` et `tests.admin.name`. Ces paramètres sont importants car il faut un accès administrateur sur l'app pour pouvoir modifier les articles.
+  
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
