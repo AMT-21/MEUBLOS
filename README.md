@@ -27,9 +27,13 @@ git flow feature start MYFEATURE
 3. Dans le répertoire `resources`, modifier le fichier `application.properties`. Le paramètre `server.port` doit contenir le port utilisé lors de l'accès au site. 
 Les paramètres `spring.datasource.username` et `spring.datasource.password` doivent renseigner le mot de passe et nom d'utilisateur utilisés pour créer la base de données. Le paramètre `server.tomcat.upload-dir` doit indiquer le chemin aux images du site et le paramètre `server.auth.url` doit contenir l'adresse et le port du service d'authentification. 
 
-4. Lancer la commande `ssh -L <PORT>:10.0.1.92:8080 MEUBLOS@16.170.194.237 -i <CERTIFICATE>.pem` pour créer un tunnel ssh avec le service de login. <PORT> correspond au port spécifié dans `application.properties` dans le paramètre `server.auth.url` et <CERTIFICATE> au fichier contenant votre certificat.
+4. Pour configurer le micro-service d'authentification, se référer à la documentation disponible à l'adresse https://github.com/AMT-21/auth-service#d%C3%A9marrer-le-projet ou utiliser le micro-service créé par M. Didier Page
 
-5. Le site est accessible à l'adresse `localhost:<PORT>` ou `<PORT>` correspond au port spécifié dans `application.properties`  
+5. Pour utiliser le micro-service créé par M. Didier Page, lancer la commande `ssh -L <PORT>:10.0.1.92:8080 MEUBLOS@16.170.194.237 -i <CERTIFICATE>.pem` pour créer un tunnel ssh avec le service de login. <PORT> correspond au port spécifié dans `application.properties` dans le paramètre `server.auth.url` et <CERTIFICATE> au fichier contenant votre certificat.
+
+6. Démarrer le projet avec la ligne de commande ou directement depuis l'IDE
+  
+7. Le site est dès lors accessible à l'adresse `localhost:<PORT>` où `<PORT>` correspond au port spécifié dans `application.properties`  
   
 6. Une fois la fonctionnalité développée, créer une PR sur la branch dev. Nous ferons notre maximum pour traiter vos modifications le plus rapidement possible.
 
