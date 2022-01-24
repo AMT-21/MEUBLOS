@@ -4,6 +4,7 @@ import org.flywaydb.core.Flyway;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
+import org.junit.Assume;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer;
 
 import javax.servlet.http.Cookie;
 import java.util.LinkedList;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -34,6 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class Sprint0ApplicationTests {
 
+    boolean isConnectionPossible;
+
     @Autowired
     private MockMvc mvc;
 
@@ -46,9 +50,18 @@ class Sprint0ApplicationTests {
     private String adminName;
 
     @BeforeAll
-    public void init() { // Reset database content
+    public void init() throws Exception { // Reset database content
         flyway.clean();
         flyway.migrate();
+
+
+        MvcResult result2 = mvc.perform(post("/login")
+                .sessionAttr("articles_in_cart", new LinkedList<>())
+                .param("inputLogin", adminName)
+                .param("inputPassword", adminPassword))
+                .andReturn();
+
+        isConnectionPossible = !Objects.equals(result2.getResponse().getRedirectedUrl(), "./login?error=true");
     }
 
     @Test
@@ -193,6 +206,8 @@ class Sprint0ApplicationTests {
     @Test
     @Order(10)
     void articleInCartPersistAfterLogin() throws Exception {
+        Assume.assumeTrue(isConnectionPossible);
+
         assert mvc.getDispatcherServlet().getWebApplicationContext() != null;
         MockMvc mvcWithSession = MockMvcBuilders.webAppContextSetup(
                 mvc.getDispatcherServlet().getWebApplicationContext())
@@ -222,6 +237,7 @@ class Sprint0ApplicationTests {
     @Test
     @Order(11)
     void addArticle() throws Exception {
+        Assume.assumeTrue(isConnectionPossible);
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
@@ -250,6 +266,7 @@ class Sprint0ApplicationTests {
     @Test
     @Order(12)
     void addArticleWithSameDescription() throws Exception {
+        Assume.assumeTrue(isConnectionPossible);
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
@@ -273,6 +290,7 @@ class Sprint0ApplicationTests {
     @Test
     @Order(13)
     void modifyArticle() throws Exception {
+        Assume.assumeTrue(isConnectionPossible);
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
@@ -302,6 +320,7 @@ class Sprint0ApplicationTests {
     @Test
     @Order(14)
     void deleteArticle() throws Exception {
+        Assume.assumeTrue(isConnectionPossible);
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
@@ -330,6 +349,7 @@ class Sprint0ApplicationTests {
     @Test
     @Order(15)
     void addCategory() throws Exception {
+        Assume.assumeTrue(isConnectionPossible);
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
@@ -352,6 +372,7 @@ class Sprint0ApplicationTests {
     @Test
     @Order(16)
     void deleteCategory() throws Exception {
+        Assume.assumeTrue(isConnectionPossible);
         // Récupérer le token admin
         MvcResult result = mvc.perform(post("/login")
                 .sessionAttr("articles_in_cart", new LinkedList<>())
